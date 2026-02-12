@@ -3,6 +3,7 @@ set -e
 
 yarn install --frozen-lockfile
 rm -f .overmind.sock
+rm -f /tmp/rails-server.pid
 
 if [ -d "vendor/dtext" ] && [ "$LOCAL_DTEXT" = "true" ]; then
   echo "dtext: Recompiling..."
