@@ -10,7 +10,8 @@ config/application.yml
 .bundle
 .yardoc
 vendor/cache/*.gem
-vendor/*
+vendor/bundle/
+vendor/cache/
 
 # Node / Yarn
 /node_modules
@@ -24,6 +25,10 @@ public/assets
 /public/packs*
 coverage
 doc/*
+/uploads/
+/public/db_export/
+/docker/traefik/acme.json
+.vscode/
 
 # Runtime files
 /log
@@ -44,3 +49,5 @@ test/reports
 *.swp
 *.local
 
+# Extra files
+public/.well-known/*

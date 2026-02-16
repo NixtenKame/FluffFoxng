@@ -4,17 +4,20 @@ module Maintenance
   module User
     class LoginRemindersController < ApplicationController
       def new
+        @matched_usernames = []
       end
 
       def create
-        ::User.with_email(params[:user][:email]).each do |user|
-          next if user.is_moderator?
-          LoginReminderMailer.notice(user).deliver_now
-        end
+        email = params.dig(:user, :email).to_s.strip
+        users = ::User.with_email(email)
+        @matched_usernames = users.map(&:name)
 
-        flash[:notice] = "If your email was on file, an email has been sent your way. It should arrive within the next few minutes. Make sure to check your spam folder"
-
-        redirect_to new_maintenance_user_login_reminder_path
+        flash.now[:notice] = if @matched_usernames.any?
+                               "Found #{@matched_usernames.size} account(s) for that email."
+                             else
+                               "No account found for that email."
+                             end
+        render :new
       end
     end
   end

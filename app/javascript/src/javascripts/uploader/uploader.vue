@@ -101,35 +101,10 @@
                     <div class="col2">
           <textarea class="tag-textarea" v-model="tagEntries.content" id="post_content" rows="2"
                     data-autocomplete="tag-edit"
-                    placeholder="Ex: young gore scat watersports diaper my_little_pony vore not_furry rape hyper etc."></textarea>
+                    placeholder="Ex: young gore my_little_pony vore not_furry hyper etc."></textarea>
                     </div>
                 </div>
             </template>
-            <div class="flex-grid border-bottom">
-                <div class="col">
-                    <label class="section-label">Rating</label>
-                    <div>Explicit tags include sex, pussy, penis, masturbation, fellatio, etc.
-                        (<a href="/help/ratings" target="_blank">help</a>)
-                    </div>
-                </div>
-                <div class="col2">
-                    <div class="box-section background-red" v-if="showErrors && invalidRating">
-                        You must select an appropriate rating for this image.
-                    </div>
-                    <div>
-                        <template v-if="!safe">
-                            <button class="toggle-button rating-e" :class="{active: rating==='e'}" @click="rating = 'e'">
-                                Explicit
-                            </button>
-                            <button class="toggle-button rating-q" :class="{active: rating==='q'}" @click="rating = 'q'">
-                                Questionable
-                            </button>
-                        </template>
-                        <button class="toggle-button rating-s" :class="{active: rating==='s'}" @click="rating = 's'">Safe
-                        </button>
-                    </div>
-                </div>
-            </div>
             <div class="flex-grid come-together-now">
                 <div class="col">
                     <label class="section-label" for="post_tags">Other Tags</label>
@@ -171,6 +146,35 @@
             </div>
             <div class="flex-grid border-bottom">
                 <div class="col">
+                    <label class="section-label">Rating</label>
+                    <div>
+                        Questionable tags include underwear, feet, thigh, maws, bluges, etc.
+                        (<a href="/help/ratings" target="_blank">help</a>)
+                    </div>
+                </div>
+                <div class="col2">
+                    <div class="box-section background-red" v-if="showErrors && invalidRating">
+                        You must select a rating for this image.
+                    </div>
+                    <div>
+                        <button class="toggle-button rating-q" :class="{active: rating==='q'}" @click="rating = 'q'">
+                            Questionable
+                        </button>
+                        <button class="toggle-button rating-s" :class="{active: rating==='s'}" @click="rating = 's'">Safe
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-grid border-bottom">
+                <div class="col">
+                    <label class="section-label">Rating Lock</label>
+                </div>
+                <div class="col2">
+                    <label><input type="checkbox" v-model="ratingLocked" :disabled="!allowRatingLock"/> Lock Rating</label>
+                </div>
+            </div>
+            <div class="flex-grid border-bottom">
+                <div class="col">
                     <label class="section-label">Parent Post ID</label>
                 </div>
                 <div class="col2">
@@ -183,14 +187,6 @@
                 </div>
                 <div class="col2">
                     <input type="text" v-model="lockedTags" data-autocomplete="tag-query"/>
-                </div>
-            </div>
-            <div v-if="allowRatingLock" class="flex-grid border-bottom">
-                <div class="col">
-                    <label class="section-label">Lock Rating</label>
-                </div>
-                <div class="col2">
-                    <label><input type="checkbox" v-model="ratingLocked"/> Lock Rating</label>
                 </div>
             </div>
             <div class="flex-grid border-bottom">
@@ -317,7 +313,6 @@
 
 
       return {
-        safe: window.uploaderSettings.safeSite,
         showErrors: false,
         allowNavigate: false,
         submitting: false,
@@ -409,11 +404,10 @@
         }
       };
 
-      // Import the post rating from a query parameter
       const fillRating = function() {
         if(!params.has("rating")) return;
         const rating = params.get("rating")[0].toLowerCase();
-        if(!/[sqe]/.test(rating)) return;
+        if(!/[qs]/.test(rating)) return;
         self.rating = rating;
       };
 
@@ -424,10 +418,10 @@
       if(params.has('sources')) {
         self.sources = params.get('sources').split(',');
       }
-      if(this.allowRatingLock)
-        fillFieldBool('ratingLocked', 'rating_locked');
       if(this.allowLockedTags)
         fillField('lockedTags', 'locked_tags');
+      if(this.allowRatingLock)
+        fillFieldBool('ratingLocked', 'rating_locked');
       if(this.allowUploadAsPending)
         fillFieldBool("uploadAsPending", "upload_as_pending")
       

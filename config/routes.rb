@@ -154,6 +154,11 @@ Rails.application.routes.draw do
       post :warning
     end
   end
+  resources :comics, only: %i[index show] do
+    member do
+      get :reader
+    end
+  end
   resources :comment_votes, only: %i[index] do
     collection do
       post :lock
@@ -171,6 +176,7 @@ Rails.application.routes.draw do
   end
   resource :dtext_preview, only: %i[create]
   resources :favorites, only: %i[index create destroy]
+  resources :moodboards, only: %i[index]
   resources :forum_posts do
     resource :votes, controller: "forum_post_votes"
     member do
@@ -245,6 +251,10 @@ Rails.application.routes.draw do
     end
   end
   resources :deleted_posts, only: %i[index]
+  resources :fan_arts, only: %i[index new create show]
+  get "/posts/fan-art" => "fan_arts#index", as: "posts_fan_art"
+  get "/posts/fan-art/new" => "fan_arts#new", as: "new_posts_fan_art"
+  post "/posts/fan-art" => "fan_arts#create"
   resources :posts, only: %i[index show update] do
     resources :replacements, only: %i[index new create], controller: "post_replacements"
     resource :votes, controller: "post_votes", only: %i[create destroy]
@@ -387,8 +397,6 @@ Rails.application.routes.draw do
       get :resend_confirmation
     end
   end
-  resources :mascots, only: %i[index new create edit update destroy]
-
   resource :terms_of_use, only: %i[show] do
     collection do
       post :accept
@@ -503,8 +511,6 @@ Rails.application.routes.draw do
   get "/static/toggle_mobile_mode" => "static#disable_mobile_mode", as: "disable_mobile_mode"
   get "/static/theme" => "static#theme", as: "theme"
   get "/static/avoid_posting" => "static#avoid_posting", as: "avoid_posting_static"
-  get "/static/subscribestar" => "static#subscribestar", as: "subscribestar" if Danbooru.config.subscribestar_url.present?
-  get "/static/furid" => "static#furid", as: "furid"
   get "/meta_searches/tags" => "meta_searches#tags", :as => "meta_searches_tags"
   get "status" => "rails/health#show", as: :rails_health_check
 

@@ -9,7 +9,7 @@ module Danbooru
 
     # The name of this Danbooru.
     def app_name
-      "e621"
+      "FluffFox"
     end
 
     def server_name
@@ -21,7 +21,7 @@ module Danbooru
     end
 
     def domain
-      "e621.net"
+      "FluffFox.net"
     end
 
     # Force rating:s on this version of the site.
@@ -52,7 +52,7 @@ module Danbooru
     end
 
     def source_code_url
-      "https://github.com/e621ng/e621ng"
+      "https://github.com/NixtenKame/FluffFoxng"
     end
 
     # Stripped of any special characters.
@@ -383,6 +383,21 @@ module Danbooru
     def discord_secret
     end
 
+    # Public invite URL shown on /static/discord.
+    def discord_invite_url
+      nil
+    end
+
+    # Server ID used to render the Discord widget embed on /static/discord.
+    def discord_widget_server_id
+      nil
+    end
+
+    # Widget theme for Discord embed ("dark" or "light").
+    def discord_widget_theme
+      "dark"
+    end
+
     # Maximum size of an upload. If you change this, you must also change
     # `client_max_body_size` in your nginx.conf.
     def max_file_size
@@ -438,7 +453,7 @@ module Danbooru
         hsts: {
           expires: 1.year,
           preload: true,
-          subdomains: false,
+          subdomains: true,
         },
       }
     end
@@ -485,7 +500,7 @@ module Danbooru
         {
           name: "uploading_guidelines",
           reason: "Does not meet the [[uploading_guidelines|uploading guidelines]]",
-          text: "This post fails to meet the site's standards, be it for artistic worth, image quality, relevancy, or something else.\nKeep in mind that your personal preferences have no bearing on this. If you find the content of a post objectionable, simply [[e621:blacklist|blacklist]] it.",
+          text: "This post fails to meet the site's standards, be it for artistic worth, image quality, relevancy, or something else.\nKeep in mind that your personal preferences have no bearing on this. If you find the content of a post objectionable, simply [[FluffFox:blacklist|blacklist]] it.",
           require_explanation: true,
         },
         {
@@ -653,7 +668,7 @@ module Danbooru
     end
 
     def mail_from_addr
-      "E621.net <noreply@e621.net>"
+      "FluffFox.net <noreply@FluffFox.net>"
     end
 
     # disable this for tests
@@ -707,10 +722,6 @@ module Danbooru
       { zone: nil, revive_id: nil, checksum: nil }
     end
 
-    def subscribestar_url
-      nil
-    end
-
     # Additional video samples will be generated in these dimensions if it makes sense to do so
     # They will be available as additional scale options on applicable posts in the order they appear here
     def video_rescales
@@ -746,6 +757,18 @@ module Danbooru
 
     def enable_visitor_metrics?
       false
+    end
+
+    # Public API key for PostHog browser analytics.
+    # Set with DANBOORU_POSTHOG_API_KEY.
+    def posthog_api_key
+      nil
+    end
+
+    # PostHog ingest host for browser SDK.
+    # Set with DANBOORU_POSTHOG_API_HOST.
+    def posthog_api_host
+      "https://us.i.posthog.com"
     end
 
     def fsc_modal_enabled?

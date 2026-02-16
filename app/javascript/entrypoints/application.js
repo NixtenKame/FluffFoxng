@@ -26,7 +26,6 @@ import Blacklist from "../src/javascripts/blacklists.js";
 import Blip from "../src/javascripts/blips.js";
 import Comment from "../src/javascripts/comments.js";
 import DTextFormatter from "../src/javascripts/dtext_formatter.js";
-import FurID from "../src/javascripts/furid.js";
 import ModAction from "../src/javascripts/mod_actions.js";
 import Note from "../src/javascripts/notes.js";
 import Post from "../src/javascripts/posts.js";
@@ -64,7 +63,6 @@ window.Danbooru = {
   Blip,
   Comment,
   DTextFormatter,
-  FurID,
   ModAction,
   Note,
   Post,

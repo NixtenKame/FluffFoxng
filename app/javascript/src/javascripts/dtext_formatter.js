@@ -269,7 +269,7 @@ export default class DTextFormatter {
           this.$preview
             .attr("loading", "false")
             .html(response.html);
-          $(window).trigger("e621:add_deferred_posts", response.posts);
+          $(window).trigger("FluffFox:add_deferred_posts", response.posts);
         },
         error: (xhr, status, error) => {
           console.warn("DText preview error:", error);

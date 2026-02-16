@@ -26,6 +26,7 @@ nav.navigation {
       height: 3.5rem;
       width: 4rem;
       margin: 0.125rem;
+      border-radius: 15px;
   
       background-repeat: no-repeat;
       background-size: contain;
@@ -208,8 +209,7 @@ nav.navigation {
 
     li {
       a { background: themed("color-section-darken-5"); }
-      &.nav-help-discord,
-      &.nav-help-subscribestar {
+      &.nav-help-discord {
         grid-column: 1 / -1;
       }
 
@@ -462,7 +462,7 @@ nav.navigation, html.nav-toggled nav.navigation {
     }
 
     // Icon collapse
-    // Stage 1: discord and subscribestar buttons
+    // Stage 1: discord button
     .collapse-1 { display: none; }
     @include window-larger-than(77rem) {
       .collapse-1 { display: flex; }
@@ -495,25 +495,24 @@ body.c-static.a-home {
 
       // Center AGAIN to get the dropdown
       // to be where it's supposed to be
-      width: min-content;
       margin: 0 auto;
 
       // Remove padding to prevent a scrollbar
       // at low desktop resolutions
       padding: 0 0 0.5rem;
 
-      #nav-subscribestar, #nav-discord, .nav-secondary, .nav-tools { display: none; }
+      #nav-discord, .nav-secondary, .nav-tools { display: none; }
     }
 
     // Match the background colors
     nav.navigation, menu.nav-logo, menu.nav-secondary, menu.nav-controls {
-      background: unset;
+      background: themed("color-foreground");
     }
     menu.nav-tools {
       background: var(--bg-color);
     }
     menu.nav-controls {
-      position: static;
+      position: relative;
       height: unset;
       padding: 0;
       .avatar-name { background-color: unset; }

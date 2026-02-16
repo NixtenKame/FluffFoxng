@@ -10,7 +10,7 @@
 #
 # This can be removed once the issue is patched in Rails.
 { "Kyiv" => "Europe/Kyiv",
-  "Bad Dragon" => "America/Phoenix", # small easter egg
+  "FluffFox" => "America/Chicago", # small easter egg
   "Rangoon" => "Asia/Yangon",
   "Greenland" => "America/Nuuk", }.each do |name, tzinfo|
   if ActiveSupport::TimeZone::MAPPING[name] == tzinfo

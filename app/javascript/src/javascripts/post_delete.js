@@ -24,7 +24,7 @@ PostDeletion.init = function () {
       });
       input.trigger("input");
     })
-    .on("e621:refresh", (event) => {
+    .on("FluffFox:refresh", (event) => {
       const $button = $(event.target);
       let text = $button.data("text");
       for (const buttonInput of $button.find("input[type=text]"))
@@ -36,14 +36,14 @@ PostDeletion.init = function () {
     .each((index, element) => {
       const $button = $(element);
       $button.find("input[type=text]").on("input", () => {
-        $button.trigger("e621:refresh");
+        $button.trigger("FluffFox:refresh");
       });
     });
-  buttons.trigger("e621:refresh");
+  buttons.trigger("FluffFox:refresh");
 
   input.on("input", () => {
     inputVal = input.val() + "";
-    buttons.trigger("e621:refresh");
+    buttons.trigger("FluffFox:refresh");
   });
 
   $("#delreason-clear").on("click", () => {

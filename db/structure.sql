@@ -686,6 +686,41 @@ ALTER SEQUENCE public.exception_logs_id_seq OWNED BY public.exception_logs.id;
 
 
 --
+-- Name: fan_arts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.fan_arts (
+    id bigint NOT NULL,
+    title character varying NOT NULL,
+    image_url character varying NOT NULL,
+    artist_name character varying NOT NULL,
+    artist_url character varying,
+    featured boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: fan_arts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.fan_arts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: fan_arts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.fan_arts_id_seq OWNED BY public.fan_arts.id;
+
+
+--
 -- Name: favorites; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -995,47 +1030,6 @@ CREATE SEQUENCE public.ip_bans_id_seq
 --
 
 ALTER SEQUENCE public.ip_bans_id_seq OWNED BY public.ip_bans.id;
-
-
---
--- Name: mascots; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.mascots (
-    id bigint NOT NULL,
-    creator_id bigint NOT NULL,
-    display_name character varying NOT NULL,
-    md5 character varying NOT NULL,
-    file_ext character varying NOT NULL,
-    background_color character varying DEFAULT '#012e57'::character varying NOT NULL,
-    artist_url character varying NOT NULL,
-    artist_name character varying NOT NULL,
-    active boolean DEFAULT true NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    available_on character varying[] DEFAULT '{}'::character varying[] NOT NULL,
-    foreground_color character varying DEFAULT '#0f0f0f80'::character varying NOT NULL,
-    is_layered boolean DEFAULT false NOT NULL
-);
-
-
---
--- Name: mascots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.mascots_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: mascots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.mascots_id_seq OWNED BY public.mascots.id;
 
 
 --
@@ -2613,6 +2607,13 @@ ALTER TABLE ONLY public.exception_logs ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: fan_arts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fan_arts ALTER COLUMN id SET DEFAULT nextval('public.fan_arts_id_seq'::regclass);
+
+
+--
 -- Name: favorites id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2673,13 +2674,6 @@ ALTER TABLE ONLY public.help_pages ALTER COLUMN id SET DEFAULT nextval('public.h
 --
 
 ALTER TABLE ONLY public.ip_bans ALTER COLUMN id SET DEFAULT nextval('public.ip_bans_id_seq'::regclass);
-
-
---
--- Name: mascots id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mascots ALTER COLUMN id SET DEFAULT nextval('public.mascots_id_seq'::regclass);
 
 
 --
@@ -3079,6 +3073,14 @@ ALTER TABLE ONLY public.exception_logs
 
 
 --
+-- Name: fan_arts fan_arts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fan_arts
+    ADD CONSTRAINT fan_arts_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: favorites favorites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3148,14 +3150,6 @@ ALTER TABLE ONLY public.help_pages
 
 ALTER TABLE ONLY public.ip_bans
     ADD CONSTRAINT ip_bans_pkey PRIMARY KEY (id);
-
-
---
--- Name: mascots mascots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mascots
-    ADD CONSTRAINT mascots_pkey PRIMARY KEY (id);
 
 
 --
@@ -3849,6 +3843,20 @@ CREATE INDEX index_exception_logs_on_user_id ON public.exception_logs USING btre
 
 
 --
+-- Name: index_fan_arts_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_fan_arts_on_created_at ON public.fan_arts USING btree (created_at);
+
+
+--
+-- Name: index_fan_arts_on_featured; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_fan_arts_on_featured ON public.fan_arts USING btree (featured);
+
+
+--
 -- Name: index_favorites_on_post_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3993,20 +4001,6 @@ CREATE INDEX index_forum_topics_on_updated_at ON public.forum_topics USING btree
 --
 
 CREATE UNIQUE INDEX index_ip_bans_on_ip_addr ON public.ip_bans USING btree (ip_addr);
-
-
---
--- Name: index_mascots_on_creator_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_mascots_on_creator_id ON public.mascots USING btree (creator_id);
-
-
---
--- Name: index_mascots_on_md5; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_mascots_on_md5 ON public.mascots USING btree (md5);
 
 
 --
@@ -4808,14 +4802,6 @@ ALTER TABLE ONLY public.user_feedback
 
 
 --
--- Name: mascots fk_rails_9901e810fa; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mascots
-    ADD CONSTRAINT fk_rails_9901e810fa FOREIGN KEY (creator_id) REFERENCES public.users(id);
-
-
---
 -- Name: favorites fk_rails_a7668ef613; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4894,6 +4880,8 @@ ALTER TABLE ONLY public.staff_notes
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260215054000'),
+('20260214000000'),
 ('20251127000001'),
 ('20251114015027'),
 ('20251113060711'),

@@ -72,8 +72,8 @@ class User < ApplicationRecord
     disable_user_dmails
     enable_compact_uploader
     replacements_beta
-    is_bd_staff
-    is_bd_auditor
+    is_ff_staff
+    is_ff_auditor
   ].freeze
 
   include Danbooru::HasBitFlags
@@ -360,8 +360,8 @@ class User < ApplicationRecord
       end
     end
 
-    def is_bd_staff?
-      is_bd_staff
+    def is_ff_staff?
+      is_ff_staff
     end
 
     def is_staff?
@@ -587,11 +587,11 @@ class User < ApplicationRecord
     end
 
     def can_handle_takedowns?
-      is_bd_staff?
+      is_ff_staff?
     end
 
     def can_edit_avoid_posting_entries?
-      is_bd_staff?
+      is_ff_staff?
     end
 
     def can_undo_post_versions?
@@ -881,7 +881,7 @@ class User < ApplicationRecord
       if email.blank?
         where("FALSE")
       else
-        where("lower(email) = lower(?)", email)
+        where("lower(trim(email)) = lower(trim(?))", email)
       end
     end
 

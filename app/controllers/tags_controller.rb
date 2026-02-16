@@ -2,7 +2,7 @@
 
 class TagsController < ApplicationController
   before_action :member_only, only: %i[edit update preview]
-  before_action :is_bd_staff_only, only: %i[destroy]
+  before_action :is_ff_staff_only, only: %i[destroy]
   respond_to :html, :json
 
   def edit

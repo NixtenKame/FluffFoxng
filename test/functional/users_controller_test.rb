@@ -133,10 +133,10 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
         end
 
         should "reject duplicate emails" do
-          create(:user, email: "valid@e621.net")
+          create(:user, email: "valid@FluffFox.net")
 
           assert_no_difference(-> { User.count }) do
-            post users_path, params: { user: { name: "test2", password: "xxxxxx", password_confirmation: "xxxxxx", email: "VaLid@E621.net" } }
+            post users_path, params: { user: { name: "test2", password: "xxxxxx", password_confirmation: "xxxxxx", email: "VaLid@FLUFFFOX.net" } }
             assert_match(/Email has already been taken/, flash[:notice])
           end
         end

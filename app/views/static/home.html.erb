@@ -1,16 +1,11 @@
 <div id="c-static"><div id="a-home">
-  <%= javascript_tag nonce: true do -%>
-    var mascots = <%= Mascot.active_for_browser.to_json.html_safe %>;
-  <% end -%>
-
-  <section class="mascot-section"></section>
 
   <section class="home-section home-search-section">
     <%= form_tag(posts_path, method: "get", id: "home-search-form") do %>
 
       <!-- Primary Searchbar -->
       <div class="home-search">
-        <%= text_field_tag("tags", "", autofocus: "autofocus", placeholder: "Search posts by tag", data: { hotkey: "search", autocomplete: "tag-query" }) %>
+        <%= text_field_tag("tags", "", autofocus: "autofocus", placeholder: "Search posts by tag :3", data: { hotkey: "search", autocomplete: "tag-query" }) %>
         <%= tag.button(svg_icon(:search), type: "submit") %>
       </div>
 
@@ -28,28 +23,55 @@
     <% end %>
   </section>
 
+  <section class="home-section home-pulse-section" aria-live="polite">
+    <div class="home-pulse-header">
+      <span class="home-pulse-dot" id="home-pulse-dot"></span>
+      <strong id="home-pulse-state">Fox Pulse</strong>
+    </div>
+    <p class="home-pulse-message" id="home-pulse-message">Calibrating vibes...</p>
+    <button type="button" class="home-pulse-button" id="home-pulse-button">Refresh Vibe</button>
+  </section>
+
+  <section class="home-section home-echo-section" id="home-echo-section" hidden>
+    <div class="home-echo-header">
+      <%= svg_icon(:sparkles) %>
+      <strong>Search Echo Trail</strong>
+    </div>
+    <p class="home-echo-description">Your recent searches stay here for quick relaunch.</p>
+    <div class="home-echo-list" id="home-echo-list"></div>
+    <button type="button" class="home-echo-clear" id="home-echo-clear">Clear Trail</button>
+  </section>
+
+  <% if @comic_spotlight.present? %>
+    <% spotlight_cover = @comic_spotlight.cover_post %>
+    <section class="home-section home-comic-spotlight-section">
+      <div class="home-comic-spotlight-header">
+        <%= svg_icon(:sparkles) %>
+        <strong>Daily Comic Spotlight</strong>
+      </div>
+      <h3><%= link_to @comic_spotlight.pretty_name, comic_path(@comic_spotlight) %></h3>
+      <p class="home-comic-spotlight-meta"><%= pluralize(@comic_spotlight.post_count, "page") %> • Curated daily</p>
+      <%= link_to reader_comic_path(@comic_spotlight), class: "home-comic-spotlight-cover" do %>
+        <% if spotlight_cover.present? %>
+          <%= image_tag spotlight_cover.preview_file_url, alt: @comic_spotlight.pretty_name %>
+        <% else %>
+          <span class="home-comic-spotlight-placeholder">No cover yet</span>
+        <% end %>
+      <% end %>
+      <div class="home-comic-spotlight-actions">
+        <%= link_to "Read Now", reader_comic_path(@comic_spotlight), class: "st-button" %>
+        <%= link_to "Browse Comics", comics_path, class: "st-button" %>
+      </div>
+    </section>
+  <% end %>
+
   <% if news_update = NewsUpdate.recent %>
     <section class="home-section">
-      <div class="news-excerpt dtext-container"><%= format_text(news_update.message.lines.first, inline: true) %></div>
+      <div class="news-excerpt dtext-container"><%= format_text(news_update.message, inline: true) %></div>
       <div class="previous-news-link"><%= link_to "Click here for previous news", news_updates_path %></div>
     </section>
   <% end %>
 
-  <% if Danbooru.config.subscribestar_url.present? %>
-    <section class="home-section home-subscribestar">
-      <a href="<%= subscribestar_path %>">
-        <div>Enjoying e621? Consider <span class="fake-link">supporting us</span>.</div>
-        <%= image_tag("ss_logotype.png", width: 256) %>
-      </a>
-    </section>
-  <% end %>
-
-  <section class="home-footer-top">
-    <div id="mascot-artist">Mascot by</div>
-    <a href="#" id="mascot-swap">
-      <span>Swap Mascot</span>
-    </a>
-  </section>
   <section class="home-footer-bottom">
     <div class="home-footer-counter">
       <% Post.fast_count.to_s.each_char do |x| %>
@@ -61,7 +83,6 @@
       <span class="separator"></span>
       <%= link_to "Contact Us", contact_path %>
       <span class="separator"></span>
-      <%= link_to "Advertising", help_page_path(id: "advertising") %>
       <br />
       <%= link_to "Terms of Use", terms_of_use_path, rel: "terms-of-service" %>
       <span class="separator"></span>
@@ -77,7 +98,7 @@
   <%= tag.meta(property: "og:title", content: Danbooru.config.app_name) %>
     <%= tag.meta(property: "og:description", content: Danbooru.config.description) %>
   <%= tag.meta(property: "og:url", content: root_url(host: Danbooru.config.hostname, protocol: "https")) %>
-  <%= tag.meta(property: "og:image", content: vite_asset_url("images/logo/default.svg")) %>
+  <%= tag.meta(property: "og:image", content: vite_asset_url("images/logo/default.png")) %>
   <%= tag.meta(name: "canonical", content: root_url(host: Danbooru.config.hostname, protocol: "https")) %>
 
   <meta property="og:type" content="website">
@@ -86,5 +107,5 @@
   <meta name="twitter:card" content="summary">
   <%= tag.meta(name: "twitter:title", content: Danbooru.config.app_name) %>
   <%= tag.meta(name: "twitter:description", content: Danbooru.config.description) %>
-  <%= tag.meta(name: "twitter:image", content: vite_asset_url("images/logo/default.svg")) %>
+  <%= tag.meta(name: "twitter:image", content: vite_asset_url("images/logo/default.png")) %>
 <%- end %>

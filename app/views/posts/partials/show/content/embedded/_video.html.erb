@@ -1,6 +1,12 @@
 <%= tag.video(id: "image", class: post.display_class_for, loop: "true", controls: "controls") do %>
   <% post.initial_video_urls.each do |video| %>
-    <%= tag.source(src: video[:url], type: video[:codec]) %>
+    <% fallback_url = begin
+      uri = URI.parse(video[:url])
+      uri.host.present? ? "#{uri.path}#{uri.query.present? ? "?#{uri.query}" : ""}" : video[:url]
+    rescue URI::InvalidURIError
+      video[:url]
+    end %>
+    <%= tag.source(src: video[:url], type: video[:codec], data: { fallback_src: fallback_url }) %>
   <% end %>
   Playback not available in your browser.
 <% end %>
@@ -10,6 +16,18 @@
     var videoEl = document.getElementById('image');
     var savedVolume = parseFloat(localStorage.getItem('video_volume') || '1.0');
     if (videoEl) {
+      videoEl.addEventListener('error', function () {
+        if (videoEl.dataset.fallbackApplied === '1') return;
+        var sources = videoEl.querySelectorAll('source[data-fallback-src]');
+        if (!sources.length) return;
+        videoEl.dataset.fallbackApplied = '1';
+        sources.forEach(function (source) {
+          if (source.dataset.fallbackSrc) {
+            source.src = source.dataset.fallbackSrc;
+          }
+        });
+        videoEl.load();
+      }, { once: true });
       videoEl.volume = savedVolume;
       videoEl.addEventListener('volumechange', function (evt) {
       if (evt.target) {

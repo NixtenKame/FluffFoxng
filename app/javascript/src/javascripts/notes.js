@@ -949,7 +949,7 @@ class NoteEditor {
 
           note.$body.html(response.html);
           if (response.posts)
-            $(window).trigger("e621:add_deferred_posts", response.posts);
+            $(window).trigger("FluffFox:add_deferred_posts", response.posts);
           note.adjustBodyPosition();
         },
         error: () => {
@@ -1028,7 +1028,7 @@ class NoteEditor {
         if (note.hasBackup) delete note.backupData;
 
         if (data.posts) {
-          $(window).trigger("e621:add_deferred_posts", data.posts);
+          $(window).trigger("FluffFox:add_deferred_posts", data.posts);
         }
 
         this.close();

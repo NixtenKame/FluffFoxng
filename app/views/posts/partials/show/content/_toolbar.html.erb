@@ -82,6 +82,12 @@
 <% end %>
 
 <% if @post.visible? %>
+  <div class="ptbr-focus">
+    <button class="st-button kinetic ptbr-focus-button" type="button" aria-pressed="false">
+      Focus Mode
+    </button>
+  </div>
+
   <div class="ptbr-fullscreen">
     <a
       href="<%= @post.file_url %>"
@@ -98,6 +104,8 @@
     </button>
     <div class="ptbr-etc-menu hidden">
       <a href="<%= @post.file_url %>" class="st-button ptbr-etc-fullscreen">Fullscreen</a>
+      <button class="st-button ptbr-copy-link" type="button" data-copy-value="<%= "#{request.base_url}#{post_path(@post)}" %>" data-copy-label="Post link">Copy Post Link</button>
+      <button class="st-button ptbr-copy-file" type="button" data-copy-value="<%= @post.file_url %>" data-copy-label="File URL">Copy File URL</button>
       <a
         href="<%= @post.file_url %>"
         class="st-button ptbr-etc-download"

@@ -3,7 +3,7 @@
 module Admin
   class DmailsController < ApplicationController
     respond_to :html, :json
-    before_action :is_bd_auditor_only
+    before_action :is_ff_auditor_only
 
     def index
       @user = User.find(params[:user_id])

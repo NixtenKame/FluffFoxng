@@ -1,11 +1,24 @@
 <div id="c-static"><div id="a-discord">
-  <h1>Discord Server</h1>
-  <div class="dtext-container">
-    <%= format_text(@page.body, allow_color: true) %>
-  </div>
-  <%= form_tag(discord_post_path) do %>
-    <%= submit_tag "Join the Server", class: "st-button submit" %>
-  <% end %>
+  <% widget_server_id = Danbooru.config.discord_widget_server_id %>
+  <% widget_theme = Danbooru.config.discord_widget_theme.presence || "dark" %>
+  <% invite_url = Danbooru.config.discord_invite_url %>
+
+  <main>
+    <div class="discord-container">
+      <h2>Discord Links</h2>
+
+      <% if widget_server_id.present? %>
+        <iframe src="https://discord.com/widget?id=<%= CGI.escape(widget_server_id.to_s) %>&amp;theme=<%= CGI.escape(widget_theme.to_s) %>" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+        <br>
+      <% end %>
+
+      <% if invite_url.present? %>
+        <a class="discord-button" href="<%= invite_url %>">Discord</a>
+      <% else %>
+        <p>Discord invite link is not configured.</p>
+      <% end %>
+    </div>
+  </main>
 </div></div>
 
 <% content_for(:secondary_links) do %>

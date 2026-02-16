@@ -1,0 +1,37 @@
+<div id="c-comics">
+  <div id="a-index">
+    <h1>Comics</h1>
+    <p class="comics-intro">Read post series in a dedicated chapter flow.</p>
+
+    <% if @comics.any? %>
+      <div class="comics-grid">
+        <% @comics.each do |comic| %>
+          <% cover = comic.cover_post %>
+          <article class="comic-card">
+            <%= link_to reader_comic_path(comic), class: "comic-card-cover" do %>
+              <% if cover.present? %>
+                <%= image_tag cover.preview_file_url, alt: comic.pretty_name %>
+              <% else %>
+                <div class="comic-card-cover-placeholder">No cover</div>
+              <% end %>
+            <% end %>
+            <div class="comic-card-meta">
+              <h2><%= link_to comic.pretty_name, comic_path(comic) %></h2>
+              <p><%= pluralize(comic.post_count, "page") %></p>
+              <%= link_to "Start Reading", reader_comic_path(comic), class: "st-button" %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+      <%= render PaginatorComponent.new(records: @comics) %>
+    <% else %>
+      <p>No comics yet.</p>
+    <% end %>
+  </div>
+</div>
+
+<%= render "secondary_links" %>
+
+<% content_for(:page_title) do %>
+  Comics
+<% end %>

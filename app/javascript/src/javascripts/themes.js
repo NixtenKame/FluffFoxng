@@ -18,10 +18,10 @@ for (const [label, settings] of Object.entries(Theme.Values)) {
         // attribute values that don't exist on the body.
         LStorage[label][one] = value;
         // If we're on the static homepage, don't apply the main or extra theme
-        // attributes; leave those unset so the default (hexagon) is used.
+        // attributes; leave those unset so the default (light) is used.
         if ($("body").is(".c-static.a-home") && (one === "Main" || one === "Extra")) return;
 
-        // Homepage fallback to hexagon is handled elsewhere; just write the
+        // Homepage fallback to light is handled elsewhere; just write the
         // attribute normally for other pages/keys.
         $("body").attr("data-th-" + one.toLowerCase(), value);
       },
@@ -48,20 +48,9 @@ Theme.initialize_selector = function () {
   }
 };
 
-Theme.initialize_buttons = function () {
-  if (!LStorage.isAvailable()) return;
-
-  $("#mascot-value").text(LStorage.Site.Mascot);
-  $("#mascot-reset").on("click", () => {
-    LStorage.Site.Mascot = 0;
-    $("#mascot-value").text(LStorage.Site.Mascot);
-  });
-};
-
 $(() => {
   if (!Page.matches("static", "theme")) return;
   Theme.initialize_selector();
-  Theme.initialize_buttons();
 });
 
 export default Theme;

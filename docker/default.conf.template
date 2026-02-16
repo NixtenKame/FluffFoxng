@@ -5,6 +5,12 @@ server {
   index index.html;
   access_log off;
   client_max_body_size 100m;
+  set_real_ip_from 172.16.0.0/12;
+  real_ip_header X-Forwarded-For;
+  real_ip_recursive on;
+
+  # Redirect to HTTPS preserving URL
+  error_page 497 https://$host$request_uri;
 
   location /data {
     expires max;
@@ -33,7 +39,13 @@ server {
     if ($secure_link = "0") {
       return 403;
     }
-}
+  }
+
+  location /db_export/ {
+    autoindex on;
+    autoindex_exact_size off;
+    autoindex_localtime on;
+  }
 
   location /tags/autocomplete.json {
     proxy_pass http://autocompleted:8118/;
@@ -43,7 +55,7 @@ server {
   location @app_server {
     proxy_pass http://app_server;
     proxy_redirect off;
-    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Real-IP $realip_remote_addr;
     proxy_set_header Host $host:$server_port;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Port $server_port;
@@ -59,5 +71,5 @@ server {
 }
 
 upstream app_server {
-  server e621:9000;
+  server FluffFox:9000;
 }

@@ -5,8 +5,8 @@ require "test_helper"
 class AvoidPostingTest < ActiveSupport::TestCase
   context "An avoid posting entry" do
     setup do
-      @bd_user = create(:bd_staff_user)
-      CurrentUser.user = @bd_user
+      @ff_user = create(:ff_staff_user)
+      CurrentUser.user = @ff_user
       @avoid_posting = create(:avoid_posting)
     end
 

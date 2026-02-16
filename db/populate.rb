@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # This script populates the database with random data for testing or development purposes.
-# Usage: docker exec -it e621ng-e621-1 /app/bin/populate
+# Usage: docker exec -it flufffoxng-FluffFox-1 /app/bin/populate
 
 require "faker"
 
@@ -15,7 +15,6 @@ presets = {
   postvotes: ENV.fetch("POSTVOTES", 0).to_i,
   commentvotes: ENV.fetch("COMVOTES", 0).to_i,
   pools: ENV.fetch("POOLS", 0).to_i,
-  furids: ENV.fetch("FURIDS", 0).to_i,
   dmails: ENV.fetch("DM", 0).to_i,
 }
 if presets.values.sum == 0
@@ -29,7 +28,6 @@ if presets.values.sum == 0
     postvotes: 100,
     commentvotes: 100,
     pools: 100,
-    furids: 0,
     dmails: 0,
   }
 end
@@ -42,16 +40,15 @@ FORUMS    = presets[:forums]
 POSTVOTES = presets[:postvotes]
 COMVOTES  = presets[:commentvotes]
 POOLS     = presets[:pools]
-FURIDS    = presets[:furids]
 DMAILS    = presets[:dmails]
 
 DISTRIBUTION = ENV.fetch("DISTRIBUTION", 10).to_i
-DEFAULT_PASSWORD = ENV.fetch("PASSWORD", "hexerade")
+DEFAULT_PASSWORD = ENV.fetch("PASSWORD", "fluffy")
 
 CurrentUser.user = User.system
 
 def api_request(path)
-  response = Faraday.get("https://e621.net#{path}", nil, user_agent: "e621ng/seeding")
+  response = Faraday.get("https://nixten.ddns.net#{path}", nil, user_agent: "FluffFox/seeding")
   JSON.parse(response.body)
 end
 
@@ -87,7 +84,7 @@ def populate_users(number, password: DEFAULT_PASSWORD)
         name: user_name,
         password_hash: "", # Required NOT NULL, but should be empty for bcrypt
         bcrypt_password_hash: encrypted_password,
-        email: "#{user_name}@e621.local",
+        email: "#{user_name}@flufffox.local",
         created_at: created_at,
         updated_at: created_at,
         last_ip_addr: "127.0.0.1",
@@ -529,8 +526,6 @@ CurrentUser.ip_addr = "127.0.0.1"
 users = populate_users(USERS)
 posts = populate_posts(POSTS, users: users)
 fill_avatars(users, posts)
-
-populate_posts(FURIDS, search: "furid_(e621)") if FURIDS
 
 comments = populate_comments(COMMENTS, users: users)
 populate_favorites(FAVORITES, users: users)

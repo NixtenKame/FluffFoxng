@@ -215,8 +215,6 @@ PostModeMenu.click = function (e) {
     Post.update(post_id, {"post[rating]": "q"});
   } else if (s === "rating-s") {
     Post.update(post_id, {"post[rating]": "s"});
-  } else if (s === "rating-e") {
-    Post.update(post_id, {"post[rating]": "e"});
   } else if (s === "lock-rating") {
     Post.update(post_id, {"post[is_rating_locked]": "1"});
   } else if (s === "lock-note") {

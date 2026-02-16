@@ -1,0 +1,53 @@
+<div id="c-moodboards">
+  <div id="a-index">
+    <h1>Moodboard Studio</h1>
+    <p class="moodboard-intro">Generate a visual board from tags and instantly remix it.</p>
+
+    <%= form_tag(moodboards_path, method: "get", class: "moodboard-form") do %>
+      <div class="moodboard-form-row">
+        <%= label_tag :tags, "Tags" %>
+        <%= text_field_tag :tags, @tags, placeholder: "e.g. neon city night rain", required: true %>
+      </div>
+
+      <div class="moodboard-form-row moodboard-form-inline">
+        <div>
+          <%= label_tag :size, "Post Count" %>
+          <%= number_field_tag :size, @size, min: 6, max: 60 %>
+        </div>
+        <div>
+          <%= label_tag :layout, "Layout" %>
+          <%= select_tag :layout, options_for_select([["Grid", "grid"], ["Cinematic", "cinematic"], ["Collage", "collage"]], @layout) %>
+        </div>
+        <%= hidden_field_tag :nonce, @nonce %>
+      </div>
+
+      <div class="moodboard-form-actions">
+        <%= submit_tag "Build Moodboard", class: "st-button" %>
+        <% if @tags.present? %>
+          <%= link_to "Remix", moodboards_path(tags: @tags, size: @size, layout: @layout, nonce: SecureRandom.hex(3)), class: "st-button" %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @tags.present? %>
+      <h2 class="moodboard-heading">Board: <%= @tags %></h2>
+      <% if @posts.any? %>
+        <div class="moodboard-grid moodboard-layout-<%= @layout %>">
+          <% @posts.each do |post| %>
+            <%= link_to post_path(post), class: "moodboard-tile", title: "Open post ##{post.id}" do %>
+              <%= image_tag(post.preview_file_url, alt: "Post ##{post.id}") %>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <p>No results found for those tags.</p>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<%= render "secondary_links" %>
+
+<% content_for(:page_title) do %>
+  Moodboard Studio
+<% end %>

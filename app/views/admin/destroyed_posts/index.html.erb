@@ -18,7 +18,7 @@
         <th width="12%">Uploader</th>
         <th width="20%">MD5</th>
         <th>Reason</th>
-        <% if CurrentUser.user.is_bd_staff? %>
+        <% if CurrentUser.user.is_ff_staff? %>
           <th width="10%"></th>
         <% end %>
       </tr>
@@ -46,7 +46,7 @@
           <td>
             <%= destroyed_post.reason %>
           </td>
-          <% if CurrentUser.user.is_bd_staff? %>
+          <% if CurrentUser.user.is_ff_staff? %>
             <td>
               <% if destroyed_post.notify %>
                 <%= link_to("Disable Notifications", admin_destroyed_post_path(id: destroyed_post.post_id, destroyed_post: { notify: "false" }), method: :put) %>

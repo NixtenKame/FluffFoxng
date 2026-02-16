@@ -39,8 +39,6 @@ gem "view_component"
 gem "diffy"
 gem "rugged"
 
-gem "datadog", require: "datadog/auto_instrument"
-
 gem "opensearch-ruby"
 
 gem "mailgun-ruby"

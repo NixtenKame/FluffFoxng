@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PostSet < ApplicationRecord
-  array_attribute :post_ids, parse: %r{(?:https://(?:e621|e926)\.net/posts/)?(\d+)}i, cast: :to_i
+  array_attribute :post_ids, parse: %r{(?:https://nixten\.ddns\.net/posts/)?(\d+)}i, cast: :to_i
 
   has_many :post_set_maintainers, dependent: :destroy do
     def in_cooldown(user)

@@ -2,7 +2,7 @@
 
 module Admin
   class ReownerController < ApplicationController
-    before_action :is_bd_staff_only
+    before_action :is_ff_staff_only
 
     def new
     end

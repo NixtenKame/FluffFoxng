@@ -1,0 +1,26 @@
+<div id="c-comics">
+  <div id="a-show">
+    <h1><%= @comic.pretty_name %></h1>
+    <p class="comics-subtitle"><%= pluralize(@comic.post_count, "page") %> in this comic</p>
+    <p><%= link_to "Open Reader", reader_comic_path(@comic), class: "st-button" %></p>
+
+    <% if @comic.description.present? %>
+      <div class="dtext-container comic-description"><%= format_text(@comic.description) %></div>
+    <% end %>
+
+    <section class="posts-container">
+      <% if @posts.none? %>
+        <%= render "posts/blank" %>
+      <% else %>
+        <%= render(PostThumbnailComponent.with_collection(@posts, pool_id: @comic.id, show_deleted: true)) %>
+      <% end %>
+    </section>
+    <%= render PaginatorComponent.new(records: @posts) %>
+  </div>
+</div>
+
+<%= render "secondary_links" %>
+
+<% content_for(:page_title) do %>
+  Comic - <%= @comic.pretty_name %>
+<% end %>

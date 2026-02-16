@@ -2,36 +2,28 @@
 
 class StaticController < ApplicationController
   def privacy
-    @page_name = "e621:privacy_policy"
+    @page_name = "FluffFox:privacy_policy"
     @page = format_wiki_page(@page_name)
   end
 
   def code_of_conduct
-    @page_name = "e621:rules"
+    @page_name = "FluffFox:rules"
     @page = format_wiki_page(@page_name)
   end
 
   def contact
-    @page_name = "e621:contact"
+    @page_name = "FluffFox:contact"
     @page = format_wiki_page(@page_name)
   end
 
   def takedown
-    @page_name = "e621:takedown"
+    @page_name = "FluffFox:takedown"
     @page = format_wiki_page(@page_name)
   end
 
   def avoid_posting
-    @page_name = "e621:avoid_posting_notice"
+    @page_name = "FluffFox:avoid_posting_notice"
     @page = format_wiki_page(@page_name)
-  end
-
-  def subscribestar
-    @page_name = "e621:subscribestar"
-    @page = format_wiki_page(@page_name)
-  end
-
-  def furid
   end
 
   def not_found
@@ -46,7 +38,12 @@ class StaticController < ApplicationController
   end
 
   def home
+    @comic_spotlight = daily_comic_spotlight
     render layout: "blank"
+  end
+
+  def fan_art
+    @fan_artworks = FanArt.ordered
   end
 
   def theme
@@ -77,7 +74,7 @@ class StaticController < ApplicationController
 
       redirect_to(Danbooru.config.discord_site + user_hash, allow_other_host: true)
     else
-      @page_name = "e621:discord"
+      @page_name = "FluffFox:discord"
       @page = format_wiki_page(@page_name)
     end
   end
@@ -129,6 +126,9 @@ class StaticController < ApplicationController
     add_link[:posts, "Changes", post_versions_path]
     add_link[:posts, "Similar Images Search", iqdb_queries_path]
     add_link[:posts, "Deleted Index", deleted_posts_path]
+    add_link[:posts, "Fan Art", posts_fan_art_path]
+    add_link[:posts, "Comics", comics_path]
+    add_link[:posts, "Moodboards", moodboards_path]
 
     add_link[:post_events, "Listing", post_events_path]
     add_link[:post_events, "Tag Changes", post_versions_path]
@@ -137,8 +137,6 @@ class StaticController < ApplicationController
     add_link[:post_events, "Replacements", post_replacements_path]
 
     add_link[:tools, "News Updates", news_updates_path]
-    add_link[:tools, "Mascots", mascots_path]
-    add_link[:tools, "FurID", furid_path]
     add_link[:tools, "Source Code", Danbooru.config.source_code_url]
     add_link[:tools, "Keyboard Shortcuts", keyboard_shortcuts_path]
     add_link[:tools, "API Documentation", help_page_path(id: "api")]
@@ -184,7 +182,6 @@ class StaticController < ApplicationController
     add_link[:staff, "Takedowns", takedowns_path]
     add_link[:staff, "Tickets", tickets_path]
 
-    add_link[:tools, "Subscribestar", Danbooru.config.subscribestar_url] if Danbooru.config.subscribestar_url.present?
     add_link[:tools, "DB Export", Danbooru.config.db_export_path] if Danbooru.config.db_export_path.present?
     add_link[:tools, "Discord", discord_post_path] if CurrentUser.can_discord?
     add_link[:users, "Signup", new_user_path] if CurrentUser.is_anonymous?
@@ -224,7 +221,7 @@ class StaticController < ApplicationController
       add_link[:admin, "SideKiq", sidekiq_path]
     end
 
-    add_link[:admin, "Reowner", new_admin_reowner_path] if CurrentUser.is_bd_staff?
+    add_link[:admin, "Reowner", new_admin_reowner_path] if CurrentUser.is_ff_staff?
     add_link[:users, "Staff Notes", staff_notes_path] if CurrentUser.can_view_staff_notes?
 
     add_link[:posts, "Help", help_page_path(id: "posts")]
@@ -247,5 +244,15 @@ class StaticController < ApplicationController
     wiki = WikiPage.titled(name)
     return WikiPage.new(body: "Wiki page \"#{name}\" not found.") if wiki.blank?
     wiki
+  end
+
+  def daily_comic_spotlight
+    series_ids = Cache.fetch("daily_comic_spotlight_series_ids", expires_in: 12.hours) do
+      Pool.where(category: "series", is_active: true).pluck(:id)
+    end
+    return nil if series_ids.blank?
+
+    seed = Date.current.yday + Date.current.year
+    Pool.find_by(id: series_ids[seed % series_ids.length])
   end
 end

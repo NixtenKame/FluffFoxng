@@ -30,11 +30,11 @@ module UsersHelper
     end
   end
 
-  def user_bd_staff_badge(user)
-    return unless user.is_bd_staff?
+  def user_ff_staff_badge(user)
+    return unless user.is_ff_staff?
 
     tag.span(class: "level-badge") do
-      "BD STAFF"
+      "FF STAFF"
     end
   end
 

@@ -1,0 +1,44 @@
+.install-shortcut-prompt {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 45%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 2500;
+  padding: 1rem;
+}
+
+.install-shortcut-card {
+  width: min(34rem, 95vw);
+  background: themed("color-section");
+  border: 1px solid themed("color-section-lighten-10");
+  border-radius: 0.6rem;
+  padding: 0.9rem;
+  box-shadow: 0 0.45rem 1.25rem rgb(0 0 0 / 35%);
+}
+
+.install-shortcut-card h3 {
+  margin: 0 0 0.45rem;
+}
+
+.install-shortcut-card p {
+  margin: 0;
+}
+
+.install-shortcut-ios-help {
+  margin-top: 0.55rem;
+  font-size: 0.9rem;
+  opacity: 0.95;
+}
+
+.install-shortcut-actions {
+  margin-top: 0.8rem;
+  display: flex;
+  gap: 0.45rem;
+}
+
+.install-shortcut-actions .st-button {
+  min-width: 6.8rem;
+}
+

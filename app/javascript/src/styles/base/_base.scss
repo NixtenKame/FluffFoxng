@@ -4,6 +4,8 @@ body {
   background-color: $hexagon-color-background;
   background-color: themed("color-background");
   background-image: themed("image-background");
+  background-size: cover;
+  background-attachment: fixed;
   font-family: $base_font_family;
   font-size: $font-size;
   line-height: 1.25em;
@@ -100,4 +102,31 @@ table tfoot {
   color: themed("color-text-muted");
   font-style: italic;
   font-size: 80%;
+}
+
+.discord-container {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.discord-button {
+  display: inline-block;
+  padding: 4px 12px;
+  margin: 20px;
+  border-radius: 8px;
+  text-align: center;
+  background-color: #5865f2;
+  color: white!important;
+  text-decoration: none;
+  min-height: 32px;
+  box-sizing: border-box;
+  line-height: 1.6;
+  font-family: 'Arial',sans-serif;
+  font-size: large;
+}
+.discord-button:hover {
+  background-color: #4654C0;
+  color: white;
 }

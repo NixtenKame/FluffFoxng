@@ -6,6 +6,7 @@ $bloodlust-color-text-muted: #999999;
 $bloodlust-color-foreground: #222222;
 
 body[data-th-main="bloodlust"] {
+  --image-background:             none;
   // Layout Colors
   --color-background:             #{$bloodlust-color-background};            // Main background (dark blue, large hexagons)
   --color-foreground:             #{$bloodlust-color-foreground};            // Foreground (lighter blue, small hexagons)

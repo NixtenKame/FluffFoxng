@@ -8,7 +8,7 @@ class TagCorrectionsController < ApplicationController
     @from_wiki = request.referer.try(:include?, "wiki_pages") || false
     @correction = TagCorrection.new(params[:tag_id])
 
-    if CurrentUser.is_bd_staff?
+    if CurrentUser.is_ff_staff?
       @tag = Tag.find(params[:tag_id])
 
       @true_count = Post.tag_match("#{@tag.name} status:any", resolve_aliases: false).count_only

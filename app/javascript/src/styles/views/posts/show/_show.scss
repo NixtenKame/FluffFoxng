@@ -22,6 +22,30 @@ body.c-posts.a-show-seq {
   @import "partials/notes";
 }
 
+body.c-posts.a-show.post-focus-mode,
+body.c-posts.a-show-seq.post-focus-mode {
+  #c-posts #a-show .post-index > .search,
+  #c-posts #a-show .post-index > .sidebar,
+  #c-posts #a-show #nav-links-top,
+  #c-posts #a-show #nav-links-bottom,
+  #c-posts #a-show .bottom-notices,
+  #c-posts #a-show #post-description-container,
+  #c-posts #a-show #post-sections,
+  #c-posts #a-show #comments,
+  #c-posts #a-show .mobile-only {
+    display: none;
+  }
+
+  #c-posts #a-show .post-index > .content {
+    max-width: 100%;
+  }
+
+  #c-posts #a-show #image-and-nav {
+    margin: 0 auto;
+    max-width: min(95vw, 1700px);
+  }
+}
+
 // Due to the show-seq page having a different action,
 // using the body classes is not possible here
 #c-posts #a-show {

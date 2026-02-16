@@ -152,6 +152,10 @@
   font-family: "Roboto", Verdana, Geneva, sans-serif;
 }
 
+#ptbr-wrapper .ptbr-focus-button {
+  font-family: "Roboto", Verdana, Geneva, sans-serif;
+}
+
 
 // Resize selector
 #ptbr-wrapper .ptbr-resize select {
@@ -220,6 +224,10 @@
 
   .st-button {
     font-family: "Roboto", Verdana, Geneva, sans-serif;
+    min-height: 2rem;
+    box-sizing: border-box;
+    align-items: center;
+    white-space: nowrap;
   }
 
   // Download button
@@ -251,6 +259,7 @@
 
   .ptbr-notes-button.hidden { display: none; }
   .ptbr-etc-pool, .ptbr-etc-set { min-width: 6.5rem; }
+  .ptbr-copy-link, .ptbr-copy-file { min-width: 7.75rem; }
 }
 
 

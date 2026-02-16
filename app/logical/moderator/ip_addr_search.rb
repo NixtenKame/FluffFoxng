@@ -15,8 +15,8 @@ module Moderator
       elsif params[:user_name].present?
         search_by_user_name(params[:user_name].split(",").map(&:strip), with_history)
       elsif params[:ip_addr].present?
-        ip_addrs = params[:ip_addr].split(",").map(&:strip)
-        if params[:add_ip_mask].to_s.truthy? && ip_addrs.count == 1 && ip_addrs[0].exclude?("/")
+        ip_addrs = params[:ip_addr].split(",").map(&:strip).reject(&:blank?)
+        if params[:add_ip_mask].to_s.truthy? && ip_addrs.count == 1 && ip_addrs[0] != "*" && ip_addrs[0].exclude?("/")
           mask = IPAddr.new(ip_addrs[0]).ipv4? ? 24 : 64
           ip_addrs[0] = "#{ip_addrs[0]}/#{mask}"
         end
@@ -81,7 +81,9 @@ module Moderator
     end
 
     def add_by_ip_addr(target, name, ips, klass, ip_field, id_field)
-      if ips.size == 1
+      if ips.include?("*")
+        target.merge!({ name => klass.where.not(ip_field => nil).group(id_field).count })
+      elsif ips.size == 1
         target.merge!({ name => klass.where("#{ip_field} <<= ?", ips[0]).group(id_field).count })
       else
         target.merge!({ name => klass.where(ip_field => ips).group(id_field).count })

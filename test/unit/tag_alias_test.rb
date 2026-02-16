@@ -112,9 +112,9 @@ class TagAliasTest < ActiveSupport::TestCase
     context "#approvable_by?" do
       setup do
         @mod = create(:moderator_user)
-        @bd = create(:bd_staff_user)
+        @ff = create(:ff_staff_user)
         @ta = as(@user) { create(:tag_alias, status: "pending") }
-        @dnp = as(@bd) { create(:avoid_posting) }
+        @dnp = as(@ff) { create(:avoid_posting) }
         @ta2 = as(@user) { create(:tag_alias, antecedent_name: @dnp.artist_name, consequent_name: "ccc", status: "pending") }
         @ta3 = as(@user) { create(:tag_alias, antecedent_name: "ddd", consequent_name: @dnp.artist_name, status: "pending") }
       end
@@ -136,9 +136,9 @@ class TagAliasTest < ActiveSupport::TestCase
         assert_equal(false, @ta3.approvable_by?(@admin))
       end
 
-      should "allow bd staff" do
-        assert_equal(true, @ta2.approvable_by?(@bd))
-        assert_equal(true, @ta3.approvable_by?(@bd))
+      should "allow ff staff" do
+        assert_equal(true, @ta2.approvable_by?(@ff))
+        assert_equal(true, @ta3.approvable_by?(@ff))
       end
     end
 

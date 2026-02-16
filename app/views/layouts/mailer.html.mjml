@@ -2,7 +2,7 @@
   <mj-head>
     <mj-attributes>
       <mj-class name="container" background-color="#152f56" border-radius="4px" padding="16px 8px 8px 8px" />
-      <mj-class name="hex-bg" background-url="<%= image_url("mailers/hex.png") %>" background-repeat="repeat-x" />
+      <mj-class name="hex-bg" background-url="<%= image_url("mailers/paw.png") %>" background-repeat="repeat-x" />
 
       <mj-class name="text" color="#ffffff" font-size="16px" line-height="20px" />
       <mj-class name="hint" color="#bbbbbb" font-size="12px" line-height="16px" />

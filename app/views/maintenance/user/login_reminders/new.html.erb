@@ -12,9 +12,21 @@
   <% end %>
   
   <section class="session_info">
-    <p>If you supplied an email address when signing up, <%= Danbooru.config.app_name %> can email you your login information. Password details will not be provided and will not be changed.</p>
-    <p>If you didn't supply a valid email address, you are out of luck.</p>
+    <p>Enter the email used at signup and this page will show the matching username(s).</p>
+    <p>Password details are not provided and are not changed.</p>
   </section>
+
+  <% if @matched_usernames.present? %>
+    <section class="session_info">
+      <h4>Username Reminder</h4>
+      <p>Accounts using that email:</p>
+      <ul>
+        <% @matched_usernames.each do |name| %>
+          <li><b><%= name %></b></li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
 </div></div>
 
 <%= render "sessions/secondary_links" %>

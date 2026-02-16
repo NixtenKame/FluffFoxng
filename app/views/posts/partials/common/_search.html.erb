@@ -12,4 +12,13 @@
     <%= text_area_tag("tags", tags, placeholder: "Search posts by tag", rows: 1, data: { hotkey: "search", autocomplete: "tag-query" }) %>
     <%= tag.button(svg_icon(:search), type: "submit", title: "Search") %>
   <% end %>
+
+  <div class="post-search-presets" data-role="search-presets">
+    <div class="post-search-presets-header">
+      <span>Quick Presets</span>
+      <button type="button" class="st-button" data-action="save-search-preset">Save Current</button>
+    </div>
+    <div class="post-search-presets-list" data-role="preset-list"></div>
+    <p class="post-search-presets-empty" data-role="preset-empty">Save common searches for one-click reuse.</p>
+  </div>
 </section>

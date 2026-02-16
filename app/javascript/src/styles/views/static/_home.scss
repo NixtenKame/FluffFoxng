@@ -1,6 +1,15 @@
 body.c-static.a-home {
   background: #012e57; // I am certain this was needed for something
   background-color: themed("bg-color", #012e57);
+  background-image: themed("image-background") !important;
+  overflow-x: hidden;
+  background-size: cover;
+
+  #c-static {
+    width: 480px;
+    position: fixed;
+    bottom: 0;
+  }
 
   #page {
     background: none;
@@ -9,6 +18,8 @@ body.c-static.a-home {
     max-width: 480px;
     padding: 0 0.5rem 0.5rem;
     box-sizing: border-box;
+    display: flex;
+    justify-content: center;
   }
 
   #a-home {
@@ -18,38 +29,11 @@ body.c-static.a-home {
     gap: 0.5rem;
   }
 
-
-  // Mascots
-  .mascot-section {
-    background-image: themed("bg-image");
-
-    display: flex;
-    $mascot-size: 750px;
-    width: min($mascot-size, 100vw);
-    height: min($mascot-size, 100vw);
-
-    // Position the search form 60% down the image.
-    // Extra 0.5rem is needed to clear the flexbox gap.
-    margin-bottom: calc(max(0 - ($mascot-size * 0.4), -40vw) - 0.5rem);
-
-    background-size: contain; // Scale the image down with the container
-    background-position: center center;
-    background-repeat: no-repeat;
-
-    // Layering over the searchbar
-    z-index: 1;
-    pointer-events: none;
-
-    // Offset for the navbar
-    @include window-larger-than(50rem) { margin-top: -3.75rem; }
-  }
-
-
   // Common
   .home-section {
     // Frosted glass effect
-    background-color: var(--fg-color, #0f0f0f80);
-    backdrop-filter: blur(8px);
+    background-color: var(--fg-color, #ffffff10);
+    backdrop-filter: blur(10px);
 
     padding: 1rem;
     @include st-radius;
@@ -60,11 +44,21 @@ body.c-static.a-home {
     z-index: 1;
   }
 
-  // Mascot layering over the searchbar
-  &[layered="true"] .home-search-section { z-index: 0; }
-
-
   // Search
+  #home-search-form {
+    input[type="text"] {
+      width: auto;
+      max-width: none;
+      border: 0;
+      font-size: 1rem;
+    }
+
+    button,
+    input[type="submit"] {
+      font-size: 1rem;
+    }
+  }
+
   .home-search {
     display: flex;
     margin-bottom: 1rem;
@@ -115,7 +109,7 @@ body.c-static.a-home {
       justify-content: center;
       gap: 0.25rem;
 
-      background: #25477b;
+      background: var(--color-section);
       font-size: 0.9rem;
       line-height: 1rem;
       font-family: "Roboto", Verdana, Geneva, sans-serif;
@@ -125,7 +119,7 @@ body.c-static.a-home {
       padding: 0.5rem;
       @include st-radius;
       
-      &:hover { background: #2b538e; }
+      &:hover { background: var(--color-section-hover); }
 
       svg {
         height: 1.25rem;
@@ -139,25 +133,207 @@ body.c-static.a-home {
     content: "Search ";
   }
 
-  .home-subscribestar {
-    a {
-      display: flex;
-      flex-flow: column;
-      align-items: center;
-      color: palette("text-white");
+  .home-pulse-section {
+    text-align: left;
+  }
 
-      .fake-link { color: themed("color-link"); }
-      &:hover .fake-link { color: themed("color-link-hover"); }
-      &:active .fake-link { color: themed("color-link-active"); }
-    }
+  .home-pulse-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+  }
 
-    img {
-      width: 100%;
-      max-width: 16rem;
-      margin-top: 0.5rem;
+  .home-pulse-dot {
+    --pulse-color: #5ec5ff;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: var(--pulse-color);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--pulse-color) 80%, transparent);
+    animation: pulse-ring 2.2s infinite;
+    flex: 0 0 auto;
+  }
+
+  .home-pulse-message {
+    margin: 0.6rem 0 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.35rem;
+  }
+
+  .home-pulse-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+
+    border: 0;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1rem;
+    font-family: "Roboto", Verdana, Geneva, sans-serif;
+    font-weight: bold;
+    color: white;
+    background: var(--color-section);
+    @include st-radius;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--color-section-hover);
     }
   }
 
+  .home-echo-section {
+    text-align: left;
+  }
+
+  .home-echo-header {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+      color: #e8c446;
+    }
+  }
+
+  .home-echo-description {
+    margin: 0 0 0.6rem;
+    font-size: 0.85rem;
+    opacity: 0.85;
+  }
+
+  .home-echo-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .home-echo-chip {
+    border: 0;
+    padding: 0.35rem 0.55rem;
+    background: color-mix(in srgb, var(--color-section) 70%, black 12%);
+    color: white;
+    font-size: 0.8rem;
+    line-height: 1rem;
+    font-family: "Roboto", Verdana, Geneva, sans-serif;
+    @include st-radius;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(6px);
+    animation: echo-in 180ms ease-out forwards;
+    animation-delay: var(--chip-delay, 0ms);
+
+    &:hover {
+      background: var(--color-section-hover);
+      transform: translateY(-1px);
+    }
+  }
+
+  .home-echo-clear {
+    margin-top: 0.6rem;
+    border: 0;
+    padding: 0.3rem 0.45rem;
+    background: transparent;
+    color: var(--color-text);
+    font-size: 0.78rem;
+    text-decoration: underline;
+    cursor: pointer;
+    opacity: 0.9;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .home-comic-spotlight-section {
+    text-align: left;
+
+    h3 {
+      margin: 0.25rem 0;
+      font-size: 1rem;
+      line-height: 1.25rem;
+    }
+  }
+
+  .home-comic-spotlight-header {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    opacity: 0.95;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+      color: #e8c446;
+    }
+  }
+
+  .home-comic-spotlight-meta {
+    margin: 0 0 0.5rem;
+    font-size: 0.8rem;
+    opacity: 0.8;
+  }
+
+  .home-comic-spotlight-cover {
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--color-section) 70%, #ffffff10);
+    margin-bottom: 0.6rem;
+
+    img {
+      display: block;
+      width: 100%;
+      max-height: 220px;
+      object-fit: cover;
+    }
+  }
+
+  .home-comic-spotlight-placeholder {
+    display: flex;
+    width: 100%;
+    min-height: 120px;
+    justify-content: center;
+    align-items: center;
+    background: #162948;
+    color: #c8d8ea;
+    font-size: 0.85rem;
+  }
+
+  .home-comic-spotlight-actions {
+    display: flex;
+    gap: 0.5rem;
+
+    .st-button {
+      flex: 1;
+      text-align: center;
+    }
+  }
+
+  @keyframes echo-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--pulse-color) 65%, transparent);
+    }
+    70% {
+      box-shadow: 0 0 0 10px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
 
   // Footer
   .home-footer-top {
@@ -176,27 +352,11 @@ body.c-static.a-home {
 
     @include st-radius-top;
 
-    a#mascot-swap {
-
-      display: flex;
-      justify-content: center;
-      gap: 0.25rem;
-
-      background: #25477b;
-      font-size: 0.85rem;
-      line-height: 1rem;
-      font-family: "Roboto", Verdana, Geneva, sans-serif;
-      color: white;
-
-      padding: 0.25rem 0.5rem;
-      @include st-radius;
-      
-      &:hover { background: #2b538e; }
-    }
   }
 
   .home-footer-bottom {
-    background: #1f3c67;
+    background: var(--fg-color , #ffffff10);
+    backdrop-filter: blur(10px);
     text-align: center;
 
     margin-top: -0.5rem;
@@ -208,7 +368,7 @@ body.c-static.a-home {
     @include st-radius-bottom;
 
     .home-footer-counter img {
-      height: 4rem;
+      width: 2.5rem;
     }
 
     .home-footer-links {
@@ -233,6 +393,66 @@ body.c-static.a-home {
         left: 0;
         bottom: 0.25em;
       }
+    }
+  }
+
+  @media (max-width: 540px) {
+    #c-static {
+      width: 100%;
+      position: static;
+      display: inline-flex;
+      flex-direction: column-reverse;
+    }
+
+    #page {
+      max-width: 100%;
+      padding: 0 0.5rem 0.75rem;
+    }
+
+    .home-section {
+      padding: 0.8rem;
+    }
+
+    .home-search {
+      margin-bottom: 0.75rem;
+
+      input[type="text"] {
+        min-width: 0;
+        font-size: 16px;
+      }
+
+      button[type="submit"] {
+        flex: 0 0 auto;
+      }
+    }
+
+    .home-buttons {
+      flex-direction: column;
+    }
+
+    .home-comic-spotlight-actions {
+      flex-direction: column;
+    }
+
+    .home-footer-bottom {
+      .home-footer-counter img {
+        height: 2.8rem;
+      }
+
+      .home-footer-links {
+        line-height: 1.35rem;
+        overflow-wrap: anywhere;
+      }
+
+      .home-footer-links br {
+        display: none;
+      }
+    }
+  }
+
+  @media (max-width: 380px) {
+    .home-footer-bottom .home-footer-links .separator {
+      display: none;
     }
   }
 }

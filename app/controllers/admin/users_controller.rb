@@ -3,7 +3,7 @@
 module Admin
   class UsersController < ApplicationController
     before_action :admin_only
-    before_action :is_bd_staff_only, only: %i[request_password_reset password_reset]
+    before_action :is_ff_staff_only, only: %i[request_password_reset password_reset]
     respond_to :html, :json
 
     def alt_list
@@ -40,7 +40,7 @@ module Admin
         ModAction.log(:user_upload_limit_change, { user_id: @user.id, old_upload_limit: @user.base_upload_limit_before_last_save, new_upload_limit: @user.base_upload_limit })
       end
 
-      if CurrentUser.is_bd_staff?
+      if CurrentUser.is_ff_staff?
         @user.mark_verified! if params[:user][:verified].to_s.truthy?
         @user.mark_unverified! if params[:user][:verified].to_s.falsy?
       end
@@ -93,7 +93,7 @@ module Admin
 
     def user_params(user)
       permitted_params = %i[profile_about profile_artinfo base_upload_limit enable_privacy_mode]
-      permitted_params << :email if user.is_bd_staff?
+      permitted_params << :email if user.is_ff_staff?
       params.require(:user).slice(*permitted_params).permit(permitted_params)
     end
   end

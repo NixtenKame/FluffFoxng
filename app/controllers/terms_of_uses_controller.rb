@@ -5,7 +5,7 @@ class TermsOfUsesController < ApplicationController
   before_action :admin_only, only: %i[clear_cache bump_version]
 
   def show
-    @page_name = "e621:terms_of_service"
+    @page_name = "FluffFox:terms_of_service"
     @content = helpers.tos_content
     @version = Setting.tos_version
   end
@@ -14,7 +14,7 @@ class TermsOfUsesController < ApplicationController
     if params[:state] == "accepted" && params[:age] == "on" && params[:terms] == "on"
       cookies.permanent.signed[:tos_accepted] = Setting.tos_version
     else
-      notice = "You must accept the TOU and confirm that you are at least 18 years old to use this site"
+      notice = "You must accept the TOU and confirm that you are at least 13 years old to use this site"
     end
 
     redirect_back fallback_location: root_path, notice: notice

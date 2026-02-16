@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory(:avoid_posting) do
     association :artist
-    association :creator, factory: :bd_staff_user
+    association :creator, factory: :ff_staff_user
     creator_ip_addr { "127.0.0.1" }
   end
 end

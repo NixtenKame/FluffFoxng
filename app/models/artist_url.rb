@@ -109,7 +109,6 @@ class ArtistUrl < ApplicationRecord
     "twitch.tv",
     # support the artist
     "patreon.com",
-    "subscribestar.adult",
     "ko-fi.com",
     "commishes.com",
     "boosty.to",

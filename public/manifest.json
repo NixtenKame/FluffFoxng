@@ -1,5 +1,12 @@
 {
-  "name": "e621",
+  "name": "FluffFox",
+  "short_name": "FluffFox",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#005999",
+  "description": "Furry art sharing site",
+  "display_override": ["standalone"],
+  "categories": ["webapp"],
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -11,9 +18,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "theme_color": "#00549e",
-  "background_color": "#021131",
-  "display": "standalone",
-  "start_url": "./"
+  ]
 }

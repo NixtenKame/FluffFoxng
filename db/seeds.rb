@@ -9,10 +9,10 @@ require "tempfile"
 
 admin = User.find_or_create_by!(name: "admin") do |user|
   user.created_at = 2.weeks.ago
-  user.password = "hexerade"
-  user.password_confirmation = "hexerade"
+  user.password = "fluffyfox"
+  user.password_confirmation = "fluffyfox"
   user.password_hash = ""
-  user.email = "admin@e621.local"
+  user.email = "admin@flufffox.local"
   user.can_upload_free = true
   user.can_approve_posts = true
   user.level = User::Levels::ADMIN
@@ -22,7 +22,7 @@ User.find_or_create_by!(name: Danbooru.config.system_user) do |user|
   user.password = "ae3n4oie2n3oi4en23oie4noienaorshtaioresnt"
   user.password_confirmation = "ae3n4oie2n3oi4en23oie4noienaorshtaioresnt"
   user.password_hash = ""
-  user.email = "system@e621.local"
+  user.email = "system@flufffox.local"
   user.can_upload_free = true
   user.can_approve_posts = true
   user.level = User::Levels::JANITOR
@@ -33,29 +33,13 @@ ForumCategory.find_or_create_by!(name: "Tag Alias and Implication Suggestions") 
 end
 
 def api_request(path)
-  response = Faraday.get("https://e621.net#{path}", nil, user_agent: "e621ng/seeding")
+  response = Faraday.get("https://nixten.ddns.net#{path}", nil, user_agent: "FluffFox/seeding")
   JSON.parse(response.body)
-end
-
-def import_mascots
-  api_request("/mascots.json?limit=3").each do |mascot|
-    puts mascot["url_path"]
-    Mascot.create!(
-      creator: CurrentUser.user,
-      mascot_file: Downloads::File.new(mascot["url_path"]).download!,
-      display_name: mascot["display_name"],
-      background_color: mascot["background_color"],
-      artist_url: mascot["artist_url"],
-      artist_name: mascot["artist_name"],
-      available_on_string: Danbooru.config.app_name,
-      active: true,
-    )
-  end
 end
 
 def setup_upload_whitelist
   UploadWhitelist.create do |entry|
-    entry.domain = "static1\.e621\.net" # rubocop:disable Style/RedundantStringEscape
+    entry.domain = "nixten\\.ddns\\.net:9001" # rubocop:disable Style/RedundantStringEscape
   end
 end
 
@@ -67,7 +51,6 @@ unless Rails.env.test?
   CurrentUser.user = admin
   CurrentUser.ip_addr = "127.0.0.1"
   begin
-    import_mascots
     setup_upload_whitelist
     setup_report_reasons
   rescue StandardError => e

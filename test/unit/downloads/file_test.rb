@@ -21,11 +21,11 @@ module Downloads
       end
 
       should "not follow redirects to non-whitelisted domains" do
-        stub_request(:get, "https://example.com/file.png").to_return(status: 301, headers: { location: "https://e621.net/abc" })
+        stub_request(:get, "https://example.com/file.png").to_return(status: 301, headers: { location: "https://nixten.ddns.net/abc" })
         error = assert_raises(Downloads::File::Error) do
           Downloads::File.new("https://example.com/file.png").download!
         end
-        assert_match("'https://e621.net/abc' is not whitelisted", error.message)
+        assert_match("'https://nixten.ddns.net/abc' is not whitelisted", error.message)
       end
     end
 

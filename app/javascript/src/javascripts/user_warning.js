@@ -28,7 +28,7 @@ class UserWarnable {
         },
       }).done(data => {
         target.closest("article.blip, article.comment, article.forum-post").replaceWith(data.html);
-        $(window).trigger("e621:add_deferred_posts", data.posts);
+        $(window).trigger("FluffFox:add_deferred_posts", data.posts);
 
         this.reinitialize_click_handlers();
         Blip.reinitialize_all();

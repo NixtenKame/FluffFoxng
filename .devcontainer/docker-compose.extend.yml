@@ -1,5 +1,5 @@
 version: "3"
-name: e621ng # Name of the Docker Compose project in the dev container
+name: FluffFoxng # Name of the Docker Compose project in the dev container
 
 services:
   # Dev Container extension doesn't support `depends_on: !reset []`
@@ -7,7 +7,7 @@ services:
   dev-container:
     build:
       dockerfile: Dockerfile
-    image: e621
+    image: flufffox
     user: ${DOCKER_USER:-root}
     environment:
       RAILS_ENV: development

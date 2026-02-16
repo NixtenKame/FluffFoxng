@@ -21,7 +21,7 @@ class Post < ApplicationRecord
   before_validation :remove_parent_loops
   normalizes :description, with: ->(desc) { desc.gsub("\r\n", "\n") }
   validates :md5, uniqueness: { :on => :create, message: ->(obj, data) {"duplicate: #{Post.find_by_md5(obj.md5).id}"} }
-  validates :rating, inclusion: { in: %w(s q e), message: "rating must be s, q, or e" }
+  validates :rating, inclusion: { in: %w(s q), message: "rating must be s or q" }
   validates :bg_color, format: { with: /\A[A-Fa-f0-9]{6}\z/ }, allow_nil: true
   validates :description, length: { maximum: Danbooru.config.post_descr_max_size }, if: :description_changed?
   validate :added_tags_are_valid, if: :should_process_tags?
@@ -230,6 +230,8 @@ class Post < ApplicationRecord
         "fit-window"
       end
     end
+
+    # This file is circumsized
 
     def has_sample_size?(scale)
       return false if video_sample_list.blank?
@@ -1014,7 +1016,7 @@ class Post < ApplicationRecord
             remove_parent_loops
           end
 
-        when /^rating:([qse])/i
+        when /^rating:([qs])/i
           self.rating = $1
 
         when /^(-?)locked:notes?$/i
@@ -1907,7 +1909,7 @@ class Post < ApplicationRecord
       new_tags = added.select { |t| t.post_count <= 0 }
       new_general_tags = new_tags.select { |t| t.category == Tag.categories.general }
       new_artist_tags = new_tags.select { |t| t.category == Tag.categories.artist }
-      # See https://github.com/e621ng/e621ng/issues/494
+      # See https://github.com/NixtenKame/FluffFoxng/issues/494
       # If the tag is fresh it's save to assume it was created with a prefix
       repopulated_tags = new_tags.select { |t| t.category != Tag.categories.general && t.category != Tag.categories.meta && t.created_at < 10.seconds.ago }
 
@@ -1959,7 +1961,7 @@ class Post < ApplicationRecord
       return if !new_record?
 
       if tags.count {|t| t.category == Tag.categories.general} < 10
-        self.warnings.add(:base, "Uploads must have at least 10 general tags. Read [[e621:tags]] for guidelines on tagging your uploads")
+        self.warnings.add(:base, "Uploads must have at least 10 general tags. Read [[FluffFox:tags]] for guidelines on tagging your uploads")
       end
     end
   end

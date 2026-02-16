@@ -1,10 +1,10 @@
 x-environment: &common-env
-  DANBOORU_HOSTNAME: http://localhost:${EXPOSED_SERVER_PORT:-3000}
+  DANBOORU_HOSTNAME: ${SERVER_PROTOCOL:-http}://localhost:${EXPOSED_SERVER_PORT:-3000}
+  DANBOORU_DOMAIN: ${DANBOORU_DOMAIN:-localhost}
   DANBOORU_REDIS_URL: redis://redis
   DANBOORU_OPENSEARCH_HOST: opensearch
   DANBOORU_MEMCACHED_SERVERS: memcached
   DANBOORU_IQDB_SERVER: http://iqdb:5588
-  DANBOORU_DISCORD_SITE: http://localhost:8000
   DANBOORU_DISCORD_SECRET: super_secret_for_url_discord
   # These are just development secrets, do not use them in production
   DANBOORU_PROTECTED_FILE_SECRET: 6686a6413d90c43d5e82403ef271ec25d13cc24e3bfcdd094e73d1eff22a3567
@@ -13,7 +13,6 @@ x-environment: &common-env
   SESSION_SECRET_KEY: 44b4f44e9f253c406cbe727d403d500c1cecff943e4d2aea8f5447f28846fffe
   # Hide annoying output from libvips on corrupt files
   VIPS_WARNING: "0"
-  DD_TRACE_STARTUP_LOGS: false
 
 x-depends-on: &common-depends-on
   opensearch:
@@ -26,26 +25,24 @@ x-depends-on: &common-depends-on
     condition: service_started
 
 services:
-  e621:
+  FluffFox:
     build:
       context: ./
       args:
         HOST_UID: ${HOST_UID:-1000}
         HOST_GID: ${HOST_GID:-1000}
-    user: ${DOCKER_USER:-root}
-    image: e621
+    user: ${DOCKER_USER:-flufffoxng}
+    image: flufffox
     volumes:
       - .:/app
       - node_modules:/app/node_modules
-      - post_data:/app/public/data
+      - ./uploads:/app/public/data
       - ./docker/cron_tasks/daily:/etc/periodic/daily
     environment:
       <<: *common-env
       RAILS_ENV: development
       LOCAL_DTEXT: ${LOCAL_DTEXT:-}
-      DD_AGENT_HOST: datadog-agent
-      DD_SERVICE: ${DD_SERVICE:-}
-      DD_ENV: ${DD_ENV:-}
+      DANBOORU_DATA_BASE_URL: ${DANBOORU_DATA_BASE_URL:-http://localhost:9001}
     depends_on:
       <<: *common-depends-on
       autocompleted:
@@ -58,32 +55,54 @@ services:
     command: /app/autocompleted
     environment:
       SERVER_ADDR: autocompleted:8118
-      PG__USER: e621
+      PG__USER: FluffFox
       PG__HOST: postgres
       PG__PORT: 5432
-      PG__DBNAME: e621_development
+      PG__DBNAME: FluffFox_development
       PG__POOL__MAX_SIZE: 1
 
   nginx:
     image: nginx:stable-alpine
     volumes:
       - ./public:/app/public
-      - post_data:/app/public/data
+      - ./uploads:/app/public/data
       - ./docker/default.conf.template:/etc/nginx/templates/default.conf.template
     environment:
       <<: *common-env
       NGINX_PORT: ${EXPOSED_SERVER_PORT:-3000}
     depends_on:
       - autocompleted
-      - e621
-    ports:
-      - "${EXPOSED_SERVER_PORT:-3000}:${EXPOSED_SERVER_PORT:-3000}"
-    
+      - FluffFox
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flufffox.entrypoints=web"
+      - "traefik.http.routers.flufffox.rule=Host(`${DANBOORU_DOMAIN:-localhost}`)"
+      - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
+      - "traefik.http.routers.flufffox.middlewares=redirect-https"
+      - "traefik.http.routers.flufffox-https.entrypoints=websecure"
+      - "traefik.http.routers.flufffox-https.rule=Host(`${DANBOORU_DOMAIN:-localhost}`)"
+      - "traefik.http.routers.flufffox-https.tls=true"
+      - "traefik.http.routers.flufffox-https.tls.certresolver=le"
+      - "traefik.http.services.flufffox.loadbalancer.server.port=80"
+    # nginx listens on the internal network; Traefik will publish host ports 80/443
+  file-server:
+    image: nginx:stable-alpine
+    volumes:
+      - ./uploads:/usr/share/nginx/html:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flufffox-files.entrypoints=websecure9001"
+      - "traefik.http.routers.flufffox-files.rule=Host(`${DANBOORU_DOMAIN:-localhost}`) && PathPrefix(`/data`)"
+      - "traefik.http.routers.flufffox-files.tls=true"
+      - "traefik.http.services.flufffox-files.loadbalancer.server.port=80"
+    command: sh -c "chmod o+rx /usr /usr/share /usr/share/nginx && echo 'server { listen 80; root /usr/share/nginx/html; autoindex on; location /data/ { alias /usr/share/nginx/html/; autoindex on; } location ~ /\. { deny all; } }' > /etc/nginx/conf.d/default.conf && nginx -g \"daemon off;\""    
   postgres:
     image: postgres:15-alpine
+    user: "1000:1000"
     environment:
-      - POSTGRES_USER=e621
-      - POSTGRES_DB=e621_development
+      - POSTGRES_USER=FluffFox
+      - POSTGRES_DB=FluffFox_development
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
       - db_data:/var/lib/postgresql/data
@@ -98,6 +117,32 @@ services:
 
   memcached:
     image: memcached:1.5.22-alpine
+    user: "1000:1000"
+
+  traefik:
+    image: traefik:v2.10
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure9001.address=:9001
+      - --certificatesresolvers.le.acme.httpchallenge=true
+      - --certificatesresolvers.le.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.le.acme.email=${LETSENCRYPT_EMAIL:-admin@example.com}
+      - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
+    ports:
+      - "80:80"
+      - "443:443"
+      - "9001:9001"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./docker/traefik:/letsencrypt
+    labels:
+      - "traefik.http.routers.api.rule=Host(`traefik.${DANBOORU_DOMAIN:-localhost}`)"
+      - "traefik.http.routers.api.service=api@internal"
+    depends_on:
+      - FluffFox
 
   opensearch:
     image: opensearchproject/opensearch:2.9.0
@@ -120,42 +165,11 @@ services:
     command: iqdb http 0.0.0.0 5588 /iqdb/e621_v2.db
     volumes:
       - iqdb_data:/iqdb
-  
-  datadog-agent:
-    image: datadog/agent:7.52.0
-    environment:
-      DD_API_KEY: ${DD_API_KEY:-}
-      DD_SITE: ${DD_SITE:-us5.datadoghq.com}
-      DD_HOSTNAME: datadog-agent
-      DD_LOG_LEVEL: WARN
-      DD_APM_NON_LOCAL_TRAFFIC: true
-    profiles:
-      - datadog
-
-  # Discord integration
-
-  discord_joiner:
-    image: ghcr.io/e621ng/discord_joiner:fdd9563e75d6f1b2b756c032b9749199c08d9765
-    environment:
-      FETCH_SECRET: abc123
-      URL_SECRET: super_secret_for_url_discord
-      JOINER_BASE_URL: http://localhost:8000
-      BOT_TOKEN: ${JOINER_BOT_TOKEN-}
-      OAUTH2_CLIENT_ID: ${JOINER_OAUTH2_CLIENT_ID-}
-      OAUTH2_CLIENT_SECRET: ${JOINER_OAUTH2_CLIENT_SECRET-}
-      GUILD_ID: ${JOINER_GUILD_ID-}
-      FAILED_JOIN_URL: ${JOINER_FAILED_JOIN_WEBHOOK_URL-}
-    ports:
-      - 8000:8000
-    volumes:
-      - discord_joiner_data:/opt/app/data
-    profiles:
-      - discord
 
   # Useful for development
 
   tests:
-    image: e621
+    image: flufffox
     environment:
       <<: *common-env
       RAILS_ENV: test
@@ -170,7 +184,7 @@ services:
       - tests
 
   bundle:
-    image: e621
+    image: flufffox
     environment:
       <<: *common-env
       RAILS_ENV: development
@@ -185,7 +199,7 @@ services:
       - bundle
 
   rails:
-    image: e621
+    image: flufffox
     environment:
       <<: *common-env
       RAILS_ENV: test
@@ -200,7 +214,7 @@ services:
       - rails
 
   rails_dev:
-    image: e621
+    image: flufffox
     environment:
       <<: *common-env
       RAILS_ENV: development
@@ -215,7 +229,7 @@ services:
       - rails_dev
 
   rubocop:
-    image: e621
+    image: flufffox
     volumes:
       - .:/app
       - rubocop_cache:/rubocop_cache
@@ -224,7 +238,7 @@ services:
       - rubocop
 
   linter:
-    image: e621
+    image: flufffox
     volumes:
       - .:/app
       - node_modules:/app/node_modules
@@ -240,4 +254,3 @@ volumes:
   redis_data_v2:
   node_modules:
   rubocop_cache:
-  discord_joiner_data:

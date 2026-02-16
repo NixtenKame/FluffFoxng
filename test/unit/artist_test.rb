@@ -322,11 +322,11 @@ class ArtistTest < ActiveSupport::TestCase
       end
 
       should "fail if the user is limited" do
-        @artist.url_string = "https://e621.net"
+        @artist.url_string = "https://nixten.ddns.net"
         as(create(:user)) { @artist.save }
 
         @artist.reload
-        assert_equal("https://e621.net", @artist.url_string)
+        assert_equal("https://nixten.ddns.net", @artist.url_string)
 
         Danbooru.config.stubs(:disable_throttles?).returns(false)
         Danbooru.config.stubs(:artist_edit_limit).returns(0)
@@ -337,15 +337,15 @@ class ArtistTest < ActiveSupport::TestCase
         end
 
         @artist.reload
-        assert_equal("https://e621.net", @artist.url_string)
+        assert_equal("https://nixten.ddns.net", @artist.url_string)
       end
 
       should "not change urls when locked" do
-        @artist.url_string = "https://e621.net"
+        @artist.url_string = "https://nixten.ddns.net"
         as(create(:user)) { @artist.save }
 
         @artist.reload
-        assert_equal("https://e621.net", @artist.url_string)
+        assert_equal("https://nixten.ddns.net", @artist.url_string)
 
         @artist.update_column(:is_locked, true)
 
@@ -355,7 +355,7 @@ class ArtistTest < ActiveSupport::TestCase
         end
 
         @artist.reload
-        assert_equal("https://e621.net", @artist.url_string)
+        assert_equal("https://nixten.ddns.net", @artist.url_string)
       end
 
       should "not change notes when locked" do

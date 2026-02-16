@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# READ THIS OR FUCKING DIE
+
 require "test_helper"
 
 module Moderator

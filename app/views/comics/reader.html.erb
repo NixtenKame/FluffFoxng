@@ -1,0 +1,60 @@
+<div id="c-comics">
+  <div id="a-reader">
+    <header class="comic-reader-header">
+      <h1><%= @comic.pretty_name %></h1>
+      <p>Page <%= @position %> / <%= @comic.post_ids.length %></p>
+      <p class="comic-reader-links">
+        <%= link_to "Grid View", comic_path(@comic) %>
+        |
+        <% if @post.present? %>
+          <%= link_to "Post ##{@post.id}", post_path(@post) %>
+        <% end %>
+      </p>
+    </header>
+
+    <nav class="comic-reader-nav">
+      <% if @previous_position.present? %>
+        <%= link_to "Previous", reader_comic_path(@comic, position: @previous_position), class: "st-button comic-nav-btn", id: "comic-prev" %>
+      <% else %>
+        <span class="st-button comic-nav-btn disabled">Previous</span>
+      <% end %>
+
+      <% if @next_position.present? %>
+        <%= link_to "Next", reader_comic_path(@comic, position: @next_position), class: "st-button comic-nav-btn", id: "comic-next" %>
+      <% else %>
+        <span class="st-button comic-nav-btn disabled">Next</span>
+      <% end %>
+    </nav>
+
+    <section class="comic-reader-stage">
+      <% if @post.nil? %>
+        <p>This page is unavailable.</p>
+      <% elsif @post.is_video? %>
+        <%= video_tag @post.file_url, controls: true, preload: "metadata", class: "comic-reader-media" %>
+      <% else %>
+        <%= image_tag @post.large_file_url, alt: "Comic page #{@position}", class: "comic-reader-media" %>
+      <% end %>
+    </section>
+  </div>
+</div>
+
+<%= render "secondary_links" %>
+
+<% content_for(:html_header) do %>
+  <%= javascript_tag nonce: true do %>
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "ArrowLeft") {
+        var prev = document.getElementById("comic-prev");
+        if (prev) window.location.href = prev.href;
+      }
+      if (event.key === "ArrowRight") {
+        var next = document.getElementById("comic-next");
+        if (next) window.location.href = next.href;
+      }
+    });
+  <% end %>
+<% end %>
+
+<% content_for(:page_title) do %>
+  Reader - <%= @comic.pretty_name %> (<%= @position %>/<%= @comic.post_ids.length %>)
+<% end %>

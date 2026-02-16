@@ -29,6 +29,7 @@
   // TODO What if button is on a light background
   background: $button-background;
   color: $button-text-color;
+  white-space: nowrap;
   &:hover, &:active { background: $button-background-hover; }
 
   // Overriding the default outline

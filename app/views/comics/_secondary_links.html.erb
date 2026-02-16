@@ -1,0 +1,5 @@
+<% content_for(:secondary_links) do %>
+  <%= subnav_link_to "Comics", comics_path %>
+  <%= subnav_link_to "Pools", pools_path(search: { category: "series" }) %>
+  <%= subnav_link_to "Posts", posts_path %>
+<% end %>

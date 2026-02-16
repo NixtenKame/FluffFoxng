@@ -1,3 +1,14 @@
 <% if post.visible? %>
-  <%= image_tag(post.file_url_for(CurrentUser.user), post.presenter.image_attributes) %>
+  <% primary_url = post.file_url_for(CurrentUser.user) %>
+  <% fallback_url = begin
+    uri = URI.parse(primary_url)
+    uri.host.present? ? "#{uri.path}#{uri.query.present? ? "?#{uri.query}" : ""}" : primary_url
+  rescue URI::InvalidURIError
+    primary_url
+  end %>
+  <% image_attrs = post.presenter.image_attributes.merge(
+    data: (post.presenter.image_attributes[:data] || {}).merge(fallback_url: fallback_url),
+    class: [post.presenter.image_attributes[:class], "js-fallbackable-image"].compact.join(" ")
+  ) %>
+  <%= image_tag(primary_url, image_attrs) %>
 <% end %>

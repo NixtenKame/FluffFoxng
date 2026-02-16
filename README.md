@@ -1,18 +1,18 @@
 <div align="center">
-  <img src="public/images/github-logo.svg" width="150" height="150" align="left">
+  <img src="public/images/github-logo.png" width="150" height="150" align="left">
   <div align="left">
-    <h3>E621</h3>
-    <a href="https://github.com/e621ng/e621ng/releases">
-      <img src="https://img.shields.io/github/v/release/e621ng/e621ng?label=version&style=flat-square" alt="Releases" />
+    <h3>FluffFox</h3>
+    <a href="https://github.com/NixtenKame/FluffFoxng/releases">
+      <img src="https://img.shields.io/github/v/release/NixtenKame/FluffFoxng?label=version&style=flat-square" alt="Releases" />
     </a><br />
-    <a href="https://github.com/e621ng/e621ng/issues">
-      <img src="https://img.shields.io/github/issues/e621ng/e621ng?label=open%20issues&style=flat-square" alt="Issues" />
+    <a href="https://github.com/NixtenKame/FluffFoxng/issues">
+      <img src="https://img.shields.io/github/issues/NixtenKame/FluffFoxng?label=open%20issues&style=flat-square" alt="Issues" />
     </a><br />
-    <a href="https://github.com/e621ng/e621ng/pulls">
-      <img src="https://img.shields.io/github/issues-pr/e621ng/e621ng?style=flat-square" alt="Pull Requests" />
+    <a href="https://github.com/NixtenKame/FluffFoxng/pulls">
+      <img src="https://img.shields.io/github/issues-pr/NixtenKame/FluffFoxng?style=flat-square" alt="Pull Requests" />
     </a><br />
-    <a href="https://github.com/e621ng/e621ng/commits/master/">
-      <img src="https://img.shields.io/github/check-runs/e621ng/e621ng/master?style=flat-square" alt="GitHub branch check runs" />
+    <a href="https://github.com/NixtenKame/FluffFoxng/commits/master/">
+      <img src="https://img.shields.io/github/check-runs/NixtenKame/FluffFoxng/master?style=flat-square" alt="GitHub branch check runs" />
     </a><br />
   </div>
 </div>
@@ -33,7 +33,7 @@
 ### Installation
 
 1. Download and install the [prerequisites](#prerequisites).
-1. Clone the repo with `git clone https://github.com/e621ng/e621ng.git`.
+1. Clone the repo with `git clone https://github.com/NixtenKame/FluffFoxng.git`.
 1. `cd` into the repo.
 1. Copy the sample environment file with `cp .env.sample .env`.
 1. WSL Only: Run the following commands:
@@ -45,14 +45,14 @@
     If you are not using WSL, this is likely not a problem for you.
 1. Run the following commands:
     ```
-    docker compose run --rm e621 /app/bin/setup
+    docker compose run --rm FluffFox /app/bin/setup
     docker compose up
     ```
     After running the commands once only `docker compose up` is needed to bring up the containers.
-1. To confirm the installation worked, open the web browser of your choice and enter `http://localhost:3000` into the address bar and see if the website loads correctly. An admin account has been created automatically, the username and password are `admin` and `hexerade` respectively.
+1. To confirm the installation worked, open the web browser of your choice and enter `http://localhost:3000` into the address bar and see if the website loads correctly. An admin account has been created automatically, the username and password are `admin` and `fluffyfox` respectively.
 1. By default, the site will lack any content. For testing purposes, you can generate some using the following command:
     ```
-    docker exec -it e621ng-e621-1 /app/bin/populate
+    docker exec -it FluffFoxng-FluffFox-1 /app/bin/populate
     ```
     The command can be run multiple times to generate more content.  
     Environmental variables are available to customize what kind of content is generated.
@@ -61,17 +61,17 @@ Note: When gems or js packages are updated you need to execute `docker compose b
 
 ### Local DText gem
 
-You may want to test changes made to the [DText gem](https://github.com/e621ng/dtext) on a local instance.
+You may want to test changes made to the [DText gem](https://github.com/FluffFoxng/dtext) on a local instance.
 You are recommended to reconsider and rethink your life choices.
 
 If you are sure that you want to do this, follow these steps.
 
-1. Clone the repo into a `vendor` directory. Example: `~/e621ng/vendor/dtext/`.
-   1. `cd ~/e621ng`
+1. Clone the repo into a `vendor` directory. Example: `~/FluffFoxng/vendor/dtext/`.
+   1. `cd ~/FluffFoxng`
    2. `mkdir vendor && cd vendor`
    3. `git clone https://github.com/e621ng/dtext.git` (substitute your local fork as needed)
 2. Rebuild the container
-   1. `cd ~/e621ng`
+   1. `cd ~/FluffFoxng`
    2. `docker compose build --no-cache`
 3. Reset the Gemfile.lock: `git checkout HEAD -- Gemfile.lock`  
   This is not required, but it will prevent you from accidentally committing bad changes.
@@ -106,7 +106,7 @@ You're most likely using Windows. Give this a shot, it tells Git to stop trackin
 
 `docker compose run --rm rubocop` to run the linter.
 
-The postgres server accepts outside connections which you can use to access it with a local client. Use `localhost:34517` to connect to a database named `e621_development` with the user `e621`. Leave the password blank, anything will work.
+The postgres server accepts outside connections which you can use to access it with a local client. Use `localhost:34517` to connect to a database named `FluffFox_development` with the user `FluffFox`. Leave the password blank, anything will work.
 
 #### Truenas / Local Server Installation
 

@@ -40,6 +40,24 @@ $palette: (
   "plain-yellow": #CC0,
   "plain-blue": #00F,
   "plain-red": #F00,
+
+  // Light theme palette
+  "light-background": #ffffff,
+  "light-foreground": #0066cc,
+  "light-text": #222222,
+  "light-text-muted": #666666,
+  "light-section": #1a4a9e,
+  "light-section-lighten-5": #2a5cae,
+  "light-section-lighten-10": #3a6ebe,
+  "light-section-darken-5": #0a3a8e,
+
+  "light-nav-background": #f5f5f5,
+  "light-nav-border": #d0d0d0,
+  "light-accent": #ff6b35,
+  "light-accent-hover": #ff5500,
+  "light-success": #2d7a3e,
+  "light-danger": #c40f26,
+  "light-warning": #ff9500,
 );
 
 :root {

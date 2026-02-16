@@ -968,7 +968,6 @@ Rails/OutputSafety:
     - 'app/helpers/text_helper.rb'
     - 'app/presenters/tag_set_presenter.rb'
     - 'app/presenters/user_presenter.rb'
-    - 'app/views/ads/_leaderboard.html.erb'
     - 'app/views/forum_topics/index.html.erb'
     - 'app/views/layouts/_head.html.erb'
     - 'app/views/moderator/ip_addrs/_ip_listing.json.erb'
@@ -1526,7 +1525,6 @@ Style/NumericLiterals:
     - 'app/indexes/post_version_index.rb'
     - 'app/logical/apng_inspector.rb'
     - 'app/logical/pbkdf2.rb'
-    - 'app/views/ads/_leaderboard.html.erb'
     - 'app/views/takedowns/new.html.erb'
     - 'test/functional/application_controller_test.rb'
 

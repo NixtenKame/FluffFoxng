@@ -63,7 +63,7 @@
       <% end %>
     <% end %>
 
-    <% if CurrentUser.is_bd_auditor? %>
+    <% if CurrentUser.is_ff_auditor? %>
       <h4>DMails</h4>
       <span>
         <%= link_to "Audit", admin_user_dmails_path(user) %>

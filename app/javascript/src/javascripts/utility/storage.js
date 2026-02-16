@@ -35,9 +35,6 @@ LStorage.isAvailable = function () {
 
 // Content that does not belong anywhere else
 LStorage.Site = {
-  /** @returns {number} Currently displayed Mascot ID, or 0 if none is selected */
-  Mascot: ["mascot", 0],
-
   /** @returns {number} Last news update ID, or 0 if none is selected */
   NewsID: ["hide_news_notice", 0],
 
@@ -52,10 +49,10 @@ StorageUtils.bootstrapMany(LStorage.Site);
 // Any changes here must be reflected there as well
 LStorage.Theme = {
   /** @returns {string} Main theme */
-  Main: ["theme", "hexagon"],
+  Main: ["theme", "light"],
 
   /** @returns {string} Extra theme / seasonal decotrations */
-  Extra: ["theme-extra", "hexagon"],
+  Extra: ["theme-extra", "light"],
 
   /** @returns {string} Colorblind-friendly palette (default / deut / trit) */
   Palette: ["theme-palette", "default"],

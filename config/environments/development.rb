@@ -76,9 +76,10 @@ Rails.application.configure do # rubocop:disable Metrics/BlockLength
   config.action_controller.raise_on_missing_callback_actions = true
 
   # Disable request forgery protection to simplify local development.
-  config.action_controller.allow_forgery_protection = ENV.fetch("DISABLE_CSRF_PROTECTION", "true") == "true"
+  # If DISABLE_CSRF_PROTECTION is "true" (the default), we turn off forgery protection.
+  config.action_controller.allow_forgery_protection = ENV.fetch("DISABLE_CSRF_PROTECTION", "true") != "true"
 
-  config.hosts << "e621ng.local"
+  config.hosts << "FluffFoxng.local"
 
   # Allow access from GitHub Codespaces, if applicable
   if ENV["CODESPACES"].present? && ENV.fetch("CODESPACES", "false") == "true"
@@ -89,4 +90,15 @@ Rails.application.configure do # rubocop:disable Metrics/BlockLength
     codespace_host = Regexp.new(codespace_host_pattern)
     config.hosts << codespace_host # for some reason, rails doesn't like the full domain
   end
+
+  # Allow requests for the host configured in .env (useful when routing through Traefik)
+  if ENV["DANBOORU_DOMAIN"].present?
+    exposed_port = ENV.fetch("EXPOSED_SERVER_PORT", "80")
+    config.hosts << ENV["DANBOORU_DOMAIN"]
+    config.hosts << "#{ENV["DANBOORU_DOMAIN"]}:#{exposed_port}"
+  end
+
+  # Trust X-Forwarded-* headers from Traefik/reverse proxies so that request.base_url
+  # correctly reflects https:// when Traefik terminates TLS, avoiding CORS/Origin validation errors
+  config.action_dispatch.trusted_proxies = ["127.0.0.1", "172.18.0.0/16"]
 end

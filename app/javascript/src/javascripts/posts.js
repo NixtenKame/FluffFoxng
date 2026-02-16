@@ -15,6 +15,8 @@ Post.initialize_all = function () {
 
   if ((Page.Controller == "posts" && ["index", "show"].includes(Page.Action)) || Page.Controller == "favorites")
     this.initialize_shortcuts();
+  if ((Page.Controller == "posts" && ["index", "show"].includes(Page.Action)) || Page.Controller == "favorites")
+    this.initialize_search_presets();
 
   if ($("#c-posts").length) {
     this.initialize_shortcuts();
@@ -28,9 +30,12 @@ Post.initialize_all = function () {
     this.initialize_links();
     this.initialize_post_relationship_previews();
     this.initialize_post_sections();
+    this.initialize_image_fallbacks();
     this.initialize_resize();
     this.initialize_gestures();
     this.initialize_moderation();
+    this.initialize_focus_mode();
+    this.initialize_clipboard_tools();
   }
 
   this.initialize_collapse();
@@ -75,6 +80,187 @@ Post.initialize_collapse = function () {
     $(`.${category}-tag-list`).toggle();
     $(e.target).toggleClass("hidden-category");
     e.preventDefault();
+  });
+};
+
+Post.initialize_image_fallbacks = function () {
+  $(".js-fallbackable-image").on("error", function () {
+    const fallbackUrl = this.dataset.fallbackUrl;
+    if (!fallbackUrl || this.dataset.fallbackApplied === "1") {
+      return;
+    }
+
+    this.dataset.fallbackApplied = "1";
+    this.src = fallbackUrl;
+  });
+};
+
+Post.initialize_search_presets = function () {
+  const STORAGE_KEY = "flufffox.search.presets.v1";
+  const MAX_PRESETS = 12;
+  const $sections = $(".post-search");
+  if (!$sections.length || !window.localStorage) return;
+
+  const readPresets = function () {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      if (!Array.isArray(parsed)) return [];
+      return parsed
+        .map(item => String(item).trim().replace(/\s+/g, " "))
+        .filter(Boolean)
+        .slice(0, MAX_PRESETS);
+    } catch {
+      return [];
+    }
+  };
+
+  const writePresets = function (presets) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(presets.slice(0, MAX_PRESETS)));
+    } catch {
+      Utility.error("Could not save presets in this browser.");
+    }
+  };
+
+  const renderSection = function ($section, presets) {
+    const $list = $section.find("[data-role='preset-list']");
+    const $empty = $section.find("[data-role='preset-empty']");
+    $list.empty();
+
+    presets.forEach((preset, index) => {
+      const $item = $("<span class='post-search-preset-item'></span>");
+      const $apply = $("<button type='button' class='post-search-preset-link'></button>")
+        .text(preset)
+        .attr("title", preset)
+        .attr("data-index", index);
+      const $remove = $("<button type='button' class='post-search-preset-remove'>×</button>")
+        .attr("aria-label", `Remove preset ${preset}`)
+        .attr("title", "Remove preset")
+        .attr("data-index", index);
+      $item.append($apply, $remove);
+      $list.append($item);
+    });
+
+    $empty.toggle(presets.length === 0);
+  };
+
+  const renderAll = function () {
+    const presets = readPresets();
+    $sections.each((_, section) => renderSection($(section), presets));
+  };
+
+  $sections.each((_, section) => {
+    const $section = $(section);
+    const $input = $section.find("textarea[name='tags']");
+    const $form = $section.find("form.post-search-form");
+
+    $section.find("[data-action='save-search-preset']").on("click", () => {
+      const value = ($input.val() || "").trim().replace(/\s+/g, " ");
+      if (!value) {
+        Utility.error("Enter tags before saving a preset.");
+        return;
+      }
+
+      const presets = readPresets().filter(item => item !== value);
+      presets.unshift(value);
+      writePresets(presets);
+      renderAll();
+      Utility.notice("Search preset saved.");
+    });
+
+    $section.on("click", ".post-search-preset-link", e => {
+      const index = Number($(e.currentTarget).attr("data-index"));
+      const preset = readPresets()[index];
+      if (!preset) return;
+
+      $input.val(preset);
+      $form.trigger("submit");
+    });
+
+    $section.on("click", ".post-search-preset-remove", e => {
+      const index = Number($(e.currentTarget).attr("data-index"));
+      const presets = readPresets();
+      if (Number.isNaN(index) || index < 0 || index >= presets.length) return;
+
+      presets.splice(index, 1);
+      writePresets(presets);
+      renderAll();
+    });
+  });
+
+  renderAll();
+};
+
+Post.initialize_focus_mode = function () {
+  const $button = $(".ptbr-focus-button");
+  if (!$button.length || !window.localStorage) return;
+
+  const STORAGE_KEY = "flufffox.post.focus_mode";
+  const applyFocusMode = function (enabled) {
+    $("body").toggleClass("post-focus-mode", enabled);
+    $button.attr("aria-pressed", enabled ? "true" : "false");
+    $button.text(enabled ? "Exit Focus" : "Focus Mode");
+  };
+
+  let isEnabled = false;
+  try {
+    isEnabled = localStorage.getItem(STORAGE_KEY) === "1";
+  } catch {
+    isEnabled = false;
+  }
+  applyFocusMode(isEnabled);
+
+  $button.on("click", () => {
+    isEnabled = !isEnabled;
+    applyFocusMode(isEnabled);
+    try {
+      localStorage.setItem(STORAGE_KEY, isEnabled ? "1" : "0");
+    } catch {
+      Utility.error("Could not save focus mode preference.");
+    }
+  });
+};
+
+Post.copy_to_clipboard = async function (text) {
+  if (!text) return false;
+
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      // fallback below
+    }
+  }
+
+  try {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "absolute";
+    textarea.style.left = "-9999px";
+    document.body.appendChild(textarea);
+    textarea.select();
+    const copied = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    return copied;
+  } catch {
+    return false;
+  }
+};
+
+Post.initialize_clipboard_tools = function () {
+  $("#ptbr-wrapper .ptbr-copy-link, #ptbr-wrapper .ptbr-copy-file").on("click", async e => {
+    const $button = $(e.currentTarget);
+    const text = String($button.data("copy-value") || "");
+    const label = String($button.data("copy-label") || "Link");
+    const copied = await Post.copy_to_clipboard(text);
+
+    if (copied) {
+      Utility.notice(`${label} copied.`);
+    } else {
+      Utility.error(`Couldn't copy ${label.toLowerCase()}.`);
+    }
   });
 };
 

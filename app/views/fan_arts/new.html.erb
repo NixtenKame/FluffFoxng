@@ -1,0 +1,254 @@
+<% content_for :page_title, "Submit Fan Art" %>
+
+<div class="static-content fan-art-submission">
+  <h1>Submit Fan Art</h1>
+
+  <div class="submission-intro">
+    <p>We'd love to see your artwork! Please share your fan art of our fursona. Just fill out the form below with the details of your artwork.</p>
+    <p><strong>Important:</strong> Please make sure you have permission to share this artwork and that it complies with our community guidelines.</p>
+  </div>
+
+  <% if @fan_art.errors.any? %>
+    <div class="error-messages">
+      <h2><%= pluralize(@fan_art.errors.count, "error") %> prevented this fan art from being submitted:</h2>
+      <ul>
+        <% @fan_art.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-container">
+    <%= form_with(model: @fan_art, local: true) do |form| %>
+      <div class="form-group">
+        <%= form.label :title, "Art Title" %>
+        <%= form.text_field :title, placeholder: "Give your artwork a title", required: true, class: "form-control" %>
+        <small class="form-text">The name or title of your artwork</small>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :artist_name, "Your Name/Handle" %>
+        <%= form.text_field :artist_name, placeholder: "Your name or artist handle", required: true, class: "form-control" %>
+        <small class="form-text">How you'd like to be credited</small>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :artist_url, "Your Website/Profile (Optional)" %>
+        <%= form.url_field :artist_url, placeholder: "https://yourwebsite.com or https://twitter.com/yourhandle", class: "form-control" %>
+        <small class="form-text">Link to your website, social media, or portfolio (must start with http:// or https://)</small>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :image_url, "Image URL" %>
+        <%= form.url_field :image_url, placeholder: "https://example.com/your-artwork.png", required: true, class: "form-control" %>
+        <small class="form-text">URL to your artwork image (must start with http:// or https://)</small>
+      </div>
+
+      <div class="preview-info">
+        <p><strong>Note:</strong> Your artwork will be reviewed before being added to the gallery. Please allow 24-48 hours for approval.</p>
+      </div>
+
+      <div class="form-actions">
+        <%= form.submit "Submit Fan Art", class: "btn btn-primary" %>
+        <%= link_to "Cancel", posts_fan_art_path, class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="submission-guidelines">
+    <h3>Submission Guidelines</h3>
+    <ul>
+      <li>Artwork must be appropriate and follow our community guidelines</li>
+      <li>You must have permission to share this artwork</li>
+      <li>Images must be accessible via a direct URL</li>
+      <li>Please provide accurate artist information</li>
+      <li>Spam and inappropriate submissions may be rejected</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+  .fan-art-submission {
+    max-width: 600px;
+    padding: 2rem;
+    margin: 0 auto;
+  }
+
+  .fan-art-submission h1 {
+    margin-bottom: 1rem;
+    color: themed("color-text");
+  }
+
+  .submission-intro {
+    background: themed("color-section");
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .submission-intro p {
+    margin-bottom: 0.5rem;
+  }
+
+  .submission-intro p:last-child {
+    margin-bottom: 0;
+  }
+
+  .error-messages {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    color: #721c24;
+  }
+
+  .error-messages h2 {
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .error-messages ul {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .error-messages li {
+    margin-bottom: 0.25rem;
+  }
+
+  .form-container {
+    background: themed("color-foreground");
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #fff;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: themed("color-nav-background");
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+  }
+
+  .form-text {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    color: #999;
+  }
+
+  .preview-info {
+    background: #e7f3ff;
+    border-left: 4px solid #0066cc;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 4px;
+    color: #004085;
+  }
+
+  .preview-info p {
+    margin: 0;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: themed("color-nav-background");
+    color: themed("color-text");
+  }
+
+  .btn-primary:hover {
+    opacity: 0.8;
+  }
+
+  .btn-secondary {
+    background: #ccc;
+    color: #333;
+  }
+
+  .btn-secondary:hover {
+    opacity: 0.8;
+  }
+
+  .submission-guidelines {
+    background: themed("color-section");
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+  }
+
+  .submission-guidelines h3 {
+    margin-top: 0;
+    color: themed("color-text");
+  }
+
+  .submission-guidelines ul {
+    margin: 0;
+    padding-left: 2rem;
+  }
+
+  .submission-guidelines li {
+    margin-bottom: 0.5rem;
+    color: themed("color-text");
+  }
+
+  @media (max-width: 768px) {
+    .fan-art-submission {
+      padding: 1rem;
+    }
+
+    .form-container {
+      padding: 1rem;
+    }
+
+    .form-actions {
+      flex-direction: column;
+    }
+
+    .btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>

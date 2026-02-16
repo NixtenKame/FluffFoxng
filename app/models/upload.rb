@@ -13,7 +13,7 @@ class Upload < ApplicationRecord
   before_validation :fixup_source, on: :create
   validate :uploader_is_not_limited, on: :create
   validate :direct_url_is_whitelisted, on: :create
-  validates :rating, inclusion: { in: %w(q e s) }, allow_nil: false
+  validates :rating, inclusion: { in: %w(q s) }, allow_nil: false
   validate :md5_is_unique, on: :file
   validate on: :file do |upload|
     FileValidator.new(upload, file.path).validate
@@ -209,7 +209,8 @@ class Upload < ApplicationRecord
 
   def assign_rating_from_tags
     if (rating = TagQuery.fetch_metatag(tag_string, "rating"))
-      self.rating = rating.downcase.first
+      parsed_rating = rating.downcase.first
+      self.rating = parsed_rating if %w[q s].include?(parsed_rating)
     end
   end
 

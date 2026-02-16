@@ -7,7 +7,7 @@ module Admin
     context "The destroyed posts controller" do
       setup do
         @admin = create(:admin_user)
-        @bd_staff = create(:bd_staff_user)
+        @ff_staff = create(:ff_staff_user)
         @upload = UploadService.new(attributes_for(:jpg_upload).merge({ uploader: @admin })).start!
         @post = @upload.post
         as(@admin) { @post.expunge! }
@@ -31,14 +31,14 @@ module Admin
       context "update action" do
         should "work" do
           assert_difference("StaffAuditLog.count", 1) do
-            put_auth admin_destroyed_post_path(@post), @bd_staff, params: { destroyed_post: { notify: "false" } }
+            put_auth admin_destroyed_post_path(@post), @ff_staff, params: { destroyed_post: { notify: "false" } }
             assert_redirected_to(admin_destroyed_posts_path)
             assert_equal(false, @destroyed_post.reload.notify)
             assert_equal("disable_post_notifications", StaffAuditLog.last.action)
           end
 
           assert_difference("StaffAuditLog.count", 1) do
-            put_auth admin_destroyed_post_path(@post), @bd_staff, params: { destroyed_post: { notify: "true" } }
+            put_auth admin_destroyed_post_path(@post), @ff_staff, params: { destroyed_post: { notify: "true" } }
             assert_redirected_to(admin_destroyed_posts_path)
             assert_equal(true, @destroyed_post.reload.notify)
             assert_equal("enable_post_notifications", StaffAuditLog.last.action)

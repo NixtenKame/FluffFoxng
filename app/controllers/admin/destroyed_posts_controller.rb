@@ -3,7 +3,7 @@
 module Admin
   class DestroyedPostsController < ApplicationController
     before_action :admin_only
-    before_action :is_bd_staff_only, only: %i[update]
+    before_action :is_ff_staff_only, only: %i[update]
     respond_to :html
 
     def index

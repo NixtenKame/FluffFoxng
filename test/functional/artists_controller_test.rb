@@ -142,14 +142,14 @@ class ArtistsControllerTest < ActionDispatch::IntegrationTest
 
     context "with a dnp entry" do
       setup do
-        @bd_user = create(:bd_staff_user)
-        CurrentUser.user = @bd_user
+        @ff_user = create(:ff_staff_user)
+        CurrentUser.user = @ff_user
         @avoid_posting = create(:avoid_posting, artist: @artist)
       end
 
       should "not allow destroying" do
         assert_no_difference("Artist.count") do
-          delete_auth artist_path(@artist), @bd_user
+          delete_auth artist_path(@artist), @ff_user
         end
       end
 
@@ -157,7 +157,7 @@ class ArtistsControllerTest < ActionDispatch::IntegrationTest
       should "not allow destroying even if the dnp is inactive" do
         @avoid_posting.update(is_active: false)
         assert_no_difference("Artist.count") do
-          delete_auth artist_path(@artist), @bd_user
+          delete_auth artist_path(@artist), @ff_user
         end
       end
 

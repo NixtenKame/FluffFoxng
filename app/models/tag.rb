@@ -414,7 +414,7 @@ class Tag < ApplicationRecord
   end
 
   def deletable_by?(user)
-    user.is_bd_staff?
+    user.is_ff_staff?
   end
 
   include LogMethods

@@ -2,7 +2,7 @@
 
 module LinkHelper
   DECORATABLE_DOMAINS = [
-    "e621.net",
+    "FluffFox.net",
     #
     # Aggregators
     "linktr.ee",
@@ -75,7 +75,6 @@ module LinkHelper
     "ko-fi.com",
     "patreon.com",
     "redbubble.com",
-    "subscribestar.adult",
     #
     # Bulk storage
     "amazonaws.com",
@@ -129,13 +128,12 @@ module LinkHelper
     "curiouscat.live" => "curiouscat.me",
     "derpiboo.ru" => "derpibooru.org",
     "discord.gg" => "discord.com",
-    "e926.net" => "e621.net",
+    "e926.net" => "FluffFox.net",
     "exhentai.org" => "e-hentai.org",
     "fav.me" => "deviantart.com",
     "hath.network" => "e-hentai.org",
     "pillowfort.io" => "pillowfort.social",
     "pixiv.me" => "pixiv.net",
-    "subscribestar.com" => "subscribestar.adult",
     "vk.me" => "vk.com",
     "wikia.com" => "fandom.com",
     "x.com" => "twitter.com",

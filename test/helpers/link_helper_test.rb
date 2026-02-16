@@ -18,8 +18,8 @@ class LinkHelperTest < ActionView::TestCase
   end
 
   test "for a normal domain" do
-    assert_equal("e621.net", hostname_for_link("https://e621.net"))
-    assert_equal("e621.net", hostname_for_link("https://www.e621.net"))
+    assert_equal("nixten.ddns.net", hostname_for_link("https://nixten.ddns.net"))
+    assert_equal("nixten.ddns.net", hostname_for_link("https://www.nixten.ddns.net"))
 
     assert_equal("imgur.com", hostname_for_link("https://imgur.com"))
     assert_equal("imgur.com", hostname_for_link("https://www.imgur.com"))
