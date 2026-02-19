@@ -10,4 +10,20 @@ module CustomCss
       end
     end.join("\n")
   end
+
+  # Parse profile CSS and scope selectors to the user profile page content.
+  def self.parse_profile(css)
+    parse(css).split("}").filter_map do |rule|
+      next if rule.blank?
+
+      selector, body = rule.split("{", 2)
+      next if selector.blank? || body.blank?
+
+      selector = selector.strip
+      next if selector.start_with?("@")
+
+      scoped_selector = selector.split(",").map { |part| "#c-users #a-show #{part.strip}" }.join(", ")
+      "#{scoped_selector} {#{body.strip}}"
+    end.join("\n")
+  end
 end

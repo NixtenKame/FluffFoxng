@@ -276,6 +276,40 @@ ALTER SEQUENCE public.avoid_postings_id_seq OWNED BY public.avoid_postings.id;
 
 
 --
+-- Name: badges; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.badges (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    description text,
+    color character varying DEFAULT '#5B8DEF'::character varying NOT NULL,
+    active boolean DEFAULT true NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: badges_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.badges_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: badges_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.badges_id_seq OWNED BY public.badges.id;
+
+
+--
 -- Name: bans; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2194,6 +2228,39 @@ ALTER SEQUENCE public.uploads_id_seq OWNED BY public.uploads.id;
 
 
 --
+-- Name: user_badges; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_badges (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    badge_id bigint NOT NULL,
+    creator_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: user_badges_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_badges_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_badges_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_badges_id_seq OWNED BY public.user_badges.id;
+
+
+--
 -- Name: user_feedback; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2383,7 +2450,12 @@ furry -rating:s'::text,
     unread_dmail_count integer DEFAULT 0 NOT NULL,
     profile_about text DEFAULT ''::text NOT NULL,
     profile_artinfo text DEFAULT ''::text NOT NULL,
-    avatar_id integer
+    avatar_id integer,
+    otp_secret character varying,
+    otp_enabled_at timestamp(6) without time zone,
+    otp_backup_codes text,
+    otp_required_for_login boolean DEFAULT false NOT NULL,
+    profile_custom_style text DEFAULT ''::text NOT NULL
 );
 
 
@@ -2527,6 +2599,13 @@ ALTER TABLE ONLY public.avoid_posting_versions ALTER COLUMN id SET DEFAULT nextv
 --
 
 ALTER TABLE ONLY public.avoid_postings ALTER COLUMN id SET DEFAULT nextval('public.avoid_postings_id_seq'::regclass);
+
+
+--
+-- Name: badges id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badges ALTER COLUMN id SET DEFAULT nextval('public.badges_id_seq'::regclass);
 
 
 --
@@ -2880,6 +2959,13 @@ ALTER TABLE ONLY public.uploads ALTER COLUMN id SET DEFAULT nextval('public.uplo
 
 
 --
+-- Name: user_badges id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_badges ALTER COLUMN id SET DEFAULT nextval('public.user_badges_id_seq'::regclass);
+
+
+--
 -- Name: user_feedback id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2982,6 +3068,14 @@ ALTER TABLE ONLY public.avoid_posting_versions
 
 ALTER TABLE ONLY public.avoid_postings
     ADD CONSTRAINT avoid_postings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: badges badges_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badges
+    ADD CONSTRAINT badges_pkey PRIMARY KEY (id);
 
 
 --
@@ -3395,6 +3489,14 @@ ALTER TABLE ONLY public.uploads
 
 
 --
+-- Name: user_badges user_badges_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_badges
+    ADD CONSTRAINT user_badges_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: user_feedback user_feedback_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3609,6 +3711,13 @@ CREATE INDEX index_avoid_postings_on_is_active_and_id ON public.avoid_postings U
 --
 
 CREATE INDEX index_avoid_postings_on_updater_id ON public.avoid_postings USING btree (updater_id);
+
+
+--
+-- Name: index_badges_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_badges_on_name ON public.badges USING btree (name);
 
 
 --
@@ -4537,6 +4646,34 @@ CREATE INDEX index_uploads_on_uploader_ip_addr ON public.uploads USING btree (up
 
 
 --
+-- Name: index_user_badges_on_badge_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_badges_on_badge_id ON public.user_badges USING btree (badge_id);
+
+
+--
+-- Name: index_user_badges_on_creator_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_badges_on_creator_id ON public.user_badges USING btree (creator_id);
+
+
+--
+-- Name: index_user_badges_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_badges_on_user_id ON public.user_badges USING btree (user_id);
+
+
+--
+-- Name: index_user_badges_on_user_id_and_badge_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_user_badges_on_user_id_and_badge_id ON public.user_badges USING btree (user_id, badge_id);
+
+
+--
 -- Name: index_user_feedback_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4850,6 +4987,14 @@ ALTER TABLE ONLY public.avoid_postings
 
 
 --
+-- Name: user_badges fk_rails_ccd0d6d6f0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_badges
+    ADD CONSTRAINT fk_rails_ccd0d6d6f0 FOREIGN KEY (creator_id) REFERENCES public.users(id);
+
+
+--
 -- Name: favorites fk_rails_d20e53bb68; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4866,11 +5011,27 @@ ALTER TABLE ONLY public.avoid_postings
 
 
 --
+-- Name: user_badges fk_rails_d9eb7b26df; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_badges
+    ADD CONSTRAINT fk_rails_d9eb7b26df FOREIGN KEY (badge_id) REFERENCES public.badges(id);
+
+
+--
 -- Name: staff_notes fk_rails_eaa7223eea; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.staff_notes
     ADD CONSTRAINT fk_rails_eaa7223eea FOREIGN KEY (updater_id) REFERENCES public.users(id);
+
+
+--
+-- Name: user_badges fk_rails_ff28d27c3c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_badges
+    ADD CONSTRAINT fk_rails_ff28d27c3c FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -4880,6 +5041,9 @@ ALTER TABLE ONLY public.staff_notes
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260216030000'),
+('20260216010000'),
+('20260216000000'),
 ('20260215054000'),
 ('20260214000000'),
 ('20251127000001'),

@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 module GitHelper
+  def self.git(*args)
+    Open3.capture3("git", "-c", "safe.directory=#{Rails.root}", *args)
+  end
+
   def self.init
     if Rails.root.join("REVISION").exist?
       @hash = @tag = Rails.root.join("REVISION").read.strip
-    elsif Open3.capture3("git rev-parse --show-toplevel")[2].success?
-      @hash = Open3.capture3("git rev-parse HEAD")[0].strip
-      @tag = Open3.capture3("git describe --abbrev=0")[0].strip
+    elsif git("rev-parse", "--show-toplevel")[2].success?
+      @hash = git("rev-parse", "HEAD")[0].strip
+      @tag = git("describe", "--tags", "--abbrev=0")[0].strip
     else
       @hash = @tag = ""
     end

@@ -219,6 +219,9 @@ class StaticController < ApplicationController
       add_link[:admin, "Security", security_root_path]
       add_link[:admin, "Alt list", alt_list_admin_users_path]
       add_link[:admin, "SideKiq", sidekiq_path]
+      if Danbooru.config.bunkerweb_enabled? && Danbooru.config.bunkerweb_url.present?
+        add_link[:admin, "BunkerWeb", Danbooru.config.bunkerweb_url]
+      end
     end
 
     add_link[:admin, "Reowner", new_admin_reowner_path] if CurrentUser.is_ff_staff?

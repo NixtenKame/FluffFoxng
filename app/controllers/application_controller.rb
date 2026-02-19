@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :reset_current_user
   before_action :sanitize_params
   before_action :set_current_user
+  before_action :enforce_two_factor_setup
   before_action :normalize_search
   before_action :api_check
   before_action :enable_cors
@@ -195,6 +196,18 @@ class ApplicationController < ActionController::Base
     CurrentUser.user = nil
     CurrentUser.ip_addr = nil
     CurrentUser.safe_mode = Danbooru.config.safe_mode?
+  end
+
+  def enforce_two_factor_setup
+    return unless request.format.html?
+    return if CurrentUser.is_anonymous?
+    return unless CurrentUser.user.otp_setup_required?
+
+    allowed_controller = params[:controller] == "maintenance/user/two_factors"
+    allowed_logout = params[:controller] == "sessions" && params[:action] == "destroy"
+    return if allowed_controller || allowed_logout
+
+    redirect_to new_maintenance_user_two_factor_path, notice: "You must set up authenticator app login before continuing."
   end
 
   def requires_reauthentication

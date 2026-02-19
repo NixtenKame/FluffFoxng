@@ -10,6 +10,8 @@ class UserPasswordResetNonce < ApplicationRecord
   end
 
   def deliver_notice
+    return unless Danbooru.config.enable_outbound_emails?
+
     if user.email.present?
       Maintenance::User::PasswordResetMailer.reset_request(user, self).deliver_now
     end

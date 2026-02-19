@@ -2,6 +2,7 @@
 
 require "zxcvbn"
 require "mail"
+require "json"
 
 class User < ApplicationRecord
   class Error < Exception; end
@@ -107,6 +108,7 @@ class User < ApplicationRecord
   before_validation :blank_out_nonexistent_avatars
   validates :blacklisted_tags, length: { maximum: 150_000 }
   validates :custom_style, length: { maximum: 500_000 }
+  validates :profile_custom_style, length: { maximum: 500_000 }
   validates :profile_about, length: { maximum: Danbooru.config.user_about_max_size }
   validates :profile_artinfo, length: { maximum: Danbooru.config.user_about_max_size }
   validates :time_zone, inclusion: { in: ActiveSupport::TimeZone.all.map(&:name) }
@@ -135,6 +137,8 @@ class User < ApplicationRecord
   has_many :post_versions
   has_many :post_votes
   has_many :staff_notes, -> { active.order("staff_notes.id desc") }
+  has_many :user_badges, dependent: :destroy
+  has_many :badges, through: :user_badges
   has_many :user_name_change_requests, -> { order(id: :asc) }
   has_many :artists, foreign_key: "linked_user"
 
@@ -263,6 +267,75 @@ class User < ApplicationRecord
       else
         errors.add(:password, "is insecure")
       end
+    end
+  end
+
+  module TwoFactorMethods
+    def otp_enabled?
+      otp_secret.present? && otp_enabled_at.present?
+    end
+
+    def otp_setup_required?
+      otp_required_for_login? && !otp_enabled?
+    end
+
+    def verify_totp_code(code)
+      return false if otp_secret.blank?
+      Totp.verify?(otp_secret, code)
+    end
+
+    def verify_two_factor_code(code)
+      verify_totp_code(code) || consume_backup_code(code)
+    end
+
+    def enable_two_factor!(secret:, backup_codes:)
+      update!(
+        otp_secret: secret,
+        otp_enabled_at: Time.current,
+        otp_backup_codes: hash_backup_codes(backup_codes).to_json,
+        otp_required_for_login: true
+      )
+    end
+
+    def set_two_factor_backup_codes!(backup_codes)
+      update!(otp_backup_codes: hash_backup_codes(backup_codes).to_json)
+    end
+
+    def backup_codes_left
+      backup_code_hashes.length
+    end
+
+    def consume_backup_code(code)
+      normalized = normalize_otp_code(code)
+      return false if normalized.blank?
+
+      hashes = backup_code_hashes
+      index = hashes.find_index do |hashed|
+        BCrypt::Password.new(hashed) == normalized
+      rescue BCrypt::Errors::InvalidHash
+        false
+      end
+      return false if index.nil?
+
+      hashes.delete_at(index)
+      update_column(:otp_backup_codes, hashes.to_json)
+      true
+    end
+
+    private
+
+    def backup_code_hashes
+      JSON.parse(otp_backup_codes.presence || "[]")
+    rescue JSON::ParserError
+      []
+    end
+
+    def hash_backup_codes(codes)
+      codes.map { |code| BCrypt::Password.create(normalize_otp_code(code)) }
+    end
+
+    def normalize_otp_code(code)
+      code.to_s.delete(" \t-").upcase
     end
   end
 
@@ -976,6 +1049,7 @@ class User < ApplicationRecord
   include BanMethods
   include NameMethods
   include PasswordMethods
+  include TwoFactorMethods
   include AuthenticationMethods
   include LevelMethods
   include EmailMethods
@@ -998,6 +1072,10 @@ class User < ApplicationRecord
 
   def has_custom_style?
     custom_style.present? && !custom_style.strip.empty?
+  end
+
+  def has_profile_custom_style?
+    profile_custom_style.present? && !profile_custom_style.strip.empty?
   end
 
   def hide_favorites?

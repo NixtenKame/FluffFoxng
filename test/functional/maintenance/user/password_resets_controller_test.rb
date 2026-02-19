@@ -8,8 +8,8 @@ module Maintenance
       context "A password resets controller" do
         setup do
           @user = create(:user, :email => "abc@com.net")
-          ActionMailer::Base.delivery_method = :test
-          ActionMailer::Base.deliveries.clear
+          @secret = Totp.generate_secret
+          @user.enable_two_factor!(secret: @secret, backup_codes: Totp.generate_backup_codes(count: 2))
         end
 
         should "render the new page" do
@@ -20,95 +20,44 @@ module Maintenance
         context "create action" do
           context "given invalid parameters" do
             setup do
-              post maintenance_user_password_reset_path, params: {:nonce => {:email => ""}}
-            end
-
-            should "not create a new nonce" do
-              assert_equal(0, UserPasswordResetNonce.count)
+              post maintenance_user_password_reset_path, params: { name: "", otp_code: "", password: "password123", password_confirm: "password123" }
             end
 
             should "redirect to the new page" do
               assert_redirected_to new_maintenance_user_password_reset_path
             end
+          end
 
-            should "not deliver an email" do
-              assert_equal(0, ActionMailer::Base.deliveries.size)
+          context "given an invalid authenticator code" do
+            setup do
+              @old_password = @user.bcrypt_password_hash
+              post maintenance_user_password_reset_path, params: {
+                name: @user.name,
+                otp_code: "000000",
+                password: "newpassword123",
+                password_confirm: "newpassword123",
+              }
+            end
+
+            should "not reset the password" do
+              @user.reload
+              assert_equal(@old_password, @user.bcrypt_password_hash)
+            end
+
+            should "redirect to the new page" do
+              assert_redirected_to new_maintenance_user_password_reset_path
             end
           end
 
           context "given valid parameters" do
             setup do
-              post maintenance_user_password_reset_path, params: { email: @user.email }
-            end
-
-            should "create a new nonce" do
-              assert_equal(1, UserPasswordResetNonce.where(user: @user).count)
-            end
-
-            should "redirect to the new page" do
-              assert_redirected_to new_maintenance_user_password_reset_path
-            end
-
-            should "deliver an email to the supplied email address" do
-              assert_equal(1, ActionMailer::Base.deliveries.size)
-            end
-          end
-        end
-
-        context "edit action" do
-          context "with invalid parameters" do
-            setup do
-              get edit_maintenance_user_password_reset_path, params: {:email => "a@b.c"}
-            end
-
-            should "succeed silently" do
-              assert_response :success
-            end
-          end
-
-          context "with valid parameters" do
-            setup do
-              @user = create(:user)
-              @nonce = create(:user_password_reset_nonce, user: @user)
-              ActionMailer::Base.deliveries.clear
-              get edit_maintenance_user_password_reset_path, params: {uid: @user.id, key: @nonce.key}
-            end
-
-            should "succeed" do
-              assert_response :success
-            end
-          end
-
-          context "with uid containing non-numeric characters (translation software)" do
-            setup do
-              @user = create(:user)
-              @nonce = create(:user_password_reset_nonce, user: @user)
-              ActionMailer::Base.deliveries.clear
-              # Simulate Chinese translation appending text to the UID
-              get edit_maintenance_user_password_reset_path, params: { uid: "#{@user.id}关闭网页", key: @nonce.key }
-            end
-
-            should "succeed by sanitizing the uid" do
-              assert_response :success
-              # Should render the form, not show "Invalid reset" message
-              assert_select "h1", text: "Reset Password"
-              assert_select "input[type=password]"
-            end
-          end
-        end
-
-        context "update action" do
-          context "with valid parameters" do
-            setup do
-              @user = create(:user)
-              @nonce = create(:user_password_reset_nonce, user: @user)
-              ActionMailer::Base.deliveries.clear
               @old_password = @user.bcrypt_password_hash
-              put maintenance_user_password_reset_path, params: { uid: @user.id.to_s, key: @nonce.key, password: "test", password_confirm: "test" }
-            end
-
-            should "succeed" do
-              assert_redirected_to new_maintenance_user_password_reset_path
+              post maintenance_user_password_reset_path, params: {
+                name: @user.name,
+                otp_code: Totp.at(@secret, Time.current),
+                password: "newpassword123",
+                password_confirm: "newpassword123",
+              }
             end
 
             should "change the password" do
@@ -116,32 +65,32 @@ module Maintenance
               assert_not_equal(@old_password, @user.bcrypt_password_hash)
             end
 
-            should "delete the nonce" do
-              assert_equal(0, UserPasswordResetNonce.count)
+            should "redirect to login page" do
+              assert_redirected_to new_session_path
             end
           end
+        end
 
-          context "with uid containing non-numeric characters (translation software)" do
+        context "edit action" do
+          context "with any parameters" do
             setup do
-              @user = create(:user)
-              @nonce = create(:user_password_reset_nonce, user: @user)
-              ActionMailer::Base.deliveries.clear
-              @old_password = @user.bcrypt_password_hash
-              # Simulate Chinese translation appending text to the UID
-              put maintenance_user_password_reset_path, params: { uid: "#{@user.id}关闭网页", key: @nonce.key, password: "newpass123", password_confirm: "newpass123" }
+              get edit_maintenance_user_password_reset_path, params: {:email => "a@b.c"}
             end
 
-            should "succeed by sanitizing the uid" do
+            should "redirect to new reset page" do
               assert_redirected_to new_maintenance_user_password_reset_path
             end
+          end
+        end
 
-            should "change the password despite the extra characters" do
-              @user.reload
-              assert_not_equal(@old_password, @user.bcrypt_password_hash)
+        context "update action" do
+          context "with any parameters" do
+            setup do
+              put maintenance_user_password_reset_path, params: { uid: @user.id.to_s, key: "x", password: "test12345", password_confirm: "test12345" }
             end
 
-            should "delete the nonce" do
-              assert_equal(0, UserPasswordResetNonce.count)
+            should "redirect to new reset page" do
+              assert_redirected_to new_maintenance_user_password_reset_path
             end
           end
         end

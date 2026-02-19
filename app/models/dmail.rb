@@ -195,6 +195,8 @@ class Dmail < ApplicationRecord
   end
 
   def send_email
+    return unless Danbooru.config.enable_outbound_emails?
+
     if to.receive_email_notifications? && to.email =~ /@/ && owner_id == to.id
       UserMailer.dmail_notice(self).deliver_now
     end

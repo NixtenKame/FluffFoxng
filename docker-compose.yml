@@ -1,6 +1,8 @@
 x-environment: &common-env
-  DANBOORU_HOSTNAME: ${SERVER_PROTOCOL:-http}://localhost:${EXPOSED_SERVER_PORT:-3000}
+  DANBOORU_HOSTNAME: ${DANBOORU_HOSTNAME:-${SERVER_PROTOCOL:-http}://localhost:${EXPOSED_SERVER_PORT:-3000}}
   DANBOORU_DOMAIN: ${DANBOORU_DOMAIN:-localhost}
+  DANBOORU_BUNKERWEB_ENABLED: ${DANBOORU_BUNKERWEB_ENABLED:-true}
+  DANBOORU_BUNKERWEB_URL: ${DANBOORU_BUNKERWEB_URL:-https://localhost:${EXPOSED_BUNKERWEB_PORT:-8443}}
   DANBOORU_REDIS_URL: redis://redis
   DANBOORU_OPENSEARCH_HOST: opensearch
   DANBOORU_MEMCACHED_SERVERS: memcached
@@ -76,14 +78,17 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.flufffox.entrypoints=web"
-      - "traefik.http.routers.flufffox.rule=Host(`${DANBOORU_DOMAIN:-localhost}`)"
+      - "traefik.http.routers.flufffox.rule=Host(`flufffox.aws.local`) || Host(`ec2-34-205-197-51.compute-1.amazonaws.com`) || Host(`nixten.ddns.net`)"
       - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
       - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
       - "traefik.http.routers.flufffox.middlewares=redirect-https"
-      - "traefik.http.routers.flufffox-https.entrypoints=websecure"
-      - "traefik.http.routers.flufffox-https.rule=Host(`${DANBOORU_DOMAIN:-localhost}`)"
-      - "traefik.http.routers.flufffox-https.tls=true"
-      - "traefik.http.routers.flufffox-https.tls.certresolver=le"
+      - "traefik.http.routers.flufffox-https-public.entrypoints=websecure"
+      - "traefik.http.routers.flufffox-https-public.rule=Host(`nixten.ddns.net`)"
+      - "traefik.http.routers.flufffox-https-public.tls=true"
+      - "traefik.http.routers.flufffox-https-public.tls.certresolver=le"
+      - "traefik.http.routers.flufffox-https-local.entrypoints=websecure"
+      - "traefik.http.routers.flufffox-https-local.rule=Host(`flufffox.aws.local`) || Host(`ec2-34-205-197-51.compute-1.amazonaws.com`)"
+      - "traefik.http.routers.flufffox-https-local.tls=true"
       - "traefik.http.services.flufffox.loadbalancer.server.port=80"
     # nginx listens on the internal network; Traefik will publish host ports 80/443
   file-server:
@@ -93,10 +98,126 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.flufffox-files.entrypoints=websecure9001"
-      - "traefik.http.routers.flufffox-files.rule=Host(`${DANBOORU_DOMAIN:-localhost}`) && PathPrefix(`/data`)"
+      - "traefik.http.routers.flufffox-files.rule=(Host(`flufffox.aws.local`) || Host(`ec2-34-205-197-51.compute-1.amazonaws.com`) || Host(`nixten.ddns.net`)) && PathPrefix(`/data`)"
       - "traefik.http.routers.flufffox-files.tls=true"
       - "traefik.http.services.flufffox-files.loadbalancer.server.port=80"
     command: sh -c "chmod o+rx /usr /usr/share /usr/share/nginx && echo 'server { listen 80; root /usr/share/nginx/html; autoindex on; location /data/ { alias /usr/share/nginx/html/; autoindex on; } location ~ /\. { deny all; } }' > /etc/nginx/conf.d/default.conf && nginx -g \"daemon off;\""    
+
+  bunkerweb:
+    image: bunkerity/bunkerweb:latest
+    user: "0:0"
+    ports:
+      - "${EXPOSED_BUNKERWEB_PORT:-8443}:443"
+    volumes:
+      - bunkerweb_data:/var/lib/bunkerweb
+    depends_on:
+      - nginx
+      - bunkerweb-ui
+      - bunkerweb-scheduler
+    environment:
+      AUTOCONF_MODE: "no"
+      KEEP_CONFIG_ON_RESTART: "yes"
+    entrypoint:
+      - /bin/sh
+      - -lc
+      - |
+        cat > /tmp/variables.env <<EOF
+        IS_LOADING=no
+        KEEP_CONFIG_ON_RESTART=yes
+        MULTISITE=yes
+        HTTP_PORT=80
+        HTTPS_PORT=443
+        SERVER_NAME=${BUNKERWEB_SERVER_NAME}
+        API_WHITELIST_IP=127.0.0.0/8 172.16.0.0/12
+        USE_REVERSE_PROXY=yes
+        REVERSE_PROXY_HOST=http://nginx:80
+        REVERSE_PROXY_URL=/
+        USE_WHITELIST=no
+        AUTO_LETS_ENCRYPT=no
+        USE_UI=yes
+        UI_HOST=http://bunkerweb-ui:7000
+        BUNKERWEB_INSTANCES=http://bunkerweb:5000
+        DATABASE_URI=sqlite:////var/lib/bunkerweb/db.sqlite3
+        EOF
+        mkdir -p /var/cache/bunkerweb/misc
+        if [ ! -f /var/cache/bunkerweb/misc/default-server-cert.pem ] || [ ! -f /var/cache/bunkerweb/misc/default-server-cert.key ]; then
+          openssl req -x509 -nodes -newkey rsa:2048 \
+            -keyout /var/cache/bunkerweb/misc/default-server-cert.key \
+            -out /var/cache/bunkerweb/misc/default-server-cert.pem \
+            -days 3650 -subj "/CN=${DANBOORU_DOMAIN:-localhost}"
+        fi
+        python3 /usr/share/bunkerweb/gen/main.py --variables /tmp/variables.env
+        exec /usr/share/bunkerweb/entrypoint.sh
+
+  bunkerweb-ui:
+    image: bunkerity/bunkerweb-ui:latest
+    user: "0:0"
+    ports:
+      - "${EXPOSED_BUNKERWEB_UI_PORT:-7000}:7000"
+    environment:
+      DATABASE_URI: sqlite:////var/lib/bunkerweb/db.sqlite3
+      BUNKERWEB_INSTANCES: http://bunkerweb:5000
+      UI_LISTEN_PORT: "7000"
+      BUNKERWEB_SERVER_NAME: ${BUNKERWEB_SERVER_NAME:-localhost}
+    volumes:
+      - bunkerweb_data:/var/lib/bunkerweb
+    entrypoint:
+      - /bin/sh
+      - -lc
+      - |
+        sed -i 's/!e.length||!e.val()||!e.get(0).checkValidity()/!e.length||!e.val()||!e.val().trim()/g' /usr/share/bunkerweb/ui/app/static/js/pages/setup.js
+        sed -i 's/val(e.val())/val(e.val().trim())/g' /usr/share/bunkerweb/ui/app/static/js/pages/setup.js
+        python3 - <<'PY'
+        from pathlib import Path
+        p = Path("/usr/share/bunkerweb/ui/app/static/js/pages/setup.js")
+        s = p.read_text()
+        dollar = chr(36)
+        old = 'if(' + dollar + '("#setup-subscribe-newsletter").prop("checked")){'
+        new = 'if(false&&' + dollar + '("#setup-subscribe-newsletter").prop("checked")){'
+        if old in s:
+          p.write_text(s.replace(old, new, 1))
+        PY
+        (
+          DB="/var/lib/bunkerweb/db.sqlite3"
+          DOMAIN="${BUNKERWEB_SERVER_NAME:-localhost}"
+          for _ in $$(seq 1 90); do
+            if [ -f "$$DB" ] && sqlite3 "$$DB" ".tables" 2>/dev/null | grep -q "bw_services"; then
+              sqlite3 "$$DB" "BEGIN;
+                UPDATE bw_services SET id='$${DOMAIN}', last_update=datetime('now') WHERE id='www.example.com';
+                UPDATE bw_services_settings SET service_id='$${DOMAIN}' WHERE service_id='www.example.com';
+                INSERT OR IGNORE INTO bw_services(id,method,is_draft,creation_date,last_update)
+                  VALUES ('$${DOMAIN}','scheduler',0,datetime('now'),datetime('now'));
+                INSERT OR REPLACE INTO bw_global_values(setting_id,value,suffix,method)
+                  VALUES ('SERVER_NAME','$${DOMAIN}',0,'manual');
+                INSERT OR REPLACE INTO bw_global_values(setting_id,value,suffix,method)
+                  VALUES ('API_WHITELIST_IP','127.0.0.0/8 172.16.0.0/12',0,'manual');
+                INSERT OR REPLACE INTO bw_services_settings(service_id,setting_id,value,suffix,method)
+                  VALUES ('$${DOMAIN}','USE_UI','yes',0,'manual');
+                INSERT OR REPLACE INTO bw_services_settings(service_id,setting_id,value,suffix,method)
+                  VALUES ('$${DOMAIN}','USE_REVERSE_PROXY','yes',0,'manual');
+                INSERT OR REPLACE INTO bw_services_settings(service_id,setting_id,value,suffix,method)
+                  VALUES ('$${DOMAIN}','REVERSE_PROXY_HOST','http://nginx:80',0,'manual');
+                INSERT OR REPLACE INTO bw_services_settings(service_id,setting_id,value,suffix,method)
+                  VALUES ('$${DOMAIN}','REVERSE_PROXY_URL','/',0,'manual');
+                INSERT OR REPLACE INTO bw_services_settings(service_id,setting_id,value,suffix,method)
+                  VALUES ('$${DOMAIN}','AUTO_LETS_ENCRYPT','no',0,'manual');
+                INSERT OR REPLACE INTO bw_services_settings(service_id,setting_id,value,suffix,method)
+                  VALUES ('$${DOMAIN}','USE_WHITELIST','no',0,'manual');
+              COMMIT;" && break
+            fi
+            sleep 2
+          done
+        ) &
+        exec ./entrypoint.sh
+
+  bunkerweb-scheduler:
+    image: bunkerity/bunkerweb-scheduler:latest
+    environment:
+      DATABASE_URI: sqlite:////var/lib/bunkerweb/db.sqlite3
+      BUNKERWEB_INSTANCES: http://bunkerweb:5000
+    volumes:
+      - bunkerweb_data:/var/lib/bunkerweb
+
   postgres:
     image: postgres:15-alpine
     user: "1000:1000"
@@ -124,6 +245,7 @@ services:
     command:
       - --api.insecure=true
       - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
       - --entrypoints.websecure9001.address=:9001
@@ -252,5 +374,6 @@ volumes:
   opensearch_data:
   db_data:
   redis_data_v2:
+  bunkerweb_data:
   node_modules:
   rubocop_cache:

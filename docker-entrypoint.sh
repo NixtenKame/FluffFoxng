@@ -1,6 +1,11 @@
 #!/bin/sh
 set -e
 
+# Ensure Ruby has a writable temp directory.
+mkdir -p /tmp
+chmod 1777 /tmp
+export TMPDIR=/tmp
+
 yarn install --frozen-lockfile
 rm -f .overmind.sock
 rm -f /tmp/rails-server.pid

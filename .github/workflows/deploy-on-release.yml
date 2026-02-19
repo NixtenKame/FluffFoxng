@@ -1,0 +1,63 @@
+name: Deploy On Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to deploy (for manual runs)"
+        required: false
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy release tag to server
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || github.event.inputs.tag }}
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          envs: RELEASE_TAG
+          script_stop: true
+          script: |
+            set -euo pipefail
+
+            APP_DIR="${{ secrets.DEPLOY_PATH }}"
+            TAG="${RELEASE_TAG:-}"
+
+            if [ -z "$TAG" ]; then
+              echo "No release tag provided."
+              exit 1
+            fi
+
+            cd "$APP_DIR"
+
+            git fetch origin --tags --force
+            git checkout "$TAG"
+
+            if docker compose version >/dev/null 2>&1; then
+              COMPOSE="docker compose"
+            else
+              COMPOSE="docker-compose"
+            fi
+
+            # Recreate only web stack services to avoid stale git metadata/version values.
+            docker rm -f \
+              flufffoxng_FluffFox_1 \
+              flufffoxng_nginx_1 \
+              flufffoxng_file-server_1 \
+              flufffoxng_traefik_1 \
+              flufffoxng_bunkerweb_1 \
+              flufffoxng_bunkerweb-ui_1 \
+              flufffoxng_bunkerweb-scheduler_1 || true
+
+            $COMPOSE -f docker-compose.yml up -d \
+              FluffFox nginx file-server traefik bunkerweb-ui bunkerweb-scheduler bunkerweb
+
+            docker ps --format 'table {{.Names}}\t{{.Status}}' | grep 'flufffoxng_' || true

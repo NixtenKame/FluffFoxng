@@ -1,0 +1,8 @@
+<div id="c-moderator-badges"><div id="a-edit">
+  <h1>Edit Badge</h1>
+  <%= render "form", badge: @badge, url: moderator_badge_path(@badge), submit_label: "Update Badge" %>
+</div></div>
+
+<% content_for(:page_title) do %>
+  Edit Badge
+<% end %>

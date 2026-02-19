@@ -25,6 +25,11 @@
   <a href="<%= has_mail ? dmails_path(search: { to_id: user.id }, folder: "received") : dmails_path %>" class="simple-avatar-dmails">
     <%= svg_icon(:mail) %> Messages
   </a>
+  <% if CurrentUser.is_moderator? %>
+    <a href="<%= moderator_badges_path %>">
+      <%= svg_icon(:ticket) %> Badge Manager
+    </a>
+  <% end %>
   <hr />
 
   <a href="<%= session_path %>" data-method="delete">

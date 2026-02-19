@@ -23,7 +23,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(User.name_or_id_to_id_forced(params[:id]))
+    @user = User.includes(user_badges: :badge).find(User.name_or_id_to_id_forced(params[:id]))
     @presenter = UserPresenter.new(@user)
     respond_with(@user, methods: @user.full_attributes)
   end
@@ -93,7 +93,10 @@ class UsersController < ApplicationController
     raise User::PrivilegeError, "Already signed in" unless CurrentUser.is_anonymous?
     raise User::PrivilegeError, "Signups are disabled" unless Danbooru.config.enable_signups?
     User.transaction do
-      @user = User.new(user_params(:create).merge({ last_ip_addr: request.remote_ip }))
+      @user = User.new(user_params(:create).merge({
+        last_ip_addr: request.remote_ip,
+        otp_required_for_login: Danbooru.config.require_two_factor_for_new_users?,
+      }))
       @user.validate_email_format = true
       @user.email_verification_key = "1" if Danbooru.config.enable_email_verification?
       if !Danbooru.config.enable_recaptcha? || verify_recaptcha(model: @user)
@@ -101,7 +104,7 @@ class UsersController < ApplicationController
         if @user.errors.empty?
           session[:user_id] = @user.id
           session[:ph] = @user.password_token
-          if Danbooru.config.enable_email_verification?
+          if Danbooru.config.enable_email_verification? && Danbooru.config.enable_outbound_emails?
             Maintenance::User::EmailConfirmationMailer.confirmation(@user).deliver_now
           end
         else
@@ -164,7 +167,7 @@ class UsersController < ApplicationController
       style_usernames show_hidden_comments
       enable_auto_complete
       enable_safe_mode disable_responsive_mode
-      forum_notification_dot
+      forum_notification_dot profile_custom_style
     ]
 
     permitted_params += [dmail_filter_attributes: %i[id words]]

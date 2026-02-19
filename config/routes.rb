@@ -44,6 +44,12 @@ Rails.application.routes.draw do
   resources :edit_histories
   namespace :moderator do
     resource :dashboard, only: %i[show]
+    resources :badges, except: %i[show] do
+      member do
+        post :assign
+        post :unassign
+      end
+    end
     resources :ip_addrs, only: %i[index] do
       collection do
         get :export
@@ -76,6 +82,10 @@ Rails.application.routes.draw do
       resource :count_fixes, only: %i[new create]
       resource :email_notification, only: %i[show destroy]
       resource :password_reset, only: %i[new create edit update]
+      resource :two_factor, only: %i[show new create] do
+        post :regenerate_backup_codes
+        post :skip
+      end
       resource :login_reminder, only: %i[new create]
       resource :deletion, only: %i[show destroy]
       resource :email_change, only: %i[new create]

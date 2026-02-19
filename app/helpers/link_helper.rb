@@ -2,7 +2,7 @@
 
 module LinkHelper
   DECORATABLE_DOMAINS = [
-    "FluffFox.net",
+    "nixten.ddns.net",
     #
     # Aggregators
     "linktr.ee",
@@ -128,7 +128,7 @@ module LinkHelper
     "curiouscat.live" => "curiouscat.me",
     "derpiboo.ru" => "derpibooru.org",
     "discord.gg" => "discord.com",
-    "e926.net" => "FluffFox.net",
+    "e926.net" => "nixten.ddns.net",
     "exhentai.org" => "e-hentai.org",
     "fav.me" => "deviantart.com",
     "hath.network" => "e-hentai.org",

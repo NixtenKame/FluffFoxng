@@ -4,6 +4,10 @@ class EmailsController < ApplicationController
   respond_to :html
 
   def resend_confirmation
+    unless Danbooru.config.enable_outbound_emails?
+      return redirect_to home_users_path, notice: "Email delivery is disabled on this site."
+    end
+
     if IpBan.is_banned? CurrentUser.ip_addr
       redirect_to home_users_path, notice: "An error occurred trying to send an activation email"
       return

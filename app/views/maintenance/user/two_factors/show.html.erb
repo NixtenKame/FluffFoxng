@@ -1,0 +1,40 @@
+<div id="c-maintenance-user-two-factors"><div id="a-show">
+  <h1>Two-Factor Authentication</h1>
+
+  <% if CurrentUser.user.otp_enabled? %>
+    <section class="session_info">
+      <p>Two-factor authentication is enabled on your account.</p>
+      <p>Backup codes remaining: <strong><%= CurrentUser.user.backup_codes_left %></strong></p>
+    </section>
+
+    <% if @backup_codes.present? %>
+      <section class="session_info">
+        <p><strong>Save these backup codes now.</strong> They are shown only once.</p>
+        <ul>
+          <% @backup_codes.each do |code| %>
+            <li><code><%= code %></code></li>
+          <% end %>
+        </ul>
+      </section>
+    <% end %>
+
+    <%= form_tag(regenerate_backup_codes_maintenance_user_two_factor_path, class: "simple_form session_form") do %>
+      <div class="input">
+        <label for="otp_code">Authenticator or Backup Code</label>
+        <%= text_field_tag :otp_code, "", autocomplete: "one-time-code", maxlength: 24 %>
+      </div>
+      <%= submit_tag "Regenerate Backup Codes" %>
+    <% end %>
+  <% else %>
+    <section class="session_info">
+      <p>Two-factor authentication is not enabled yet.</p>
+      <p><%= link_to "Start setup", new_maintenance_user_two_factor_path %></p>
+    </section>
+  <% end %>
+</div></div>
+
+<%= render "sessions/secondary_links" %>
+
+<% content_for(:page_title) do %>
+  Two-Factor Authentication
+<% end %>

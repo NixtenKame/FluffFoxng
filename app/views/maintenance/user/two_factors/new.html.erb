@@ -1,0 +1,31 @@
+<div id="c-maintenance-user-two-factors"><div id="a-new">
+  <h1>Set Up Authenticator App</h1>
+
+  <section class="session_info">
+    <p>Open your authenticator app (Google Authenticator, Authy, LastPass Authenticator, etc.) and add this account.</p>
+    <p><strong>Account:</strong> <%= CurrentUser.user.name %></p>
+    <p><strong>Secret key:</strong> <code><%= @secret %></code></p>
+    <p><strong>Setup URL:</strong> <%= link_to "Open otpauth URI", @otpauth_uri %></p>
+    <p>Then enter the 6-digit code from your app.</p>
+  </section>
+
+  <%= form_tag(maintenance_user_two_factor_path, class: "simple_form session_form") do %>
+    <div class="input">
+      <label for="otp_code">Authenticator Code</label>
+      <%= text_field_tag :otp_code, "", autocomplete: "one-time-code", inputmode: "numeric", maxlength: 12 %>
+    </div>
+    <%= submit_tag "Enable Two-Factor" %>
+  <% end %>
+
+  <% if CurrentUser.user.otp_setup_required? %>
+    <%= form_tag(skip_maintenance_user_two_factor_path, class: "simple_form session_form") do %>
+      <%= submit_tag "Skip For Now" %>
+    <% end %>
+  <% end %>
+</div></div>
+
+<%= render "sessions/secondary_links" %>
+
+<% content_for(:page_title) do %>
+  Set Up Authenticator App
+<% end %>

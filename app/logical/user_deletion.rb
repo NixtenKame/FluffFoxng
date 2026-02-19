@@ -43,6 +43,7 @@ class UserDeletion
       profile_about: '',
       profile_artinfo: '',
       custom_style: '',
+      profile_custom_style: '',
       level: User::Levels::MEMBER,
     )
   end

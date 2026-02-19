@@ -4,6 +4,7 @@
     <%= f.input(:url, as: :hidden, input_html: { value: params[:url] }) %>
     <%= f.input(:name, label: "Username", autofocus: true) %>
     <%= f.input(:password) %>
+    <%= f.input(:otp_code, label: "Authenticator Code", required: false, hint: "Required if your account has two-factor enabled.") %>
     <%= f.input(:remember, as: :boolean, input_html: { checked: "checked" }) %>
     <%= f.submit("Continue") %>
   <% end %>

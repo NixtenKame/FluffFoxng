@@ -1,6 +1,15 @@
 <div class="ui-corner-all ui-state-highlight site-notice" id="unactivated-notice">
-  <h1>You still need to activate your account via an email sent to
-    <span style="font-weight:bold;"><%= CurrentUser.email %> (<%= link_to "resend", resend_confirmation_email_path %>)</span>
+  <h1>
+    <% if Danbooru.config.enable_outbound_emails? %>
+      You still need to activate your account via an email sent to
+    <% else %>
+      Your account still needs activation.
+    <% end %>
+    <% if Danbooru.config.enable_outbound_emails? %>
+      <span style="font-weight:bold;"><%= CurrentUser.email %> (<%= link_to "resend", resend_confirmation_email_path %>)</span>
+    <% else %>
+      <span style="font-weight:bold;"><%= CurrentUser.email %></span>
+    <% end %>
     <span style="font-weight:bold;">(<%= link_to "change email", new_maintenance_user_email_change_path %>)</span>
   </h1>
 </div>

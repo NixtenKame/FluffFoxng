@@ -1,0 +1,7 @@
+<%= custom_form_for(badge, url: url) do |f| %>
+  <%= f.input :name %>
+  <%= f.input :description %>
+  <%= f.input :color, hint: "Hex color like #5B8DEF" %>
+  <%= f.input :active, as: :boolean %>
+  <%= f.button :submit, submit_label %>
+<% end %>

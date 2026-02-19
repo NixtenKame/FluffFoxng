@@ -29,6 +29,18 @@
     color: themed("color-text-muted");
     margin-top: -0.25rem;
   }
+
+  .user-custom-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: 0.2rem;
+  }
+
+  .custom-user-badge {
+    background: var(--badge-color, themed("color-user-member"));
+    color: #ffffff;
+  }
 }
 
 .profile-quickie {

@@ -61,6 +61,7 @@ class SessionLoader
       return unless pieces.length == 2
       user = User.find_by_id(pieces[0].to_i)
       return unless user
+      return if user.otp_required_for_login?
       return if pieces[1].to_i != user.password_token
       CurrentUser.user = user
       session[:user_id] = user.id

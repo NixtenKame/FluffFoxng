@@ -21,7 +21,7 @@ module Danbooru
     end
 
     def domain
-      "FluffFox.net"
+      "nixten.ddns.net"
     end
 
     # Force rating:s on this version of the site.
@@ -491,6 +491,25 @@ module Danbooru
       false
     end
 
+    # If false, the app will never send outbound emails (password resets,
+    # confirmation, dmail notifications, forum notifications).
+    def enable_outbound_emails?
+      false
+    end
+
+    # If true, password reset requests will show a one-time reset URL on the
+    # reset page instead of relying solely on email delivery. Keep this off on
+    # public sites unless you fully understand the account recovery tradeoffs.
+    def password_reset_show_link?
+      false
+    end
+
+    # If true, newly created accounts must configure authenticator-app login
+    # (TOTP) before they can use the site.
+    def require_two_factor_for_new_users?
+      true
+    end
+
     def enable_signups?
       true
     end
@@ -668,7 +687,7 @@ module Danbooru
     end
 
     def mail_from_addr
-      "FluffFox.net <noreply@FluffFox.net>"
+      "nixtenkame@gmail.com <noreply@gmail.com>"
     end
 
     # disable this for tests
@@ -773,6 +792,18 @@ module Danbooru
 
     def fsc_modal_enabled?
       false
+    end
+
+    # Enable a BunkerWeb admin link in the sitemap.
+    # Set with DANBOORU_BUNKERWEB_ENABLED=true.
+    def bunkerweb_enabled?
+      false
+    end
+
+    # External URL for BunkerWeb admin UI (for example, http://localhost:8080).
+    # Set with DANBOORU_BUNKERWEB_URL.
+    def bunkerweb_url
+      nil
     end
 
     def janitor_reports_discord_webhook_url

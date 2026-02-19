@@ -38,6 +38,22 @@ module UsersHelper
     end
   end
 
+  def user_custom_badges(user)
+    return if user.nil?
+
+    badges = user.user_badges.map(&:badge).select(&:active?)
+    return if badges.empty?
+
+    tag.span(class: "user-custom-badges") do
+      safe_join(
+        badges.map do |badge|
+          tag.span(badge.name.upcase, class: "level-badge custom-user-badge", style: "--badge-color: #{badge.color};")
+        end,
+        " "
+      )
+    end
+  end
+
   def user_feedback_badge(user)
     return if user.nil?
 

@@ -4,52 +4,47 @@ module Maintenance
   module User
     class PasswordResetsController < ApplicationController
       def new
-        @nonce = UserPasswordResetNonce.new
+        @reset_name = ""
       end
 
       def edit
-        @nonce = find_nonce_from_params
+        redirect_to new_maintenance_user_password_reset_path, notice: "Token reset links are disabled. Use your authenticator code to reset your password."
       end
 
       def create
-        ::User.with_email(params[:email]).each do |user|
-          next if user.is_moderator?
-          UserPasswordResetNonce.create(user_id: user.id)
+        if RateLimiter.check_limit("password_reset:#{request.remote_ip}", 5, 1.hour)
+          return redirect_to new_maintenance_user_password_reset_path, notice: "Too many reset attempts. Please wait and try again."
         end
-        redirect_to new_maintenance_user_password_reset_path, notice: "If your email was on file, an email has been sent your way. It should arrive within the next few minutes. Make sure to check your spam folder."
+
+        name = params[:name].to_s.strip
+        otp_code = params[:otp_code].to_s
+        password = params[:password].to_s
+        password_confirm = params[:password_confirm].to_s
+        @reset_name = name
+
+        user = ::User.find_by_name(name)
+        if user.nil? || !user.otp_enabled?
+          return redirect_to new_maintenance_user_password_reset_path, notice: "Invalid username or authenticator code."
+        end
+
+        unless user.verify_two_factor_code(otp_code)
+          return redirect_to new_maintenance_user_password_reset_path, notice: "Invalid username or authenticator code."
+        end
+
+        if password != password_confirm
+          return redirect_to new_maintenance_user_password_reset_path, notice: "Passwords do not match."
+        end
+
+        if password.length < 8
+          return redirect_to new_maintenance_user_password_reset_path, notice: "Password must be at least 8 characters."
+        end
+
+        user.upgrade_password(password)
+        redirect_to new_session_path, notice: "Password reset. You can now log in."
       end
 
       def update
-        @nonce = find_nonce_from_params
-
-        if @nonce
-          if @nonce.expired?
-            return redirect_to new_maintenance_user_password_reset_path, notice: "Reset expired"
-          end
-          if @nonce.reset_user!(params[:password], params[:password_confirm])
-            @nonce.destroy
-            redirect_to new_maintenance_user_password_reset_path, notice: "Password reset"
-          else
-            redirect_to new_maintenance_user_password_reset_path, notice: "Passwords do not match"
-          end
-        else
-          redirect_to new_maintenance_user_password_reset_path, notice: "Invalid reset token"
-        end
-      end
-
-      private
-
-      def find_nonce_from_params
-        # Some translator software keeps appending extra text to the end of the UID.
-        # Just strip the non-numeric characters, ex: "1739850关闭网页" -> "1739850"
-        sanitized_uid = params[:uid].to_s.gsub(/[^\d]/, "")
-        return nil if sanitized_uid.blank?
-
-        if params[:uid].to_s != sanitized_uid
-          Rails.logger.warn("Password reset UID sanitized: original='#{params[:uid]}', sanitized='#{sanitized_uid}', key='#{params[:key]}', user_agent='#{request.user_agent}'")
-        end
-
-        UserPasswordResetNonce.where("user_id = ? AND key = ?", sanitized_uid, params[:key]).first
+        redirect_to new_maintenance_user_password_reset_path, notice: "Token reset links are disabled. Use your authenticator code to reset your password."
       end
     end
   end

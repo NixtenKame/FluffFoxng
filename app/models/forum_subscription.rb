@@ -16,7 +16,9 @@ class ForumSubscription < ApplicationRecord
         CurrentUser.scoped(subscription.user) do
           forum_posts = forum_topic.posts.where("created_at > ?", subscription.last_read_at).order("id desc")
           begin
-            UserMailer.forum_notice(subscription.user, forum_topic, forum_posts).deliver_now
+            if Danbooru.config.enable_outbound_emails?
+              UserMailer.forum_notice(subscription.user, forum_topic, forum_posts).deliver_now
+            end
           rescue Net::SMTPSyntaxError
           end
           subscription.update_attribute(:last_read_at, forum_topic.updated_at)

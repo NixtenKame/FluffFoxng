@@ -29,7 +29,7 @@ class UserEmailChange
 
       if user.errors.empty?
         RateLimiter.hit("email:#{user.id}", 24.hours)
-        if Danbooru.config.enable_email_verification?
+        if Danbooru.config.enable_email_verification? && Danbooru.config.enable_outbound_emails?
           Maintenance::User::EmailConfirmationMailer.confirmation(user).deliver_now
         end
       end

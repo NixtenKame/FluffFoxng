@@ -27,6 +27,17 @@
   </tab-hint>
 </tab-entry>
 
+<tab-entry tab="<%= tab_name %>" group="account" class="with-buttons" search="update change user profile account security 2fa two-factor authenticator otp">
+  <tab-head>Two-Factor Authentication</tab-head>
+  <tab-body>
+    <input type="text" value="<%= CurrentUser.user.otp_enabled? ? "Enabled (#{CurrentUser.user.backup_codes_left} backup codes left)" : (CurrentUser.user.otp_required_for_login? ? "Required - setup incomplete" : "Disabled") %>" disabled>
+    <%= link_to (CurrentUser.user.otp_enabled? ? "Manage" : "Setup"), maintenance_user_two_factor_path, class: "st-button" %>
+  </tab-body>
+  <tab-hint>
+    Protect your account with authenticator-app login codes and backup codes.
+  </tab-hint>
+</tab-entry>
+
 <tab-entry tab="<%= tab_name %>" group="account" class="" id="settings-account-buttons" search="update change user profile account delete password">
   <tab-head></tab-head>
   <tab-body>

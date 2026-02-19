@@ -153,3 +153,13 @@
     Apply <a href="https://en.wikipedia.org/wiki/CSS">CSS Styles</a> to the whole website.
   </tab-hint>
 </tab-entry>
+
+<tab-entry tab="<%= tab_name %>" group="customization" class="bigtext" search="customize css styles profile page">
+  <tab-head>Profile CSS</tab-head>
+  <tab-body>
+    <%= form.input_field :profile_custom_style, label: false, rows: 8 %>
+  </tab-body>
+  <tab-hint>
+    Apply CSS only to your user profile page.
+  </tab-hint>
+</tab-entry>
