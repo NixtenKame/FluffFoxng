@@ -199,6 +199,16 @@
                   </div>
                 </div>
             </div>
+            <div class="flex-grid border-bottom">
+                <div class="col">
+                    <label class="section-label">Background for Transparency</label>
+                    <div>Use a custom background color behind transparent areas in previews/samples.</div>
+                </div>
+                <div class="col2">
+                    <label><input type="checkbox" v-model="useBackgroundColor"/> Use background color</label>
+                    <input v-if="useBackgroundColor" type="color" v-model="backgroundColor" aria-label="Background color"/>
+                </div>
+            </div>
             <div v-if="allowUploadAsPending" class="flex-grid border-bottom">
                 <div class="col">
                     <label class="section-label">Upload as Pending</label>
@@ -359,6 +369,8 @@
 
         parentID: '',
         description: '',
+        useBackgroundColor: false,
+        backgroundColor: '#152f56',
         rating: '',
         error: '',
         duplicateId: 0,
@@ -424,6 +436,11 @@
         fillFieldBool('ratingLocked', 'rating_locked');
       if(this.allowUploadAsPending)
         fillFieldBool("uploadAsPending", "upload_as_pending")
+      fillFieldBool("useBackgroundColor", "use_background_color");
+      fillField("backgroundColor", "bg_color");
+      if (this.backgroundColor && !this.backgroundColor.startsWith("#")) {
+        this.backgroundColor = `#${this.backgroundColor}`;
+      }
       
       this.initVerifiedArtistButtons();
 
@@ -458,6 +475,7 @@
           data.append('upload[locked_rating]', this.ratingLocked);
         if (this.allowUploadAsPending)
           data.append('upload[as_pending]', this.uploadAsPending);
+        data.append('upload[bg_color]', this.useBackgroundColor ? this.backgroundColor.replace(/^#/, '') : '');
         jQuery.ajax('/uploads.json', {
           contentType: false,
           processData: false,
@@ -476,13 +494,21 @@
 
             console.log(`Status: ${response.status} ${response.statusText}`);
             console.log("Response:", response.responseText);
-            console.log(response);
 
             self.submitting = false;
             try {
               const jsonData = response.responseJSON;
-              if (!jsonData) throw new Error("No JSON data returned from server.");
-              else console.log(jsonData);
+              if (!jsonData) {
+                const body = `${response.responseText || ""}`.toLowerCase();
+                const looksLikeFailbooru = body.includes("failbooru") || body.includes("something broke");
+                if (response.status >= 500 || looksLikeFailbooru) {
+                  self.error = "Server/proxy error while submitting. Your upload may still have been created; check the post list or uploads page and retry if needed.";
+                } else {
+                  self.error = `Upload failed (${response.status || "unknown"}).`;
+                }
+                return;
+              }
+              console.log(jsonData);
 
               if (jsonData && jsonData.reason === 'duplicate') self.duplicateId = jsonData.post_id;
               if (jsonData && ['duplicate', 'invalid'].indexOf(jsonData.reason) !== -1) {

@@ -524,6 +524,36 @@ Rails.application.routes.draw do
   get "/meta_searches/tags" => "meta_searches#tags", :as => "meta_searches_tags"
   get "status" => "rails/health#show", as: :rails_health_check
 
+  # Nixten personal pages (converted from PHP to Rails) you can ignore these or comment them out if you want, they are just for fun and not really important to the site, but they are also not really hurting anything either so I left them in but hey if you want to put your own about me page in just make sure to change the name of the links to your name and ill create the about me templates in a git repo in the future so you can just copy those and change the content to your liking, but for now they are just nixtens pages :3
+  match "/nixten", to: "nixten#index", via: %i[get post], as: "nixten"
+  get "/nixten/index", to: redirect("/nixten")
+  get "/nixten/index.php", to: redirect("/nixten")
+
+  match "/nixten/messages", to: "nixten#messages", via: %i[get post], as: "nixten_messages"
+  get "/nixten/messages.php", to: redirect("/nixten/messages")
+
+  match "/nixten/rate_me", to: "nixten#rate_me", via: %i[get post], as: "nixten_rate_me"
+  get "/nixten/rate_me/index.php", to: redirect("/nixten/rate_me")
+
+  match "/nixten/jam_dashboard", to: "nixten#jam_dashboard", via: %i[get post], as: "nixten_jam_dashboard"
+  get "/nixten/jam_dashboard.php", to: redirect("/nixten/jam_dashboard")
+
+  get "/nixten/now_playing", to: "nixten#now_playing", as: "nixten_now_playing"
+  get "/activity/update_activity", to: "nixten#update_activity", as: "activity_update_activity"
+  post "/nixten/vscode_update", to: "nixten#vscode_update", as: "nixten_vscode_update"
+
+  get "/nixten/dm-status", to: "nixten#dm_status", as: "nixten_dm_status"
+  get "/nixten/dm-status.php", to: redirect("/nixten/dm-status")
+
+  get "/nixten/planes", to: "nixten#planes", as: "nixten_planes"
+  get "/nixten/planes.php", to: redirect("/nixten/planes")
+
+  get "/nixten/nixten.bi", to: "nixten#nixten_bi", as: "nixten_bi"
+  get "/nixten/nixten.bi.php", to: redirect("/nixten/nixten.bi")
+
+  get "/nixten/secret/easter_egg", to: "nixten#easter_egg", as: "nixten_secret_easter_egg"
+  get "/nixten/secret/easter_egg.php", to: redirect("/nixten/secret/easter_egg")
+
   root to: "static#home"
 
   get "*other", to: "static#not_found"

@@ -35,15 +35,15 @@ Rails.application.configure do
       "https://www.gstatic.com/recaptcha/",
       "https://www.recaptcha.net/",
       "https://assets.freespeechcoalition.com",
-      "https://plausible.dragonfru.it/",
+      "https://kit.fontawesome.com",
     ]
     script_sources << posthog_origin if posthog_origin.present?
     script_sources << posthog_assets_origin if posthog_assets_origin.present?
 
     connect_sources = [
       :self,
-      "plausible.dragonfru.it",
       "api.freespeechcoalition.com",
+      "https://api.lanyard.rest",
     ]
     connect_sources << posthog_origin if posthog_origin.present?
 
@@ -54,7 +54,7 @@ Rails.application.configure do
     policy.style_src :self, :unsafe_inline
 
     policy.connect_src(*connect_sources)
-    policy.connect_src(*policy.connect_src, "ws://localhost:3036", "http://localhost:3036") if Rails.env.development?
+    policy.connect_src(*policy.connect_src, "ws://localhost:3036", "http://localhost:3036", "https://api.lanyard.rest") if Rails.env.development?
 
     media_sources = [:self, "nixten.ddns.net:9001"]
     media_sources << data_origin if data_origin.present?

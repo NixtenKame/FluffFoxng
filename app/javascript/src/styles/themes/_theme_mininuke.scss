@@ -1,0 +1,117 @@
+$mininuke-color-background:        #2f2f2f;
+$mininuke-color-foreground:        #3f3f3f;
+$mininuke-color-link:              #c9a227;
+$mininuke-color-link-hover:        #e0be4a;
+$mininuke-color-text:              #e0be4a;
+$mininuke-color-text-muted:        #a8841f;
+$mininuke-color-section:           #4f5a3e;
+$mininuke-color-section-hover:     #66734f;
+$mininuke-color-section-border:    #5a5a5a;
+
+body[data-th-main="mininuke"] {
+  // Theme-specific images
+  --image-background:             url("") !important;
+
+  // Layout Colors
+  --color-background:             #{$mininuke-color-background};
+  --color-foreground:             #{$mininuke-color-foreground};
+  --color-section:                #{$mininuke-color-section};
+  --color-section-hover:          #{$mininuke-color-section-hover};
+  --color-section-lighten-5:      #{lighten($mininuke-color-section, 5%)};
+  --color-section-lighten-10:     #{lighten($mininuke-color-section, 10%)};
+  --color-section-darken-5:       #{darken($mininuke-color-section, 5%)};
+  --color-table-border:           #{$mininuke-color-section-border};
+
+  --color-section-pending:        #8b5a3c;
+  --color-section-pending-border: #5e4a3a;
+
+  // Main colors
+  --color-text:                   #{$mininuke-color-text};
+  --color-text-muted:             #{$mininuke-color-text-muted};
+  --color-text-white:             #{$mininuke-color-text};
+  --color-text-table-header:      #{$mininuke-color-text};
+
+  --color-link:                   #{$mininuke-color-link};
+  --color-link-hover:             #{$mininuke-color-link-hover};
+  --color-link-active:            #b5523f;
+  --color-button-active:          #b5523f;
+
+  --color-link-last-page:         #7f8c63;
+
+  // Status
+  --color-success:                #66734f;
+  --color-success-darken-5:       #{darken(#66734f, 5%)};
+  --color-danger:                 #9e3b2d;
+  --color-danger-darken-5:        #{darken(#9e3b2d, 5%)};
+  --color-danger-darken-10:       #{darken(#9e3b2d, 10%)};
+  --color-warning:                #c9a227;
+  --color-warning-darken-5:       #{darken(#c9a227, 5%)};
+
+  // Ratings / scores
+  --color-rating-explicit:        #b5523f;
+  --color-rating-questionable:    #c9a227;
+  --color-rating-safe:            #7f8c63;
+
+  --color-score-positive:         #7f8c63;
+  --color-score-negative:         #b5523f;
+
+  --color-active-tag:             #c9a227;
+
+  // DText
+  --color-dtext-quote:            #7f8c63;
+  --color-dtext-code:             #e0be4a;
+  --color-dtext-section:          #8b5a3c;
+
+  // User groups
+  --color-user-member:            #e0be4a;
+  --color-user-member-alt:        #c9a227;
+  --color-user-privileged:        #e0be4a;
+  --color-user-privileged-alt:    #c9a227;
+
+  --color-user-blocked:           #b5523f;
+  --color-user-blocked-alt:       #9e3b2d;
+
+  --color-user-former-staff:      #7f8c63;
+  --color-user-former-staff-alt:  #66734f;
+  --color-user-janitor:           #b5523f;
+  --color-user-janitor-alt:       #9e3b2d;
+  --color-user-moderator:         #b5523f;
+  --color-user-moderator-alt:     #9e3b2d;
+  --color-user-admin:             #e0be4a;
+  --color-user-admin-alt:         #c9a227;
+
+  // Tag categories
+  --color-tag-general:            #e0be4a;
+  --color-tag-general-alt:        #c9a227;
+
+  --color-tag-artist:             #b5523f;
+  --color-tag-artist-alt:         #9e3b2d;
+
+  --color-tag-contributor:        #8b5a3c;
+  --color-tag-contributor-alt:    #5e4a3a;
+
+  --color-tag-copyright:          #c9a227;
+  --color-tag-copyright-alt:      #e0be4a;
+
+  --color-tag-character:          #66734f;
+  --color-tag-character-alt:      #7f8c63;
+
+  --color-tag-species:            #8b5a3c;
+  --color-tag-species-alt:        #b5523f;
+
+  --color-tag-invalid:            #b5523f;
+  --color-tag-invalid-alt:        #9e3b2d;
+
+  --color-tag-meta:               #5a5a5a;
+  --color-tag-meta-alt:           #c9a227;
+
+  --color-tag-lore:               #7f8c63;
+  --color-tag-lore-alt:           #66734f;
+
+  --color-tag-pool:               #8b5a3c;
+  --color-tag-pool-alt:           #5e4a3a;
+
+  // Spoilers
+  --color-spoiler-link:           #{$mininuke-color-link};
+  --color-spoiler-link-hover:     #{$mininuke-color-link-hover};
+}

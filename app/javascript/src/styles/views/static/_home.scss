@@ -1,6 +1,6 @@
 body.c-static.a-home {
-  background: #012e57; // I am certain this was needed for something
-  background-color: themed("bg-color", #012e57);
+  background: themed("color-background"); // I am certain this was needed for something | well this is Nixten speaking now, im not so sure but well find out if it was needed or not :3
+  background-color: themed("color-background", #012e57);
   background-image: themed("image-background") !important;
   overflow-x: hidden;
   background-size: cover;

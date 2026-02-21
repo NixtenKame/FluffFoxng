@@ -62,6 +62,7 @@ class UploadService
       p.uploader_ip_addr = upload.uploader_ip_addr
       p.parent_id = upload.parent_id
       p.duration = upload.video_duration(upload.file.path)
+      p.bg_color = upload.bg_color.to_s.delete_prefix("#").presence
 
       if !upload.uploader.can_upload_free? || (!upload.uploader.can_approve_posts? && p.avoid_posting_artists.any?) || upload.upload_as_pending?
         p.is_pending = true

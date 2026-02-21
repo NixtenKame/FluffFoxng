@@ -17,16 +17,11 @@ module Danbooru
     end
 
     def description
-      "Find good furry art, fast"
+      "FluffFox is a safe for work furry art gallery and artboard website for sharing any form of artwork. Browse, upload, and favorite SFW art in a community focused space."
     end
 
     def domain
       "nixten.ddns.net"
-    end
-
-    # Force rating:s on this version of the site.
-    def safe_mode?
-      false
     end
 
     # The canonical hostname of the site.

@@ -78,16 +78,12 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.flufffox.entrypoints=web"
-      - "traefik.http.routers.flufffox.rule=Host(`flufffox.aws.local`) || Host(`ec2-34-205-197-51.compute-1.amazonaws.com`) || Host(`nixten.ddns.net`)"
+      - "traefik.http.routers.flufffox.rule=Host(`flufffox.aws.local`)"
       - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
       - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
       - "traefik.http.routers.flufffox.middlewares=redirect-https"
-      - "traefik.http.routers.flufffox-https-public.entrypoints=websecure"
-      - "traefik.http.routers.flufffox-https-public.rule=Host(`nixten.ddns.net`)"
-      - "traefik.http.routers.flufffox-https-public.tls=true"
-      - "traefik.http.routers.flufffox-https-public.tls.certresolver=le"
       - "traefik.http.routers.flufffox-https-local.entrypoints=websecure"
-      - "traefik.http.routers.flufffox-https-local.rule=Host(`flufffox.aws.local`) || Host(`ec2-34-205-197-51.compute-1.amazonaws.com`)"
+      - "traefik.http.routers.flufffox-https-local.rule=Host(`flufffox.aws.local`)"
       - "traefik.http.routers.flufffox-https-local.tls=true"
       - "traefik.http.services.flufffox.loadbalancer.server.port=80"
     # nginx listens on the internal network; Traefik will publish host ports 80/443
@@ -98,7 +94,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.flufffox-files.entrypoints=websecure9001"
-      - "traefik.http.routers.flufffox-files.rule=(Host(`flufffox.aws.local`) || Host(`ec2-34-205-197-51.compute-1.amazonaws.com`) || Host(`nixten.ddns.net`)) && PathPrefix(`/data`)"
+      - "traefik.http.routers.flufffox-files.rule=(Host(`flufffox.aws.local`) ||  Host(`nixten.ddns.net`)) && PathPrefix(`/data`)"
       - "traefik.http.routers.flufffox-files.tls=true"
       - "traefik.http.services.flufffox-files.loadbalancer.server.port=80"
     command: sh -c "chmod o+rx /usr /usr/share /usr/share/nginx && echo 'server { listen 80; root /usr/share/nginx/html; autoindex on; location /data/ { alias /usr/share/nginx/html/; autoindex on; } location ~ /\. { deny all; } }' > /etc/nginx/conf.d/default.conf && nginx -g \"daemon off;\""    
@@ -114,6 +110,18 @@ services:
       - nginx
       - bunkerweb-ui
       - bunkerweb-scheduler
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flufffox-bw.entrypoints=web"
+      - "traefik.http.routers.flufffox-bw.rule=Host(`nixten.ddns.net`)"
+      - "traefik.http.middlewares.flufffox-bw-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.flufffox-bw-redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.flufffox-bw.middlewares=flufffox-bw-redirect"
+      - "traefik.http.routers.flufffox-bw-secure.entrypoints=websecure"
+      - "traefik.http.routers.flufffox-bw-secure.rule=Host(`nixten.ddns.net`)"
+      - "traefik.http.routers.flufffox-bw-secure.tls=true"
+      - "traefik.http.routers.flufffox-bw-secure.tls.certresolver=le"
+      - "traefik.http.services.flufffox-bw.loadbalancer.server.port=80"
     environment:
       AUTOCONF_MODE: "no"
       KEEP_CONFIG_ON_RESTART: "yes"
@@ -132,12 +140,19 @@ services:
         USE_REVERSE_PROXY=yes
         REVERSE_PROXY_HOST=http://nginx:80
         REVERSE_PROXY_URL=/
+        REDIRECT_HTTP_TO_HTTPS=no
+        AUTO_REDIRECT_HTTP_TO_HTTPS=no
         USE_WHITELIST=no
         AUTO_LETS_ENCRYPT=no
         USE_UI=yes
         UI_HOST=http://bunkerweb-ui:7000
         BUNKERWEB_INSTANCES=http://bunkerweb:5000
         DATABASE_URI=sqlite:////var/lib/bunkerweb/db.sqlite3
+        EOF
+        mkdir -p /etc/bunkerweb/configs/modsec-crs/${BUNKERWEB_SERVER_NAME}
+        cat > /etc/bunkerweb/configs/modsec-crs/${BUNKERWEB_SERVER_NAME}/10-posthog-cookie-exclusion.conf <<'EOF'
+        # Prevent CRS false positives on PostHog analytics cookie JSON payload.
+        SecRuleUpdateTargetById 942290 "!REQUEST_COOKIES:/^ph_phc_.*/"
         EOF
         mkdir -p /var/cache/bunkerweb/misc
         if [ ! -f /var/cache/bunkerweb/misc/default-server-cert.pem ] || [ ! -f /var/cache/bunkerweb/misc/default-server-cert.key ]; then

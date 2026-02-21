@@ -41,7 +41,6 @@ class Post < ApplicationRecord
   after_commit :remove_iqdb_async, on: :destroy
   # after_commit :update_iqdb_async, :on => :create
   after_commit :handle_thumbnails_on_create, on: :create
-  after_commit :generate_image_samples, on: :create
   after_commit :generate_video_samples, on: :create, if: :is_video?
 
   belongs_to :updater, :class_name => "User", optional: true # this is handled in versions
@@ -122,7 +121,8 @@ class Post < ApplicationRecord
       sample_url
     end
 
-    def sample_url(type = :sample_jpg)
+    def sample_url(type = nil)
+      type ||= Danbooru.config.webp_previews_enabled? ? :sample_webp : :sample_jpg
       return file_url unless has_sample?
       storage_manager.post_file_url(self, type)
     end
@@ -340,8 +340,8 @@ class Post < ApplicationRecord
     end
 
     def handle_thumbnails_on_create
-      ImageSampler.generate_post_images(self)
-      update_iqdb_async if has_preview?
+      # Generate previews/samples asynchronously so upload requests return quickly.
+      generate_image_samples(later: true)
     end
 
     def check_for_ai_content
@@ -564,8 +564,7 @@ class Post < ApplicationRecord
       when "q"
         "Questionable"
 
-      when "e"
-        "Explicit"
+      #if your wondering where the explicit rating went, wellllllll its gone like gone, WE DONT LIKE THAT HERE >:3
 
       when "s"
         "Safe"

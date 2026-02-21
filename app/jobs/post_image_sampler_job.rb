@@ -11,5 +11,6 @@ class PostImageSamplerJob < ApplicationJob
   def perform(id)
     post = Post.find(id)
     ImageSampler.generate_post_images(post)
+    post.update_iqdb_async if post.has_preview?
   end
 end

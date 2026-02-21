@@ -58,11 +58,11 @@ module ImageSampler
   #   - background: the background color to be used
   # Returns a hash containing the paths to the generated jpg and webp thumbnails.
   # The keys are :jpg and :webp, and the values are Tempfile objects.
-  def thumbnail(image, dimensions, background: "000000")
+  def thumbnail(image, dimensions, background: nil)
     gen_target_image(image, dimensions, Danbooru.config.small_image_width, crop: true, background: background)
   end
 
-  def thumbnail_from_path(file_path, dimensions, background: "000000", is_video: false)
+  def thumbnail_from_path(file_path, dimensions, background: nil, is_video: false)
     thumbnail(image_from_path(file_path, is_video: is_video), dimensions, background: background)
   end
 
@@ -73,11 +73,11 @@ module ImageSampler
   #   - background: the background color to be used
   # Returns a hash containing the paths to the generated jpg and webp samples.
   # The keys are :jpg and :webp, and the values are Tempfile objects.
-  def sample(image, dimensions, background: "000000")
+  def sample(image, dimensions, background: nil)
     gen_target_image(image, dimensions, Danbooru.config.large_image_width, crop: false, background: background)
   end
 
-  def sample_from_path(file_path, dimensions, background: "000000", is_video: false)
+  def sample_from_path(file_path, dimensions, background: nil, is_video: false)
     sample(image_from_path(file_path, is_video: is_video), dimensions, background: background)
   end
 
@@ -171,7 +171,7 @@ module ImageSampler
   #
   # Returns a hash containing the paths to the generated jpg and webp thumbnails.
   # The keys are :jpg and :webp, and the values are Tempfile objects.
-  def gen_target_image(image, original_dims, target_size, crop: false, background: "000000")
+  def gen_target_image(image, original_dims, target_size, crop: false, background: nil)
     # scale
     new_scale, crop_area = calc_dimensions(original_dims[0], original_dims[1], target_size, crop: crop)
     result = image.resize(new_scale)
@@ -186,7 +186,13 @@ module ImageSampler
     webp_image = Tempfile.new(["image-thumb", ".webp"], binmode: true)
 
     result.jpegsave(jpg_image.path, Q: 90, background: calc_background_color(background), strip: true, interlace: true, optimize_coding: true)
-    result.webpsave(webp_image.path, Q: 90, min_size: true)
+
+    webp_image_data = if background.present?
+                        result.flatten(background: calc_background_color(background))
+                      else
+                        result
+                      end
+    webp_image_data.webpsave(webp_image.path, Q: 90, min_size: true)
 
     {
       jpg: jpg_image,
