@@ -11,8 +11,8 @@
     <a href="https://github.com/NixtenKame/FluffFoxng/pulls">
       <img src="https://img.shields.io/github/issues-pr/NixtenKame/FluffFoxng?style=flat-square" alt="Pull Requests" />
     </a><br />
-    <a href="https://github.com/NixtenKame/FluffFoxng/commits/master/">
-      <img src="https://img.shields.io/github/check-runs/NixtenKame/FluffFoxng/master?style=flat-square" alt="GitHub branch check runs" />
+    <a href="https://github.com/NixtenKame/FluffFoxng/commits/main/">
+      <img src="https://img.shields.io/github/check-runs/NixtenKame/FluffFoxng/main?style=flat-square" alt="GitHub branch check runs" />
     </a><br />
   </div>
 </div>
