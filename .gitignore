@@ -12,6 +12,7 @@ config/application.yml
 vendor/cache/*.gem
 vendor/bundle/
 vendor/cache/
+vendor/
 
 # Node / Yarn
 /node_modules

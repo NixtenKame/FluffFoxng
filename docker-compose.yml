@@ -101,7 +101,7 @@ services:
 
   bunkerweb:
     image: bunkerity/bunkerweb:latest
-    user: "0:0"
+    user: "101:101"
     ports:
       - "${EXPOSED_BUNKERWEB_PORT:-8443}:443"
     volumes:
@@ -145,6 +145,7 @@ services:
         AUTO_REDIRECT_HTTP_TO_HTTPS=no
         USE_WHITELIST=no
         AUTO_LETS_ENCRYPT=no
+        ALLOWED_METHODS=GET|POST|HEAD|OPTIONS|DELETE|PATCH
         USE_UI=yes
         UI_HOST=http://bunkerweb-ui:7000
         BUNKERWEB_INSTANCES=http://bunkerweb:5000
@@ -156,6 +157,14 @@ services:
         SecRuleUpdateTargetById 942290 "!REQUEST_COOKIES:/^ph_phc_.*/"
         EOF
         mkdir -p /var/cache/bunkerweb/misc
+        mkdir -p /var/cache/bunkerweb/bunkernet
+        touch /var/cache/bunkerweb/bunkernet/ip.list
+        # Restore BunkerNet instance id from persistent DB cache if missing.
+        if [ ! -s /var/cache/bunkerweb/bunkernet/instance.id ] && [ -f /var/lib/bunkerweb/db.sqlite3 ]; then
+          python3 -c "import sqlite3,pathlib; db='/var/lib/bunkerweb/db.sqlite3'; t=pathlib.Path('/var/cache/bunkerweb/bunkernet/instance.id'); c=sqlite3.connect(db); r=c.execute(\"select data from bw_jobs_cache where job_name='bunkernet-register' and file_name='instance.id' order by id desc limit 1\").fetchone(); c.close(); v=(r[0] if r else None); v=(v.decode('utf-8','ignore') if isinstance(v,(bytes,bytearray)) else v); t.write_text(str(v).strip(),encoding='utf-8') if v else None" || true
+        fi
+        chmod 644 /var/cache/bunkerweb/bunkernet/ip.list 2>/dev/null || true
+        chmod 644 /var/cache/bunkerweb/bunkernet/instance.id 2>/dev/null || true
         if [ ! -f /var/cache/bunkerweb/misc/default-server-cert.pem ] || [ ! -f /var/cache/bunkerweb/misc/default-server-cert.key ]; then
           openssl req -x509 -nodes -newkey rsa:2048 \
             -keyout /var/cache/bunkerweb/misc/default-server-cert.key \
@@ -183,6 +192,11 @@ services:
       - |
         sed -i 's/!e.length||!e.val()||!e.get(0).checkValidity()/!e.length||!e.val()||!e.val().trim()/g' /usr/share/bunkerweb/ui/app/static/js/pages/setup.js
         sed -i 's/val(e.val())/val(e.val().trim())/g' /usr/share/bunkerweb/ui/app/static/js/pages/setup.js
+        # Prevent scheduler warning about unreadable UI session files.
+        # /var/lib/bunkerweb is a symlink to /data/lib in BunkerWeb images.
+        mkdir -p /data/lib/ui_sessions_cache
+        chown -R 101:101 /data/lib/ui_sessions_cache || true
+        chmod -R u+rwX,go+rX /data/lib/ui_sessions_cache || true
         python3 - <<'PY'
         from pathlib import Path
         p = Path("/usr/share/bunkerweb/ui/app/static/js/pages/setup.js")
@@ -199,8 +213,8 @@ services:
           for _ in $$(seq 1 90); do
             if [ -f "$$DB" ] && sqlite3 "$$DB" ".tables" 2>/dev/null | grep -q "bw_services"; then
               sqlite3 "$$DB" "BEGIN;
-                UPDATE bw_services SET id='$${DOMAIN}', last_update=datetime('now') WHERE id='www.example.com';
-                UPDATE bw_services_settings SET service_id='$${DOMAIN}' WHERE service_id='www.example.com';
+                UPDATE bw_services SET id='$${DOMAIN}', last_update=datetime('now') WHERE id='nixten.ddns.net';
+                UPDATE bw_services_settings SET service_id='$${DOMAIN}' WHERE service_id='nixten.ddns.net';
                 INSERT OR IGNORE INTO bw_services(id,method,is_draft,creation_date,last_update)
                   VALUES ('$${DOMAIN}','scheduler',0,datetime('now'),datetime('now'));
                 INSERT OR REPLACE INTO bw_global_values(setting_id,value,suffix,method)
