@@ -100,3 +100,5 @@ User-agent: SemrushBot
 User-agent: SemrushBot-SA
 User-agent: AhrefsBot
 Disallow: /
+
+Sitemap: https://nixten.ddns.net/sitemap.xml

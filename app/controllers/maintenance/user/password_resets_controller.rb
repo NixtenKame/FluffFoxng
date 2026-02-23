@@ -5,15 +5,20 @@ module Maintenance
     class PasswordResetsController < ApplicationController
       def new
         @reset_name = ""
+        @reset_email = ""
       end
 
       def edit
-        redirect_to new_maintenance_user_password_reset_path, notice: "Token reset links are disabled. Use your authenticator code to reset your password."
+        redirect_to new_maintenance_user_password_reset_path, notice: token_links_disabled_message
       end
 
       def create
         if RateLimiter.check_limit("password_reset:#{request.remote_ip}", 5, 1.hour)
           return redirect_to new_maintenance_user_password_reset_path, notice: "Too many reset attempts. Please wait and try again."
+        end
+
+        if Danbooru.config.password_reset_show_link?
+          return create_email_reset
         end
 
         name = params[:name].to_s.strip
@@ -44,7 +49,38 @@ module Maintenance
       end
 
       def update
-        redirect_to new_maintenance_user_password_reset_path, notice: "Token reset links are disabled. Use your authenticator code to reset your password."
+        redirect_to new_maintenance_user_password_reset_path, notice: token_links_disabled_message
+      end
+
+      private
+
+      def create_email_reset
+        email = params[:email].to_s.strip
+        password = params[:password].to_s
+        password_confirm = params[:password_confirm].to_s
+        @reset_email = email
+
+        user = ::User.with_email(email).first
+        if user.nil?
+          return redirect_to new_maintenance_user_password_reset_path, notice: "Invalid email address."
+        end
+        if password != password_confirm
+          return redirect_to new_maintenance_user_password_reset_path, notice: "Passwords do not match."
+        end
+        if password.length < 8
+          return redirect_to new_maintenance_user_password_reset_path, notice: "Password must be at least 8 characters."
+        end
+
+        user.upgrade_password(password)
+        redirect_to new_session_path, notice: "Password reset. You can now log in."
+      end
+
+      def token_links_disabled_message
+        if Danbooru.config.password_reset_show_link?
+          "Token reset links are disabled. Reset with your email and new password on this page."
+        else
+          "Token reset links are disabled. Use your authenticator code to reset your password."
+        end
       end
     end
   end

@@ -699,7 +699,7 @@ module Danbooru
     # Use a recaptcha on the signup page to protect against spambots creating new accounts.
     # https://developers.google.com/recaptcha/intro
     def enable_recaptcha?
-      Rails.env.production? && Danbooru.config.recaptcha_site_key.present? && Danbooru.config.recaptcha_secret_key.present?
+      Danbooru.config.recaptcha_site_key.present? && Danbooru.config.recaptcha_secret_key.present?
     end
 
     def recaptcha_site_key

@@ -131,7 +131,7 @@ module IconHelper
       "stroke-linejoin": "round",
       "class": "user-record #{klass}",
     ) do
-      concat tag.path(d: "M23 16.8V7.2a2.4 2.4 0 0 0-1.2-2L13.2.2a2.4 2.4 0 0 0-2.4 0L2.2 5.1A2.4 2.4 0 0 0 1 7.2v9.6a2.4 2.4 0 0 0 1.2 2l8.6 4.9a2.4 2.4 0 0 0 2.4 0l8.6-4.8a2.4 2.4 0 0 0 1.2-2.1Z", fill: "red")
+      concat tag.path(d: "M12 0A12 12 0 1 0 12 24A12 12 0 1 0 12 0Z", fill: "red")
       concat tag.text(number, "x": "50%", "y": "55%", "dominant-baseline": "middle", "text-anchor": "middle", "font-size": "20px", "font-family": "monospace", "font-weight": "bold")
     end
   end

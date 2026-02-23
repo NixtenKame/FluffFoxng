@@ -140,6 +140,7 @@ services:
         USE_REVERSE_PROXY=yes
         REVERSE_PROXY_HOST=http://nginx:80
         REVERSE_PROXY_URL=/
+        USE_REAL_IP=yes
         REDIRECT_HTTP_TO_HTTPS=no
         AUTO_REDIRECT_HTTP_TO_HTTPS=no
         USE_WHITELIST=no
@@ -214,6 +215,8 @@ services:
                   VALUES ('$${DOMAIN}','REVERSE_PROXY_HOST','http://nginx:80',0,'manual');
                 INSERT OR REPLACE INTO bw_services_settings(service_id,setting_id,value,suffix,method)
                   VALUES ('$${DOMAIN}','REVERSE_PROXY_URL','/',0,'manual');
+                INSERT OR REPLACE INTO bw_services_settings(service_id,setting_id,value,suffix,method)
+                  VALUES ('$${DOMAIN}','USE_REAL_IP','yes',0,'manual');
                 INSERT OR REPLACE INTO bw_services_settings(service_id,setting_id,value,suffix,method)
                   VALUES ('$${DOMAIN}','AUTO_LETS_ENCRYPT','no',0,'manual');
                 INSERT OR REPLACE INTO bw_services_settings(service_id,setting_id,value,suffix,method)

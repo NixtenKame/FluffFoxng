@@ -54,3 +54,4 @@ public/.well-known/*
 public/nixten/
 app/views/nixten/
 app/controllers/nixten_controller.rb
+public/google*.html
