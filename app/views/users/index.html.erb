@@ -7,6 +7,9 @@
       <thead>
         <tr>
           <th></th>
+          <% if CurrentUser.is_admin? %>
+            <th>Id</th>
+          <% end %>
           <th>Name</th>
           <th>Posts</th>
           <th>Deleted</th>
@@ -28,6 +31,9 @@
                 <%= link_to "Edit", edit_admin_user_path(user) %>
               <% end %>
             </td>
+            <% if CurrentUser.is_admin? %>
+              <td><%= user.id %></td>
+            <% end %>
             <td>
               <%= link_to_user user %>
             </td>
