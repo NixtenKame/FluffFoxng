@@ -2,10 +2,15 @@ div#c-static {
   div#a-site-map {
     display: flex;
     flex-flow: row wrap;
-    max-width: 80em;
+    max-width: max-content;
+    gap: 5px;
 
     section {
       width: 20em;
+      // Frosted glass effect to make things more readable on light themes and to make it more visually appealing on dark themes :3
+      background-color: var(--fg-color, #ffffff10);
+      backdrop-filter: blur(10px);
+      border-radius: .25rem;
       ul { margin-bottom: 1.5em; }
     }
   }
