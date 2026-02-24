@@ -10,7 +10,7 @@ $mininuke-color-section-border:    #5a5a5a;
 
 body[data-th-main="mininuke"] {
   // Theme-specific images
-  --image-background:             url("") !important;
+  --image-background:             none;
 
   // Layout Colors
   --color-background:             #{$mininuke-color-background};
