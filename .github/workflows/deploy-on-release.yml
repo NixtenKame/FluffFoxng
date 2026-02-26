@@ -52,12 +52,9 @@ jobs:
               flufffoxng_FluffFox_1 \
               flufffoxng_nginx_1 \
               flufffoxng_file-server_1 \
-              flufffoxng_traefik_1 \
-              flufffoxng_bunkerweb_1 \
-              flufffoxng_bunkerweb-ui_1 \
-              flufffoxng_bunkerweb-scheduler_1 || true
+              flufffoxng_traefik_1 || true
 
             $COMPOSE -f docker-compose.yml up -d \
-              FluffFox nginx file-server traefik bunkerweb-ui bunkerweb-scheduler bunkerweb
+              FluffFox nginx file-server traefik
 
             docker ps --format 'table {{.Names}}\t{{.Status}}' | grep 'flufffoxng_' || true

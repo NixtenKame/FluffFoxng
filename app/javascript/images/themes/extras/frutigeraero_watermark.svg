@@ -1,0 +1,19 @@
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="watermark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0099ff;stop-opacity:0.1" />
+      <stop offset="50%" style="stop-color:#66b3ff;stop-opacity:0.05" />
+      <stop offset="100%" style="stop-color:#cce7ff;stop-opacity:0.02" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Frutiger Aero style abstract shape -->
+  <path d="M20,100 Q50,50 100,50 T180,100 Q150,150 100,150 T20,100" 
+        fill="url(#watermark)" />
+  
+  <!-- Additional decorative elements -->
+  <circle cx="60" cy="60" r="8" fill="url(#watermark)" />
+  <circle cx="140" cy="60" r="6" fill="url(#watermark)" />
+  <circle cx="140" cy="140" r="10" fill="url(#watermark)" />
+  <circle cx="60" cy="140" r="7" fill="url(#watermark)" />
+</svg>

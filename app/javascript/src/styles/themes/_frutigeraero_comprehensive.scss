@@ -1,0 +1,849 @@
+// Comprehensive Frutiger Aero Theme Enhancements
+// This file extends the base theme with additional styling for all components
+
+body[data-th-main="frutigeraero"] {
+  --fa-glass-panel: linear-gradient(
+    145deg,
+    rgba(252, 255, 255, 0.95) 0%,
+    rgba(239, 248, 255, 0.88) 52%,
+    rgba(219, 237, 255, 0.82) 100%
+  );
+  --fa-glass-strong: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.96) 0%,
+    rgba(233, 246, 255, 0.9) 50%,
+    rgba(205, 229, 251, 0.86) 100%
+  );
+  --fa-glass-edge: rgba(121, 174, 221, 0.6);
+  --fa-glass-shadow: rgba(18, 86, 146, 0.2);
+  --fa-text-strong: #143a5a;
+  --fa-text-muted: #3a607e;
+  
+  // Generic boxed sections used across many pages (.box-section)
+  .box-section {
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.75) 40%,
+      rgba(230, 247, 255, 0.6) 100%);
+    backdrop-filter: blur(18px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow:
+      0 10px 28px var(--color-shadow),
+      0 2px 8px rgba(255, 255, 255, 0.6) inset;
+  }
+
+  // Post index / favorites search bar
+  .search {
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(240, 248, 255, 0.75) 40%,
+      rgba(204, 231, 255, 0.5) 100%);
+    backdrop-filter: blur(18px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow:
+      0 10px 28px var(--color-shadow),
+      0 2px 8px rgba(255, 255, 255, 0.6) inset;
+  }
+
+  // Post sidebar / favorites sidebar container
+  .sidebar {
+    background: linear-gradient(145deg,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(230, 247, 255, 0.65) 50%,
+      rgba(204, 231, 255, 0.4) 100%);
+    backdrop-filter: blur(18px);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow:
+      0 14px 32px var(--color-shadow),
+      0 2px 10px rgba(255, 255, 255, 0.6) inset;
+  }
+
+  // Dialog windows
+  #dialog-container .dialog {
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.96) 0%,
+      rgba(230, 247, 255, 0.7) 50%,
+      rgba(204, 231, 255, 0.5) 100%);
+    backdrop-filter: blur(22px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow:
+      0 18px 40px var(--color-shadow),
+      0 2px 10px rgba(255, 255, 255, 0.65) inset;
+
+    .dialog-header {
+      background: linear-gradient(to right,
+        rgba(0, 153, 255, 0.35) 0%,
+        rgba(102, 179, 255, 0.2) 50%,
+        rgba(230, 247, 255, 0.0) 100%);
+    }
+  }
+
+  // Upload sources (multi-source URL list)
+  .upload-source-list {
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(230, 247, 255, 0.6) 100%);
+    backdrop-filter: blur(16px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow:
+      0 10px 28px var(--color-shadow),
+      0 2px 8px rgba(255, 255, 255, 0.6) inset;
+    padding: 0.75rem;
+  }
+
+  .upload-source-more {
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.85) 0%,
+      rgba(230, 247, 255, 0.55) 100%);
+    backdrop-filter: blur(14px);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 0.5rem 0.75rem;
+  }
+
+  // Enhanced paginator component
+  .paginator {
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.9) 0%, 
+      rgba(255, 255, 255, 0.6) 100%);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 20px 0;
+    
+    .page-link {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.8) 0%, 
+        rgba(230, 247, 255, 0.4) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin: 0 4px;
+      
+      &:hover {
+        background: linear-gradient(135deg, 
+          rgba(255, 255, 255, 0.9) 0%, 
+          rgba(240, 248, 255, 0.6) 100%);
+        box-shadow: 0 4px 12px rgba(0, 153, 255, 0.2);
+      }
+      
+      &.current {
+        background: linear-gradient(135deg, 
+          rgba(0, 153, 255, 0.8) 0%, 
+          rgba(102, 179, 255, 0.4) 100%);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.8);
+      }
+    }
+  }
+  
+  // Enhanced post thumbnails
+  .post-thumbnail {
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.8) 0%, 
+      rgba(255, 255, 255, 0.4) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    overflow: hidden;
+    
+    &:hover {
+      box-shadow: 
+        0 8px 24px rgba(0, 153, 255, 0.2),
+        0 4px 12px rgba(255, 255, 255, 0.4) inset;
+      border-color: rgba(255, 255, 255, 0.8);
+    }
+    
+    img {
+      border-radius: 8px 8px 0 0;
+    }
+    
+    .post-info {
+      background: linear-gradient(to bottom, 
+        rgba(255, 255, 255, 0.9) 0%, 
+        rgba(230, 247, 255, 0.6) 100%);
+      padding: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.5);
+    }
+  }
+  
+  // Enhanced comments
+  .comment-container {
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.85) 0%, 
+      rgba(255, 255, 255, 0.55) 100%);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 12px 0;
+    
+    .comment-header {
+      background: linear-gradient(to bottom, 
+        rgba(0, 153, 255, 0.2) 0%, 
+        rgba(0, 153, 255, 0.05) 100%);
+      border-radius: 8px 8px 0 0;
+      padding: 12px;
+      margin: -16px -16px 12px -16px;
+      border-bottom: 1px solid rgba(179, 217, 255, 0.3);
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(to bottom, 
+          rgba(255, 255, 255, 0.4) 0%, 
+          transparent 100%);
+        border-radius: 12px 12px 0 0;
+        pointer-events: none;
+      }
+    }
+    
+    .comment-body {
+      line-height: 1.6;
+      
+      blockquote {
+        background: linear-gradient(135deg, 
+          rgba(230, 247, 255, 0.4) 0%, 
+          rgba(204, 231, 255, 0.2) 100%);
+        border-left: 4px solid #0099ff;
+        border-radius: 0 8px 8px 0;
+        padding: 12px;
+        margin: 12px 0;
+      }
+      
+      code {
+        background: linear-gradient(135deg, 
+          rgba(230, 247, 255, 0.6) 0%, 
+          rgba(204, 231, 255, 0.4) 100%);
+        border: 1px solid rgba(179, 217, 255, 0.3);
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-family: 'Consolas', 'Monaco', monospace;
+      }
+    }
+  }
+  
+  // Enhanced footer
+  footer {
+    background: linear-gradient(to bottom, 
+      rgba(0, 153, 255, 0.6) 0%, 
+      rgba(0, 153, 255, 0.3) 50%,
+      rgba(102, 179, 255, 0.2) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px 12px 0 0;
+    padding: 24px;
+    margin-top: 40px;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(to bottom, 
+        rgba(255, 255, 255, 0.3) 0%, 
+        transparent 100%);
+      border-radius: 12px 12px 0 0;
+      pointer-events: none;
+    }
+    
+    .footer-links {
+      a {
+        color: rgba(255, 255, 255, 0.9);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        
+        &:hover {
+          color: white;
+          text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+        }
+      }
+    }
+  }
+  
+  // Enhanced search and autocomplete
+  .autocomplete-container {
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.95) 0%, 
+      rgba(255, 255, 255, 0.7) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    box-shadow: 
+      0 8px 32px rgba(0, 153, 255, 0.15),
+      0 4px 16px rgba(255, 255, 255, 0.4) inset;
+    
+    .autocomplete-item {
+      padding: 12px;
+      border-bottom: 1px solid rgba(179, 217, 255, 0.2);
+      
+      &:hover {
+        background: linear-gradient(135deg, 
+          rgba(230, 247, 255, 0.6) 0%, 
+          rgba(204, 231, 255, 0.4) 100%);
+      }
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+  
+  // Enhanced notices and alerts (use same glass styling as core theme)
+  .notice, .alert, .flash {
+    background: linear-gradient(135deg, 
+      var(--color-glass) 0%, 
+      rgba(255, 255, 255, 0.9) 40%, 
+      rgba(255, 255, 255, 0.7) 100%);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    box-shadow:
+      0 8px 24px var(--color-shadow),
+      0 2px 8px rgba(255, 255, 255, 0.6) inset;
+    padding: 16px;
+    margin: 12px 0;
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(to bottom, 
+        rgba(255, 255, 255, 0.6) 0%, 
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 100%);
+      border-radius: 8px 8px 0 0;
+      pointer-events: none;
+    }
+    
+    &.success {
+      border-color: rgba(0, 204, 102, 0.6);
+      background: linear-gradient(135deg, 
+        rgba(0, 204, 102, 0.12) 0%, 
+        rgba(0, 204, 102, 0.06) 100%);
+    }
+    
+    &.error, &.danger {
+      border-color: rgba(255, 51, 102, 0.6);
+      background: linear-gradient(135deg, 
+        rgba(255, 51, 102, 0.12) 0%, 
+        rgba(255, 51, 102, 0.06) 100%);
+    }
+    
+    &.warning {
+      border-color: rgba(255, 153, 51, 0.6);
+      background: linear-gradient(135deg, 
+        rgba(255, 153, 51, 0.12) 0%, 
+        rgba(255, 153, 51, 0.06) 100%);
+    }
+  }
+  
+  // Enhanced tags
+  .tag {
+    background: linear-gradient(135deg, 
+      rgba(230, 247, 255, 0.8) 0%, 
+      rgba(204, 231, 255, 0.6) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    padding: 4px 12px;
+    margin: 4px;
+    display: inline-block;
+    
+    &:hover {
+      background: linear-gradient(135deg, 
+        rgba(240, 248, 255, 0.9) 0%, 
+        rgba(230, 247, 255, 0.7) 100%);
+      box-shadow: 0 4px 12px rgba(0, 153, 255, 0.2);
+    }
+    
+    &.tag-general {
+      background: linear-gradient(135deg, 
+        rgba(230, 247, 255, 0.8) 0%, 
+        rgba(204, 231, 255, 0.6) 100%);
+    }
+    
+    &.tag-artist {
+      background: linear-gradient(135deg, 
+        rgba(230, 255, 204, 0.8) 0%, 
+        rgba(204, 255, 153, 0.6) 100%);
+    }
+    
+    &.tag-copyright {
+      background: linear-gradient(135deg, 
+        rgba(255, 243, 204, 0.8) 0%, 
+        rgba(255, 230, 153, 0.6) 100%);
+    }
+    
+    &.tag-character {
+      background: linear-gradient(135deg, 
+        rgba(230, 247, 255, 0.8) 0%, 
+        rgba(204, 231, 255, 0.6) 100%);
+    }
+    
+    &.tag-invalid {
+      background: linear-gradient(135deg, 
+        rgba(255, 230, 230, 0.8) 0%, 
+        rgba(255, 204, 204, 0.6) 100%);
+    }
+  }
+  
+  // Enhanced user styles
+  .user-avatar {
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.9) 0%, 
+      rgba(255, 255, 255, 0.6) 100%);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    overflow: hidden;
+    
+    &:hover {
+      box-shadow: 0 8px 24px rgba(0, 153, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.8);
+    }
+  }
+  
+  // Enhanced voting buttons
+  .vote-button {
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.8) 0%, 
+      rgba(230, 247, 255, 0.4) 100%);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    padding: 8px 16px;
+    
+    &.upvoted {
+      background: linear-gradient(135deg, 
+        rgba(0, 204, 102, 0.8) 0%, 
+        rgba(0, 153, 77, 0.4) 100%);
+      color: white;
+    }
+    
+    &.downvoted {
+      background: linear-gradient(135deg, 
+        rgba(255, 51, 102, 0.8) 0%, 
+        rgba(204, 0, 51, 0.4) 100%);
+      color: white;
+    }
+    
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 153, 255, 0.2);
+    }
+  }
+
+  // Readability pass: improve nav clarity, button contrast, and post containers.
+  nav.navigation {
+    background: linear-gradient(
+      180deg,
+      rgba(215, 237, 255, 0.96) 0%,
+      rgba(177, 216, 251, 0.96) 48%,
+      rgba(110, 179, 238, 0.96) 52%,
+      rgba(72, 146, 212, 0.96) 100%
+    ) !important;
+    border-bottom: 1px solid rgba(49, 110, 168, 0.45);
+    box-shadow: 0 6px 18px rgba(28, 88, 143, 0.22);
+
+    .desktop li a,
+    .mobile li a {
+      color: #103c62;
+      font-weight: 600;
+      text-shadow: none;
+      border-radius: 0.35rem;
+    }
+
+    .desktop li.current a,
+    .mobile li.current a {
+      background: rgba(12, 88, 156, 0.2);
+      color: #082846;
+    }
+
+    .desktop li a:hover,
+    .mobile li a:hover {
+      background: rgba(255, 255, 255, 0.42);
+      color: #05243f;
+    }
+
+    .nav-secondary,
+    .nav-tools,
+    .nav-help {
+      background: rgba(244, 251, 255, 0.74);
+      border: 1px solid rgba(121, 170, 216, 0.4);
+      backdrop-filter: blur(12px);
+    }
+  }
+
+  .st-button, .button, button, input[type="submit"], input[type="button"] {
+    color: #123d61;
+    border-color: rgba(92, 148, 201, 0.58);
+    text-shadow: none;
+
+    &:hover {
+      color: #0a2e4d;
+      border-color: rgba(62, 124, 183, 0.72);
+    }
+
+    &:focus {
+      outline: 2px solid rgba(0, 125, 214, 0.45);
+      outline-offset: 1px;
+    }
+  }
+
+  // Post pages: avoid plain white blocks and increase structure contrast.
+  #c-posts #a-index .posts-container,
+  #c-posts #a-show .post-index > .search,
+  #c-posts #a-show .post-index > .sidebar,
+  #c-posts #a-show .post-index > .content,
+  #c-posts #a-show #post-description-container,
+  #c-posts #a-show #comments,
+  #c-posts #a-show #post-sections,
+  #c-posts #a-show #image-container,
+  .box-section {
+    background: linear-gradient(
+      145deg,
+      rgba(250, 254, 255, 0.96) 0%,
+      rgba(237, 247, 255, 0.9) 55%,
+      rgba(219, 238, 255, 0.84) 100%
+    );
+    border: 1px solid rgba(132, 182, 226, 0.56);
+    box-shadow:
+      0 8px 22px rgba(28, 101, 165, 0.16),
+      0 1px 0 rgba(255, 255, 255, 0.72) inset;
+  }
+
+  #c-posts #a-show .post-index > .sidebar section {
+    border-color: rgba(121, 172, 218, 0.58);
+  }
+
+  // Inputs/search elements should not blend into cards.
+  input[type="text"], input[type="search"], input[type="email"],
+  input[type="password"], textarea, select {
+    color: #163f63;
+    background: rgba(255, 255, 255, 0.88);
+    border-color: rgba(111, 167, 214, 0.62);
+  }
+
+  // Maximum glass, but keep all high-use surfaces readable.
+  #page,
+  .content,
+  .search,
+  .sidebar,
+  .box-section,
+  .notice,
+  .dtext-container,
+  #c-posts #a-show #post-sections,
+  #c-posts #a-show #post-description-container,
+  #c-posts #a-show #comments,
+  #c-posts #a-show #image-container {
+    color: var(--fa-text-strong);
+    background: var(--fa-glass-panel);
+    border: 1px solid var(--fa-glass-edge);
+    box-shadow:
+      0 10px 24px var(--fa-glass-shadow),
+      0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  }
+
+  // Footer readability and style consistency.
+  footer.footer-wrapper {
+    background: transparent;
+    border-top: 1px solid rgba(118, 171, 219, 0.5);
+    box-shadow: 0 -8px 20px rgba(15, 84, 144, 0.14);
+
+    .footer-grid {
+      background: var(--fa-glass-strong);
+      border: 1px solid var(--fa-glass-edge);
+      border-radius: 14px;
+      box-shadow:
+        0 10px 26px var(--fa-glass-shadow),
+        0 2px 8px rgba(255, 255, 255, 0.62) inset;
+      padding: 1rem 1.25rem;
+    }
+
+    .footer-left,
+    .footer-right {
+      color: var(--fa-text-muted);
+
+      a {
+        color: #145486;
+        font-weight: 600;
+      }
+
+      a:hover {
+        color: #083458;
+      }
+    }
+
+    .footer-left {
+      border-right-color: rgba(114, 165, 211, 0.45);
+    }
+
+    .footer-logo img {
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(128, 176, 220, 0.5);
+      box-shadow: 0 4px 14px rgba(24, 95, 154, 0.16);
+    }
+  }
+
+  // Post tags: keep glass look while ensuring category tags remain readable.
+  #c-posts #a-show #tag-list,
+  #c-posts #a-index #tag-list {
+    h5.tag-list-header {
+      color: var(--fa-text-strong);
+      letter-spacing: 0.01em;
+      text-shadow: none;
+    }
+
+    ul.tag-list li {
+      background: var(--fa-glass-strong);
+      border-color: rgba(143, 188, 228, 0.55);
+      box-shadow:
+        0 6px 14px rgba(32, 102, 161, 0.12),
+        0 1px 0 rgba(255, 255, 255, 0.7) inset;
+    }
+
+    .tag-list-search .tag-list-name {
+      background: rgba(255, 255, 255, 0.66);
+      border-color: rgba(125, 176, 219, 0.5);
+    }
+
+    .tag-list-search .tag-list-count {
+      color: #395f7d;
+      font-weight: 600;
+    }
+
+    .tag-list-actions button {
+      color: #145486;
+    }
+
+    .tag-list-actions button:hover {
+      color: #07365c;
+    }
+  }
+
+  // Post information panel: labels and values need stronger separation.
+  #post-information .post-sidebar-grid {
+    gap: 0.2rem 0.65rem;
+
+    .post-sidebar-label {
+      color: #355a77;
+      font-weight: 700;
+    }
+
+    .post-sidebar-value {
+      color: #113a5d;
+      font-weight: 500;
+    }
+
+    .post-sidebar-break {
+      border-top: 1px solid rgba(122, 173, 215, 0.45);
+    }
+  }
+
+  // Post view section tabs/nav blocks should not flatten into the background.
+  #c-posts #a-show menu#post-sections li,
+  #c-posts #a-index menu#post-sections li,
+  #c-posts #a-show .nav-block li {
+    background: rgba(248, 253, 255, 0.62);
+    border: 1px solid rgba(126, 178, 220, 0.4);
+    border-radius: 0.45rem;
+    margin-bottom: 0.2rem;
+  }
+
+  #c-posts #a-show menu#post-sections li.active,
+  #c-posts #a-index menu#post-sections li.active {
+    background: rgba(194, 225, 250, 0.7);
+    border-color: rgba(72, 138, 197, 0.6);
+  }
+
+  #c-posts #a-show .nav-block li .nav-link {
+    color: #11446d;
+  }
+
+  #c-posts #a-show .nav-block li a.nav-link:hover {
+    background: rgba(222, 240, 255, 0.85);
+    color: #072f52;
+  }
+
+  // Keep long-form readable on bright glass surfaces.
+  .dtext-container,
+  .post-description,
+  #post-description {
+    color: #193f61;
+    line-height: 1.6;
+    text-shadow: none;
+  }
+
+  // Screenshot-driven fixes: sidebar and tag list were too washed out.
+  .post-index > .sidebar,
+  #c-posts #a-show .post-index > .sidebar {
+    color: var(--fa-text-strong);
+
+    section {
+      background: var(--fa-glass-strong);
+      border: 1px solid rgba(122, 176, 218, 0.58);
+      box-shadow:
+        0 8px 20px rgba(20, 90, 146, 0.16),
+        0 1px 0 rgba(255, 255, 255, 0.74) inset;
+    }
+
+    h1, h2, h3, h4, h5 {
+      color: #16486f;
+      text-shadow: none;
+    }
+
+    #search-box input[type="text"] {
+      background: rgba(255, 255, 255, 0.92);
+      color: #133f63;
+      border: 1px solid rgba(105, 165, 213, 0.7);
+    }
+  }
+
+  // Desktop tag list strips were almost transparent; give them depth.
+  ul.tag-list {
+    li {
+      background: linear-gradient(
+        145deg,
+        rgba(252, 255, 255, 0.96) 0%,
+        rgba(233, 246, 255, 0.9) 60%,
+        rgba(212, 234, 253, 0.84) 100%
+      );
+      border: 1px solid rgba(135, 184, 224, 0.6);
+      box-shadow:
+        0 3px 10px rgba(22, 91, 148, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.75) inset;
+    }
+
+    .tag-list-wiki,
+    .tag-list-inc,
+    .tag-list-exl,
+    .tag-list-count {
+      color: #315978;
+    }
+
+    .tag-list-search .tag-list-name {
+      background: rgba(255, 255, 255, 0.58);
+      border-color: rgba(120, 175, 217, 0.56);
+    }
+  }
+
+  // Comments block readability on post show.
+  #c-posts #a-show #comments,
+  #c-posts #a-show .post-comment,
+  #c-posts #a-show .comment {
+    color: #173f62;
+
+    .author,
+    .creator,
+    .comment-author {
+      color: #0f4f81;
+      font-weight: 700;
+    }
+  }
+
+  // Home page: keep glass but fix washed-out contrast.
+  &.c-static.a-home {
+    #c-static {
+      color: #143b5b;
+    }
+
+    .home-section {
+      background: linear-gradient(
+        145deg,
+        rgba(250, 254, 255, 0.94) 0%,
+        rgba(234, 245, 255, 0.88) 55%,
+        rgba(214, 235, 253, 0.8) 100%
+      );
+      border: 1px solid rgba(124, 177, 219, 0.62);
+      box-shadow:
+        0 10px 24px rgba(18, 90, 145, 0.2),
+        0 1px 0 rgba(255, 255, 255, 0.82) inset;
+      color: #153f61;
+    }
+
+    .home-search input[type="text"] {
+      background: rgba(255, 255, 255, 0.96);
+      color: #123d60;
+      border: 1px solid rgba(104, 163, 209, 0.7);
+    }
+
+    .home-search button[type="submit"] {
+      background: rgba(247, 252, 255, 0.96);
+      border: 1px solid rgba(104, 163, 209, 0.7);
+      color: #10456f;
+    }
+
+    .home-buttons a,
+    .home-pulse-button,
+    .home-echo-chip {
+      background: linear-gradient(
+        145deg,
+        rgba(247, 252, 255, 0.94) 0%,
+        rgba(225, 241, 255, 0.86) 100%
+      );
+      border: 1px solid rgba(118, 173, 218, 0.62);
+      color: #10456f;
+      text-shadow: none;
+      box-shadow:
+        0 4px 12px rgba(21, 92, 148, 0.14),
+        0 1px 0 rgba(255, 255, 255, 0.75) inset;
+    }
+
+    .home-buttons a:hover,
+    .home-pulse-button:hover,
+    .home-echo-chip:hover {
+      background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.98) 0%,
+        rgba(234, 247, 255, 0.94) 100%
+      );
+      color: #062f52;
+      border-color: rgba(92, 152, 202, 0.72);
+    }
+
+    .home-echo-description,
+    .home-comic-spotlight-meta {
+      color: #355c79;
+      opacity: 1;
+    }
+
+    .home-footer-top,
+    .home-footer-bottom {
+      background: linear-gradient(
+        145deg,
+        rgba(250, 254, 255, 0.93) 0%,
+        rgba(228, 242, 255, 0.86) 100%
+      );
+      border: 1px solid rgba(121, 175, 218, 0.6);
+      color: #163f62;
+      box-shadow:
+        0 8px 20px rgba(18, 90, 145, 0.16),
+        0 1px 0 rgba(255, 255, 255, 0.78) inset;
+    }
+
+    .home-footer-links,
+    .home-footer-links a {
+      color: #0f4875;
+      text-shadow: none;
+      font-weight: 600;
+    }
+
+    .home-footer-links a:hover {
+      color: #082f52;
+    }
+  }
+}

@@ -1,0 +1,62 @@
+<svg width="1200" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#b3d9ff;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#80b3ff;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#4d94ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a6bff;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="aurora1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.4" />
+      <stop offset="25%" style="stop-color:#d4e8ff;stop-opacity:0.3" />
+      <stop offset="50%" style="stop-color:#80b3ff;stop-opacity:0.4" />
+      <stop offset="75%" style="stop-color:#4d94ff;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.2" />
+    </linearGradient>
+    
+    <linearGradient id="aurora2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.3" />
+      <stop offset="33%" style="stop-color:#e8f4ff;stop-opacity:0.4" />
+      <stop offset="66%" style="stop-color:#0080ff;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.2" />
+    </linearGradient>
+    
+    <filter id="blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" />
+    </filter>
+    
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Base sky gradient -->
+  <rect width="1200" height="600" fill="url(#sky)" />
+  
+  <!-- Aurora waves -->
+  <path d="M0,200 Q300,100 600,150 T1200,100 L1200,400 Q900,350 600,380 T0,350 Z" 
+        fill="url(#aurora1)" filter="url(#blur)" opacity="0.7" />
+  
+  <path d="M0,300 Q400,200 800,250 T1200,200 L1200,500 Q800,450 400,480 T0,450 Z" 
+        fill="url(#aurora2)" filter="url(#blur)" opacity="0.6" />
+  
+  <!-- Glossy wave overlays -->
+  <path d="M0,150 Q200,50 400,100 T800,80 Q1000,60 1200,120 L1200,250 Q900,200 600,220 T300,200 Q150,180 0,220 Z" 
+        fill="url(#aurora1)" filter="url(#glow)" opacity="0.5" />
+  
+  <!-- Light rays -->
+  <g opacity="0.4">
+    <path d="M100,0 L150,600 L200,600 L120,0 Z" fill="url(#aurora1)" filter="url(#blur)" />
+    <path d="M500,0 L480,600 L520,600 L540,0 Z" fill="url(#aurora2)" filter="url(#blur)" />
+    <path d="M900,0 L880,600 L920,600 L940,0 Z" fill="url(#aurora1)" filter="url(#blur)" />
+  </g>
+  
+  <!-- Highlight glow at top -->
+  <ellipse cx="600" cy="100" rx="400" ry="150" 
+           fill="url(#aurora1)" filter="url(#blur)" opacity="0.4" />
+</svg>

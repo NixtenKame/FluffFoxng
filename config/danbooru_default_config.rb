@@ -26,7 +26,7 @@ module Danbooru
 
     # The canonical hostname of the site.
     def hostname
-      "localhost:3000"
+      "localhost:443"
     end
 
     # Contact email address of the admin.
@@ -789,18 +789,7 @@ module Danbooru
       false
     end
 
-    # Enable a BunkerWeb admin link in the sitemap.
-    # Set with DANBOORU_BUNKERWEB_ENABLED=true.
-    def bunkerweb_enabled?
-      false
-    end
-
-    # External URL for BunkerWeb admin UI (for example, http://localhost:8080).
-    # Set with DANBOORU_BUNKERWEB_URL.
-    def bunkerweb_url
-      nil
-    end
-
+    
     def janitor_reports_discord_webhook_url
       nil
     end

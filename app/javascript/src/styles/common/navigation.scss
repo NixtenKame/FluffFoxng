@@ -240,6 +240,17 @@ body[data-th-stickyheader="true"] nav.navigation {
   }
 }
 
+// Frutiger Aero theme
+[data-th-main="frutigeraero"] nav.navigation {
+    background: linear-gradient(
+        180deg,
+        rgb(160, 160, 160),
+        rgba(230, 247, 255, 0.85) 50%,
+        rgba(26, 159, 255, 0.85) 50%,
+        rgba(11, 120, 209, 0.85) 100%
+    ) !important;
+}
+
 
 // Forum notification
 nav.navigation .nav-primary li.notification {
@@ -507,6 +518,9 @@ body.c-static.a-home {
     // Match the background colors
     nav.navigation, menu.nav-logo, menu.nav-secondary, menu.nav-controls {
       background: themed("color-foreground");
+    }
+    [data-th-main="frutigeraero"] nav.navigation, menu.nav-logo, menu.nav-secondary, menu.nav-controls {
+      background: unset;
     }
     menu.nav-tools {
       background: var(--bg-color);

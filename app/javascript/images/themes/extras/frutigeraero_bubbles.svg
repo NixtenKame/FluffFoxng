@@ -1,0 +1,59 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bubble1">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.8" />
+      <stop offset="30%" style="stop-color:#cce7ff;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#0099ff;stop-opacity:0.1" />
+    </radialGradient>
+    <radialGradient id="bubble2">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.7" />
+      <stop offset="40%" style="stop-color:#66b3ff;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#0099ff;stop-opacity:0.05" />
+    </radialGradient>
+    <radialGradient id="bubble3">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.6" />
+      <stop offset="50%" style="stop-color:#99d1ff;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#66b3ff;stop-opacity:0.05" />
+    </radialGradient>
+    <radialGradient id="bubble4">
+      <stop offset="0%" style="stop-color:#e6f3ff;stop-opacity:0.9" />
+      <stop offset="60%" style="stop-color:#cce7ff;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#99d1ff;stop-opacity:0.1" />
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Large organic bubbles -->
+  <ellipse cx="120" cy="180" rx="65" ry="55" fill="url(#bubble1)" filter="url(#glow)" />
+  <ellipse cx="450" cy="120" rx="75" ry="60" fill="url(#bubble2)" filter="url(#glow)" />
+  <ellipse cx="300" cy="250" rx="55" ry="45" fill="url(#bubble3)" filter="url(#glow)" />
+  
+  <!-- Medium bubbles -->
+  <ellipse cx="200" cy="80" rx="35" ry="30" fill="url(#bubble4)" filter="url(#glow)" />
+  <ellipse cx="500" cy="280" rx="40" ry="35" fill="url(#bubble1)" filter="url(#glow)" />
+  <ellipse cx="80" cy="320" rx="30" ry="25" fill="url(#bubble2)" filter="url(#glow)" />
+  
+  <!-- Small bubbles -->
+  <ellipse cx="380" cy="60" rx="20" ry="18" fill="url(#bubble3)" filter="url(#glow)" />
+  <ellipse cx="150" cy="280" rx="18" ry="15" fill="url(#bubble4)" filter="url(#glow)" />
+  <ellipse cx="420" cy="320" rx="15" ry="12" fill="url(#bubble1)" filter="url(#glow)" />
+  <ellipse cx="250" cy="140" rx="12" ry="10" fill="url(#bubble2)" filter="url(#glow)" />
+  
+  <!-- Tiny bubbles -->
+  <ellipse cx="320" cy="180" rx="8" ry="6" fill="url(#bubble3)" />
+  <ellipse cx="180" cy="220" rx="6" ry="5" fill="url(#bubble4)" />
+  <ellipse cx="480" cy="200" rx="7" ry="6" fill="url(#bubble1)" />
+  <ellipse cx="350" cy="300" rx="5" ry="4" fill="url(#bubble2)" />
+  
+  <!-- Organic flowing shapes -->
+  <path d="M50,150 Q100,100 150,120 T200,150 Q180,200 150,220 T100,200 Q60,180 50,150" 
+        fill="url(#bubble4)" opacity="0.6" filter="url(#glow)" />
+  <path d="M400,250 Q450,200 500,230 T550,280 Q520,330 480,340 T430,310 Q410,280 400,250" 
+        fill="url(#bubble3)" opacity="0.5" filter="url(#glow)" />
+</svg>

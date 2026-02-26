@@ -49,8 +49,7 @@
     docker compose up
     ```
     After running the commands once only `docker compose up` is needed to bring up the containers.
-1. To confirm the installation worked, open the web browser of your choice and enter `http://localhost:3000` into the address bar and see if the website loads correctly. An admin account has been created automatically, the username and password are `admin` and `fluffyfox` respectively.
-1. BunkerWeb setup UI is started by default on a separate port. Open `https://localhost:7000/setup` (or your configured `EXPOSED_BUNKERWEB_PORT`) to access it. A browser certificate warning is expected with the default self-signed certificate.
+1. To confirm the installation worked, open the web browser of your choice and enter `https://localhost:3000` into the address bar and see if the website loads correctly. (You may need to accept a self-signed certificate warning in development.) An admin account has been created automatically, the username and password are `admin` and `fluffyfox` respectively.
 1. By default, the site will lack any content. For testing purposes, you can generate some using the following command:
     ```
     docker exec -it FluffFoxng-FluffFox-1 /app/bin/populate
