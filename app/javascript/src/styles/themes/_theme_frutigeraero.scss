@@ -136,6 +136,49 @@ body[data-th-main="frutigeraero"] {
     
     // Navigation styling - CRITICAL for the Vista look
     nav.navigation {
+      @include window-smaller-than(50rem) {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.94) 0%,
+          rgba(236, 248, 255, 0.9) 44%,
+          rgba(184, 220, 250, 0.82) 53%,
+          rgba(118, 179, 232, 0.8) 100%
+        ) !important;
+        border: 1px solid rgba(126, 181, 224, 0.58);
+        border-radius: 0 0 0.6rem 0.6rem;
+        box-shadow:
+          0 10px 24px rgba(16, 86, 142, 0.22),
+          0 1px 0 rgba(255, 255, 255, 0.84) inset,
+          0 -1px 0 rgba(97, 158, 209, 0.34) inset;
+        backdrop-filter: blur(18px) saturate(128%);
+        overflow: hidden;
+
+        html:not(.nav-toggled) & {
+          overflow: visible;
+        }
+
+        html.nav-toggled & {
+          overflow-y: auto !important;
+          overflow-x: hidden !important;
+          -webkit-overflow-scrolling: touch;
+          touch-action: pan-y;
+        }
+
+        .nav-logo,
+        .nav-controls {
+          background: transparent;
+          border: none;
+          box-shadow: none;
+        }
+
+        .nav-logo::before,
+        .nav-logo::after,
+        .nav-controls::before,
+        .nav-controls::after {
+          content: none;
+        }
+      }
+
       .nav-logo {
         // Let the global nav background be the main glass; keep the logo itself clean.
         background: none;
@@ -205,6 +248,10 @@ body[data-th-main="frutigeraero"] {
             transparent 100%);
           pointer-events: none;
         }
+
+        & > a > .avatar-more {
+          border-radius: 0 8px 8px 0;
+        }
         
         & > a > span {
           background: linear-gradient(135deg, 
@@ -213,7 +260,7 @@ body[data-th-main="frutigeraero"] {
             rgba(230, 247, 255, 0.5) 100%);
           backdrop-filter: blur(20px);
           border: 1px solid rgba(255, 255, 255, 0.7);
-          border-radius: 8px;
+          border-radius: 8px 0 0 8px;
           box-shadow: 
             0 2px 8px rgba(0, 128, 255, 0.15),
             0 1px 4px rgba(255, 255, 255, 0.5) inset;
@@ -250,6 +297,27 @@ body[data-th-main="frutigeraero"] {
             content: none;
           }
         }
+
+        @include window-smaller-than(50rem) {
+          background: transparent;
+          border: none;
+          box-shadow: none;
+          backdrop-filter: none;
+          overflow: visible;
+
+          &::before,
+          &::after {
+            content: none;
+          }
+        }
+      }
+
+      .simple-avatar-menu {
+        z-index: 320;
+        max-height: calc(100vh - 4.25rem);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
       }
       
       // Nav menus when opened
@@ -302,6 +370,30 @@ body[data-th-main="frutigeraero"] {
               box-shadow: 0 4px 12px rgba(0, 128, 255, 0.2);
             }
           }
+        }
+
+        @include window-smaller-than(50rem) {
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+      }
+
+      .nav-primary,
+      .nav-secondary {
+        @include window-smaller-than(50rem) {
+          overflow-x: hidden;
+          touch-action: pan-y;
+          overscroll-behavior: contain;
+        }
+      }
+
+      @include window-smaller-than(50rem) {
+        html.nav-toggled & .nav-primary,
+        html.nav-toggled & .nav-secondary {
+          overflow-y: auto !important;
+          overflow-x: hidden !important;
+          -webkit-overflow-scrolling: touch;
+          touch-action: pan-y;
         }
       }
 

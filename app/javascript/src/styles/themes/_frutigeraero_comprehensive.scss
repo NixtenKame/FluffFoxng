@@ -846,4 +846,29 @@ body[data-th-main="frutigeraero"] {
       color: #082f52;
     }
   }
+
+  // Keep post search settings popup usable without editing base layout files.
+  .post-index > .search {
+    position: relative;
+    overflow: visible;
+    z-index: 12;
+
+    .search-controls {
+      z-index: 13;
+    }
+
+    .search-settings-container {
+      z-index: 280;
+      box-shadow:
+        0 12px 28px rgba(14, 89, 150, 0.24),
+        0 2px 8px rgba(255, 255, 255, 0.62) inset;
+      border: 1px solid rgba(123, 177, 219, 0.65);
+      background: var(--fa-glass-strong);
+    }
+  }
+
+  .post-index > .sidebar {
+    position: relative;
+    z-index: 2;
+  }
 }
