@@ -480,10 +480,8 @@ nav.navigation, html.nav-toggled nav.navigation {
     }
     
     // Stage 2: account label
-    .collapse-2 .avatar-name { display: none; }
-    @include window-larger-than(65rem) {
-      .collapse-2 .avatar-name { display: unset; }
-    }
+    // Keep the username visible on regular desktop widths.
+    .collapse-2 .avatar-name { display: flex; }
   }
 }
 
