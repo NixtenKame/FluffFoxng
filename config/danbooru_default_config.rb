@@ -65,6 +65,11 @@ module Danbooru
       "/db_export/"
     end
 
+    # How many daily DB export files to keep per table.
+    def db_export_keep_latest
+      4
+    end
+
     def levels
       {
         "Anonymous" => 0,

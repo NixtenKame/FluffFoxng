@@ -26,6 +26,8 @@ class DbExport
     TABLES.each do |table|
       export_table(table, date_stamp)
     end
+
+    prune_old_exports!(keep: Danbooru.config.db_export_keep_latest.to_i)
   end
 
   private
@@ -50,6 +52,16 @@ class DbExport
     FileUtils.mv(temporary, destination)
   ensure
     FileUtils.rm_f(temporary) if temporary.present?
+  end
+
+  def prune_old_exports!(keep:)
+    return if keep <= 0
+
+    TABLES.each do |table|
+      exports = Dir.glob(export_dir.join("#{table}-*.csv.gz")).sort.reverse
+      old_exports = exports.drop(keep)
+      FileUtils.rm_f(old_exports)
+    end
   end
 
   def copy_table_as_csv(table, output)
