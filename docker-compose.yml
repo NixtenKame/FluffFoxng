@@ -1,8 +1,8 @@
 x-environment: &common-env
-  DANBOORU_HOSTNAME: ${DANBOORU_HOSTNAME:-https://localhost:3000}
+  DANBOORU_HOSTNAME: ${DANBOORU_HOSTNAME:-http://localhost:3000}
   DANBOORU_DOMAIN: ${DANBOORU_DOMAIN:-localhost}
   DANBOORU_BUNKERWEB_ENABLED: ${DANBOORU_BUNKERWEB_ENABLED:-false}
-  DANBOORU_BUNKERWEB_URL: ${DANBOORU_BUNKERWEB_URL:-https://localhost:3000}
+  DANBOORU_BUNKERWEB_URL: ${DANBOORU_BUNKERWEB_URL:-http://localhost:3000}
   DANBOORU_REDIS_URL: redis://redis
   DANBOORU_OPENSEARCH_HOST: opensearch
   DANBOORU_MEMCACHED_SERVERS: memcached
@@ -33,7 +33,6 @@ services:
       args:
         HOST_UID: ${HOST_UID:-1000}
         HOST_GID: ${HOST_GID:-1000}
-    user: ${DOCKER_USER:-flufffoxng}
     image: flufffox
     volumes:
       - .:/app
@@ -44,7 +43,7 @@ services:
       <<: *common-env
       RAILS_ENV: development
       LOCAL_DTEXT: ${LOCAL_DTEXT:-}
-      DANBOORU_DATA_BASE_URL: ${DANBOORU_DATA_BASE_URL:-https://localhost:3000/data}
+      DANBOORU_DATA_BASE_URL: ${DANBOORU_DATA_BASE_URL:-http://localhost:3000/data}
     depends_on:
       <<: *common-depends-on
       autocompleted:
@@ -69,6 +68,8 @@ services:
       - ./public:/app/public
       - ./uploads:/app/public/data
       - ./docker/default.conf.template:/etc/nginx/templates/default.conf.template
+    ports:
+      - "${EXPOSED_NGINX_PORT:-3000}:80"
     environment:
       <<: *common-env
       NGINX_PORT: 80
@@ -90,6 +91,8 @@ services:
 
   file-server:
     image: nginx:stable-alpine
+    profiles:
+      - proxy
     volumes:
       - ./uploads:/usr/share/nginx/html:ro
     labels:
@@ -104,7 +107,6 @@ services:
 
   postgres:
     image: postgres:15-alpine
-    user: "1000:1000"
     environment:
       - POSTGRES_USER=FluffFox
       - POSTGRES_DB=FluffFox_development
@@ -122,10 +124,11 @@ services:
 
   memcached:
     image: memcached:1.5.22-alpine
-    user: "1000:1000"
 
   traefik:
     image: traefik:v2.10
+    profiles:
+      - proxy
     command:
       - --api.insecure=true
       - --providers.docker=true
@@ -139,7 +142,7 @@ services:
       - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
     ports:
       - "${EXPOSED_HTTP_PORT:-80}:80"
-      - "${EXPOSED_SERVER_PORT:-3000}:443"
+      - "${EXPOSED_SERVER_PORT:-443}:443"
       - "${EXPOSED_FILE_SERVER_PORT:-9001}:9001"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro

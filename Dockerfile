@@ -36,7 +36,7 @@ COPY --from=node-builder /usr/local/include /usr/local/include
 COPY --from=node-builder /usr/local/bin /usr/local/bin
 # Copy yarn to both root and the user created below to support running as both
 COPY --from=node-builder /root/.cache/node /root/.cache/node
-COPY --from=node-builder /root/.cache/node /home/FluffFoxng/.cache/node
+COPY --from=node-builder /root/.cache/node /home/flufffoxng/.cache/node
 
 # Copy gems and js packages
 COPY --from=node-builder /app/node_modules node_modules

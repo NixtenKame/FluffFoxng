@@ -9,8 +9,8 @@ require "tempfile"
 
 admin = User.find_or_create_by!(name: "admin") do |user|
   user.created_at = 2.weeks.ago
-  user.password = "fluffyfox"
-  user.password_confirmation = "fluffyfox"
+  user.password = "p!nkf0xp@w"
+  user.password_confirmation = "p!nkf0xp@w"
   user.password_hash = ""
   user.email = "admin@flufffox.local"
   user.can_upload_free = true
