@@ -138,6 +138,16 @@ PostSearch.initialize_controls = function () {
       LStorage.Posts.StickySearch = event.target.checked;
       $("body").attr("data-st-stickysearch", event.target.checked);
     });
+
+  $("#ssc-spoiler-images")
+    .prop("checked", LStorage.Posts.SpoilerImages)
+    .on("change", (event) => {
+      LStorage.Posts.SpoilerImages = event.target.checked;
+      $("body").attr("data-st-spoiler", event.target.checked);
+    });
+
+  // Initialize spoiler state on page load
+  $("body").attr("data-st-spoiler", LStorage.Posts.SpoilerImages);
 };
 
 $(() => {

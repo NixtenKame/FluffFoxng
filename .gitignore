@@ -58,3 +58,4 @@ app/controllers/nixten_controller.rb
 public/google*.html
 public/sitemap.xml
 config/environments/production.rb
+lib/tasks/assets_cleaner.rake

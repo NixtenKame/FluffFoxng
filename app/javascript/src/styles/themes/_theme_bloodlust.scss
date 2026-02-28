@@ -1,56 +1,135 @@
-$bloodlust-color-background: #000000;
-$bloodlust-color-section:    #333333;
-$bloodlust-color-link:       #ffee95;
-$bloodlust-color-link-hover: #f68b00;
-$bloodlust-color-text-muted: #999999;
-$bloodlust-color-foreground: #222222;
+$bloodlust-color-background: #180000;
+$bloodlust-color-foreground: #220000;
+$bloodlust-color-section:    #300000;
+$bloodlust-color-section-2:  #420000;
+$bloodlust-color-link:       #ff4d4d;
+$bloodlust-color-link-hover: #ffd2d2;
+$bloodlust-color-text-muted: #cc8a8a;
+$bloodlust-color-text:       #ffe8e8;
+$bloodlust-color-acid:       #ff0000;
+
+@keyframes bloodlust-pulse {
+  0% { filter: saturate(100%) brightness(100%); }
+  50% { filter: saturate(145%) brightness(112%); }
+  100% { filter: saturate(100%) brightness(100%); }
+}
+
+@keyframes bloodlust-flow {
+  0% { background-position: 0 0, 0 0, 0 0; }
+  100% { background-position: 0 240px, -220px 150px, 160px -100px; }
+}
 
 body[data-th-main="bloodlust"] {
-  --image-background:             none;
+  --image-background:
+    radial-gradient(circle at 15% 10%, rgba(255, 0, 0, 0.30) 0 14%, rgba(255, 0, 0, 0) 40%),
+    radial-gradient(circle at 80% 75%, rgba(255, 26, 26, 0.26) 0 12%, rgba(255, 0, 0, 0) 45%),
+    repeating-linear-gradient(170deg, rgba(0, 0, 0, 0.7) 0 6px, rgba(90, 0, 0, 0.75) 6px 16px, rgba(25, 0, 0, 0.7) 16px 28px);
   // Layout Colors
-  --color-background:             #{$bloodlust-color-background};            // Main background (dark blue, large hexagons)
-  --color-foreground:             #{$bloodlust-color-foreground};            // Foreground (lighter blue, small hexagons)
-  --color-section:                #{$bloodlust-color-section};               // Foreground sections - boxes, sections, etc
+  --color-background:             #{$bloodlust-color-background};
+  --color-foreground:             #{$bloodlust-color-foreground};
+  --color-section:                #{$bloodlust-color-section};
+  --color-section-hover:          #{$bloodlust-color-section-2};
   --color-section-lighten-5:      #{lighten($bloodlust-color-section, 5%)};
   --color-section-lighten-10:     #{lighten($bloodlust-color-section, 10%)};
   --color-section-darken-5:       #{darken($bloodlust-color-section, 5%)};
-  --color-table-border:           #{$bloodlust-color-foreground};
+  --color-table-border:           #{$bloodlust-color-section-2};
 
   --color-section-pending:        #{$bloodlust-color-section};
-  --color-section-pending-border: #{$bloodlust-color-background};
+  --color-section-pending-border: #{$bloodlust-color-section-2};
 
   // Main Colors
-  --color-text:                   #ffffff;
+  --color-text:                   #{$bloodlust-color-text};
   --color-text-muted:             #{$bloodlust-color-text-muted};
-  --color-text-table-header:      #{darken(#ffffff, 10%)};
+  --color-text-table-header:      #{darken($bloodlust-color-text, 10%)};
 
   --color-link:                   #{$bloodlust-color-link};
   --color-link-hover:             #{$bloodlust-color-link-hover};
-  --color-link-active:            #ffffff;
-  --color-button-active:          #e8c446;
+  --color-link-active:            #{$bloodlust-color-text};
+  --color-button-active:          #{$bloodlust-color-acid};
 
   --color-link-last-page:         #{$bloodlust-color-text-muted};
 
-  --color-active-tag:             #{$bloodlust-color-foreground};
+  --color-active-tag:             #{$bloodlust-color-section-2};
 
   // DText Colors
-  --color-dtext-quote:            #67717b;
-  --color-dtext-section:          #427982;
+  --color-dtext-quote:            #a02020;
+  --color-dtext-section:          #ff2020;
 
   // User Groups
-  --color-user-member:            #ffee95;
-  --color-user-member-alt:        #f68b00;
-  --color-user-privileged:        #ffee95;
-  --color-user-privileged-alt:    #f68b00;
+  --color-user-member:            #ff7070;
+  --color-user-member-alt:        #ffd0d0;
+  --color-user-privileged:        #ff7070;
+  --color-user-privileged-alt:    #ffd0d0;
 
-  --color-user-blocked:           #ffee95;
-  --color-user-blocked-alt:       #f68b00;
+  --color-user-blocked:           #ff7070;
+  --color-user-blocked-alt:       #ffd0d0;
 
   // Tag Categories
-  --color-tag-general:            #ffee95;
-  --color-tag-general-alt:        #f68b00;
+  --color-tag-general:            #ff6565;
+  --color-tag-general-alt:        #ffe0e0;
 
   // Spoilers
   --color-spoiler-link:           #{$bloodlust-color-link};
   --color-spoiler-link-hover:     #{$bloodlust-color-link-hover};
+
+}
+
+body[data-th-main="bloodlust"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body[data-th-main="bloodlust"] nav,
+body[data-th-main="bloodlust"] .box,
+body[data-th-main="bloodlust"] .striped > tbody > tr:nth-child(odd),
+body[data-th-main="bloodlust"] .striped > tbody > tr:nth-child(even),
+body[data-th-main="bloodlust"] .ui-widget-content {
+  background-color: rgba(35, 0, 0, 0.9);
+  border-color: #720000;
+  box-shadow: 0 0 0.7rem rgba(255, 0, 0, 0.35), inset 0 0 1.2rem rgba(255, 0, 0, 0.12);
+}
+
+body[data-th-main="bloodlust"] a,
+body[data-th-main="bloodlust"] .tag-type-general a {
+  text-shadow: 0 0 0.45rem rgba(255, 30, 30, 0.7);
+}
+
+body[data-th-main="bloodlust"] button,
+body[data-th-main="bloodlust"] input[type="submit"],
+body[data-th-main="bloodlust"] .button,
+body[data-th-main="bloodlust"] .ptbr-etc-download, 
+body[data-th-main="bloodlust"] .ptbr-fullscreen,
+body[data-th-main="bloodlust"] .ptbr-resize {
+  background: linear-gradient(180deg, #880000, #510000)!important;
+  border: 1px solid #ff3d3d;
+  color: #fff0f0;
+  box-shadow: 0 0 0.7rem rgba(255, 0, 0, 0.35);
+}
+
+// to recreate the css files
+
+// fix for the fullscreen and resize buttons in the post viewer, which are technically not buttons but should look like them :3
+body[data-th-main="bloodlust"] .ptbr-etc-fullscreen a,
+body[data-th-main="bloodlust"] .ptbr-etc-resize a {
+  background: linear-gradient(180deg, #880000, #510000);
+  border: 1px solid #ff3d3d;
+  color: #fff0f0;
+  box-shadow: 0 0 0.7rem rgba(255, 0, 0, 0.35);
+}
+
+body[data-th-main="bloodlust"] input,
+body[data-th-main="bloodlust"] textarea,
+body[data-th-main="bloodlust"] select {
+  background-color: #1a0000;
+  border-color: #7d0000;
+  color: #ffeaea;
+}
+
+@media (max-width: 45rem) {
+  body[data-th-main="bloodlust"] {
+    text-shadow: none;
+  }
 }

@@ -289,6 +289,18 @@ body[data-st-contain="true"] article.thumbnail img {
   object-fit: contain;
 }
 
+// Spoiler images - blur until hovered
+body[data-st-spoiler="true"] article.thumbnail img,
+body[data-st-spoiler="true"] .post-index img {
+  filter: blur(20px) brightness(0.6) !important;
+}
+
+body[data-st-spoiler="true"] article.thumbnail:hover img,
+body[data-st-spoiler="true"] .post-index img:hover,
+body[data-st-spoiler="true"] section img:hover {
+  filter: blur(0) brightness(1) !important;
+}
+
 
 // ============================== //
 // ===== Thumbnail Borders ====== //

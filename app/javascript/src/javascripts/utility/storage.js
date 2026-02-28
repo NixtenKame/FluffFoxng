@@ -98,6 +98,9 @@ LStorage.Posts = {
   /** @returns {boolean} True if the search should be displayed in fullscreen */
   StickySearch: ["e6.posts.ssearch", false],
 
+  /** @returns {boolean} True to blur post thumbnails until hovered */
+  SpoilerImages: ["e6.posts.spoiler", false],
+
   /** @returns {boolean} True to stop limiting videos to 1080p in Original mode */
   SkipVariants: ["e6.posts.scvideos", false],
 
