@@ -36,6 +36,7 @@ Rails.application.configure do
       "https://www.recaptcha.net/",
       "https://assets.freespeechcoalition.com",
       "https://kit.fontawesome.com",
+      "www.googletagmanager.com"
     ]
     script_sources << posthog_origin if posthog_origin.present?
     script_sources << posthog_assets_origin if posthog_assets_origin.present?
