@@ -790,6 +790,11 @@ module Danbooru
       "https://us.i.posthog.com"
     end
 
+    # Google Analytics tracking ID. Set with DANBOORU_GOOGLE_ANALYTICS_ID.
+    def google_analytics_id
+      nil
+    end
+
     def fsc_modal_enabled?
       false
     end

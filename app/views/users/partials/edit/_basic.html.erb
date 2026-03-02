@@ -60,14 +60,6 @@
 <!-- Notifications -->
 <tab-group name="notifications">Notifications</tab-group>
 
-<tab-entry tab="<%= tab_name %>" group="notifications" class="inline" search="user account email notify notifications">
-  <tab-head><%= form.label :receive_email_notifications, label: "Email Notifications" %></tab-head>
-  <tab-body>
-    <%= form.input_field :receive_email_notifications, as: :boolean, class: "st-toggle" %>
-    <%= form.label :receive_email_notifications, "!", class: "st-toggle" %>
-  </tab-body>
-</tab-entry>
-
 <tab-entry tab="<%= tab_name %>" group="notifications" class="inline" search="user account forum activity dot bubble toggle notify notification">
   <tab-head><%= form.label :forum_notification_dot, label: "Forum Activity Dot" %></tab-head>
   <tab-body>
@@ -170,16 +162,5 @@
   </tab-body>
   <tab-hint>
     Show <%= CurrentUser.user.is_staff? ? "all" : "your" %> hidden comments on comment pages.
-  </tab-hint>
-</tab-entry>
-
-<tab-entry tab="<%= tab_name %>" group="posts" class="inline" search="posts display show hide mode explicit questionable safe rated rating">
-  <tab-head><%= form.label :enable_safe_mode, "Safe mode" %></tab-head>
-  <tab-body>
-    <%= form.input_field :enable_safe_mode, as: :boolean, class: "st-toggle" %>
-    <%= form.label :enable_safe_mode, "!", class: "st-toggle", role: "switch" %>
-  </tab-body>
-  <tab-hint>
-    Only show images rated safe.
   </tab-hint>
 </tab-entry>
