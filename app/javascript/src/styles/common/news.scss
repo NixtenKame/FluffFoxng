@@ -51,4 +51,14 @@ div#page div#news {
     font-size: 1.25rem;
     font-weight: bold;
   }
+  
+  // Sticky site notice
+  // Dude just dont ask why this is necessary I was bored and decided to add some useless fucking feature that I know no one will use
+  [data-th-stickynotice="true"] & {
+    position: sticky;
+    top: 3.75rem;
+
+    // on top of thumbnail labels
+    z-index: 100;
+  }
 }
