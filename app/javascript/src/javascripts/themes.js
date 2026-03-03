@@ -4,7 +4,7 @@ import LStorage from "./utility/storage";
 const Theme = {};
 
 Theme.Values = {
-  "Theme": ["Main", "Extra", "Palette", "Font", "StickyHeader", "Navbar", "Gestures", "Logo"],
+  "Theme": ["Main", "Extra", "Palette", "Font", "StickyHeader", "StickyNotice", "Navbar", "Gestures", "Logo"],
   "Posts": ["WikiExcerpt", "StickySearch"],
   "Site": ["Events"],
 };
