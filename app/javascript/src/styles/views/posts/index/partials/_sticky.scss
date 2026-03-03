@@ -21,4 +21,8 @@
 // Fix margin error when sticky notice is enabled
 &[data-th-stickynotice="true"] {
   .post-index .search { top: 5.75rem; }
+  // Fix margin error when stickysearch is true, stickyheader is false, and stickynotice is true
+  &[data-th-stickyheader="false"] .post-index .search { top: 2rem; }
+  // Fix margin error for div#page div#news when stickyheader is disabled but sticky notice is enabled
+  &[data-th-stickyheader="false"] div#page div#news { top: 0; }
 }
