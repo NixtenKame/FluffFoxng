@@ -207,7 +207,7 @@ class ApplicationController < ActionController::Base
     allowed_logout = params[:controller] == "sessions" && params[:action] == "destroy"
     return if allowed_controller || allowed_logout
 
-    redirect_to new_maintenance_user_two_factor_path, notice: "You must set up authenticator app login before continuing."
+    redirect_to new_maintenance_user_two_factor_path, notice: "Set up 2FA with an authenticator app otherwise click Skip For Now."
   end
 
   def requires_reauthentication
