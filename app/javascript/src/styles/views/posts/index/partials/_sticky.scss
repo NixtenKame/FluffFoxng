@@ -17,3 +17,8 @@
 &[data-th-stickyheader="true"] {
   .post-index .search { top: 3.75rem; }
 }
+
+// Fix margin error when sticky notice is enabled
+&[data-th-stickynotice="true"] {
+  .post-index .search { top: 5.75rem; }
+}
