@@ -69,6 +69,9 @@ LStorage.Theme = {
   /** @returns {boolean} True if the sticky header is enabled */
   StickyHeader: ["theme-sheader", false],
 
+  /** @returns {boolean} True if the sticky news bar is enabled */
+  StickyNotice: ["theme-snotice", false],
+
   /** @returns {string} Currently selected logo */
   Logo: ["theme-logo", "pride"],
 };
