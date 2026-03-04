@@ -22,6 +22,7 @@ import Favorite from "../src/javascripts/models/Favorite.js";
 import PostVote from "../src/javascripts/models/PostVote.js";
 import User from "../src/javascripts/models/User.js";
 import Autocomplete from "../src/javascripts/autocomplete.js";
+import UserClock from "../src/javascripts/user_clock.js";
 import Blacklist from "../src/javascripts/blacklists.js";
 import Blip from "../src/javascripts/blips.js";
 import Comment from "../src/javascripts/comments.js";
@@ -59,6 +60,7 @@ window.Danbooru = {
   PostVote,
   User,
   Autocomplete,
+  UserClock,
   Blacklist,
   Blip,
   Comment,

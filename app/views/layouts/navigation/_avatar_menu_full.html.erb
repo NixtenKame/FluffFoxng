@@ -1,5 +1,14 @@
 <%# locals: (user: CurrentUser.user, has_mail: CurrentUser.has_mail?) %>
 
+<%# Add a clock feature that displays the users local time%>
+<% if user.time_zone.present? %>
+  <div class="avatar-menu-clock">
+    <%= svg_icon(:clock) %>
+    <span class="avatar-menu-clock-time" data-timezone="<%= user.time_zone %>"></span>
+  </div>
+<% end %>
+
+<hr />
 <a href="<%= user_path(user) %>">
   <%= svg_icon(:user_square) %> Profile
 </a>
