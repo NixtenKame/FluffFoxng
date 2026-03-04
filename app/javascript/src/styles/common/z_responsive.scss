@@ -188,3 +188,10 @@
     }
   }
 }
+
+// margin fix for sticky news and other things on mobile
+@media (max-width: 45rem) {
+  .post-index .search { top: 3.75rem; }
+  [data-th-stickyheader="false"] .post-index .search { top: 2rem; }
+  [data-th-stickyheader="false"] div#page div#news { top: 0; margin-top: 0; }
+}
