@@ -141,3 +141,128 @@ correct.
 debug your Nginx configuration file.
 
 4) Check all log files.
+
+## Technology I Use
+
+1)  **Traffic RRD Tool:** I use quite a few RRD tools; they all function
+    the same. I will list them down below.
+
+-   Cacti
+-   Zabbix
+
+2)  **Server Infrastructure:** I use cloud computing with AWS on an EC2
+    `t3a.xlarge` server. You can do the same, but I'd recommend running
+    it on a local server, as AWS **CAN** get a little pricey if you
+    leave it on 24/7. And yes, a local server is way more pricey, but if
+    you have an old computer with 4 cores and 8GB of RAM with great
+    bandwidth, you should be good.
+
+3)  **Domain Registrar:** I've been using a DDNS (Dynamic Domain Name
+    System) hosted by No-IP, which can be useful if your ISP doesn't
+    allow static IPs. Even though I use an Elastic IP on AWS, I still
+    like using the DDNS service because it's completely free. You just
+    have to make sure to confirm your domain name every month, which can
+    be a little annoying, but it's easy to set up. All you have to do is
+    tell No-IP to point to your public IP and you're done. **THAT'S
+    IT.** You can register a domain name for free at
+    [noip.com](https://www.noip.com/).
+
+4)  **Operating System:** I use Ubuntu 24.04.4 LTS. You **CAN** use
+    Ubuntu Server, and it would probably be better than using a
+    consumer-grade version of Ubuntu. I just use the consumer-grade
+    version because I don't think AWS allows Ubuntu Server, but I could
+    be wrong.
+
+5)  **Storage:** For a starter, I'm using a 256GB virtual disk with AWS.
+    Depending on how you set up the EC2 server and what resources you're
+    using will determine how much money you will be spending on the
+    server, as well as how long the server stays up.
+
+6)  **Reverse Proxy:** I'm just listing this because why not, though if
+    you already did a deep read on the source code and you know exactly
+    how this works, then you can ignore this. I'm just using the Nginx
+    reverse proxy, as that's the web server this whole website runs on
+    like any other booru website.
+
+7)  **Fonts:** I use Font Awesome, but don't worry about setting up the
+    Font Awesome API, as the fonts and logos are being hosted locally.
+
+8)  **Text Editor:** For the production version of this source code, I'm
+    using the local DText fork from the [e621ng Source
+    Code](https://github.com/e621ng/e621ng/ "Almost all credit goes to Dragon Fruit Ventures LLC. as this source code was NOT modified like crazy").
+    You can use the remote DText from e621ng, as I'm still working on
+    modifying the DText source code.
+
+9)  **Analytics:** I use a few analytics softwares like Google Tag
+    Manager, Google Analytics, and PostHog. You can obtain your API keys
+    if you like, but they're not required---only required if you're
+    using this source code for production use.
+
+I think the rest is pretty obvious. It's coded in Ruby and Ruby on Rails
+with a touch of different languages like Vue.js and Sass for the style
+sheets. Now, I was a little confused about what to modify at first, so
+I'll help you in the next paragraph.
+
+------------------------------------------------------------------------
+
+## Locations and What They Do
+
+-   The first one, probably the most important if you want to view where
+    the webpages are displayed. You can go there in
+
+```
+    app/views
+```
+
+Within that directory, you will find a bunch of folders that correspond
+to the webpage. For example, if you want to look at the webpage for the
+posts page, you can go there at
+
+```
+    app/views/index.html.erb
+```
+
+Ruby on Rails uses the `.erb` file extension for the framework. I will
+warn you that these files are super small, so you might have to dig
+around to find what you're looking for.
+
+-   Style sheets are weird too, because instead of using CSS, it uses
+    SCSS for compression. On GitHub, those files can be found in
+
+```
+    app/javascript/src/styles/
+```
+
+Why they're in the JavaScript folder, I have no clue. That's just how
+they built the source code. Wouldn't it be better if it was like
+`app/styles/src/`? lol
+
+-   Controllers are found in
+
+```
+    app/controllers
+```
+
+These files are what do the backend scripting and other database
+scripting.
+
+-   Static front-end pages can be found in the
+
+```
+    public
+```
+
+folder, and it's where the compiled Vite files are stored, along with
+icons and error pages.
+
+------------------------------------------------------------------------
+
+### Conclusion
+
+Almost all files you are looking for for the front-end scripting are
+located in the `app` folder.
+
+If you want more information, you can contact me at
+<nixtenkame@gmail.com>. If I'm unavailable, you can use AI or some other
+SDK built into Visual Studio Code and have it scan everything in the
+source code and break it down for you.
