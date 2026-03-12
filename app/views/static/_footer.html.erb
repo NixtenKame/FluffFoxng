@@ -25,4 +25,8 @@
       <%= link_to disable_mobile_mode? ? "Mobile mode: OFF": "Mobile mode: ON", disable_mobile_mode_path, :rel => "nofollow" %>
     </span>
   </div>
+  <%# Server Time %>
+  <span class="footer-time">
+    Current Server Time: <span class="footer-time-text"><%= Time.current.in_time_zone("America/New_York").strftime("%I:%M %p") %></span>
+  </span>
 </footer>

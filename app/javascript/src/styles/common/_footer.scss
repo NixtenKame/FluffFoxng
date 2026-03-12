@@ -58,6 +58,23 @@ footer.footer-wrapper {
     grid-area: right;
     padding-left: 1rem;
   }
+  .footer-time {
+    display: grid;
+    justify-content: center;
+    padding-left: 1rem;
+    margin-top: 0.5rem;
+    text-align: left;
+    font-size: 1rem;
+    color: var(--color-text-lighten-5);
+  }
+  .footer-time-text {
+    margin: 0.5rem 0 .5rem 0;
+    font-size: 1.5rem;
+    color: var(--color-text-lighten-5);
+    text-align: center;
+    display: block;
+    font-weight: 500;
+  }
 }
 
 
