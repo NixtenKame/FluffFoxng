@@ -580,6 +580,7 @@ module Danbooru
         "Colored base",
         "Advertisement",
         "Underage artist",
+        "Not Safe For Work (NSFW)",
         "",
         "Does not meet minimum quality standards (Artistic)",
         "Does not meet minimum quality standards (Resolution)",
