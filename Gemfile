@@ -35,6 +35,7 @@ gem "redis"
 gem "request_store"
 gem "zxcvbn-ruby", require: "zxcvbn"
 gem "view_component"
+gem "webpush"
 
 gem "diffy"
 gem "rugged"

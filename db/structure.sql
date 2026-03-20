@@ -1763,6 +1763,42 @@ ALTER SEQUENCE public.posts_id_seq OWNED BY public.posts.id;
 
 
 --
+-- Name: push_subscriptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.push_subscriptions (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    endpoint text NOT NULL,
+    p256dh_key character varying NOT NULL,
+    auth_key character varying NOT NULL,
+    expiration_time timestamp(6) without time zone,
+    user_agent character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: push_subscriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.push_subscriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: push_subscriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.push_subscriptions_id_seq OWNED BY public.push_subscriptions.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2875,6 +2911,13 @@ ALTER TABLE ONLY public.posts ALTER COLUMN change_seq SET DEFAULT nextval('publi
 
 
 --
+-- Name: push_subscriptions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.push_subscriptions ALTER COLUMN id SET DEFAULT nextval('public.push_subscriptions_id_seq'::regclass);
+
+
+--
 -- Name: settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3382,6 +3425,14 @@ ALTER TABLE ONLY public.post_votes
 
 ALTER TABLE ONLY public.posts
     ADD CONSTRAINT posts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: push_subscriptions push_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.push_subscriptions
+    ADD CONSTRAINT push_subscriptions_pkey PRIMARY KEY (id);
 
 
 --
@@ -4485,6 +4536,20 @@ CREATE INDEX index_posts_on_uploader_ip_addr ON public.posts USING btree (upload
 
 
 --
+-- Name: index_push_subscriptions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_push_subscriptions_on_user_id ON public.push_subscriptions USING btree (user_id);
+
+
+--
+-- Name: index_push_subscriptions_on_user_id_and_endpoint; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_push_subscriptions_on_user_id_and_endpoint ON public.push_subscriptions USING btree (user_id, endpoint);
+
+
+--
 -- Name: index_settings_on_var; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4915,6 +4980,14 @@ ALTER TABLE ONLY public.blips
 
 
 --
+-- Name: push_subscriptions fk_rails_43d43720fc; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.push_subscriptions
+    ADD CONSTRAINT fk_rails_43d43720fc FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: tickets fk_rails_45cd696dba; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5041,6 +5114,7 @@ ALTER TABLE ONLY public.user_badges
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260313000000'),
 ('20260216030000'),
 ('20260216010000'),
 ('20260216000000'),

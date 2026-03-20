@@ -68,6 +68,22 @@
   </tab-body>
 </tab-entry>
 
+<% if Danbooru.config.enable_push_notifications? %>
+  <tab-entry tab="<%= tab_name %>" group="notifications" search="push notification browser dmail">
+    <tab-head>Push Notifications</tab-head>
+    <tab-body>
+      <div id="push-notification-controls" data-status="unknown">
+        <button type="button" class="st-button" data-action="enable">Enable</button>
+        <button type="button" class="st-button danger" data-action="disable">Disable</button>
+        <span class="push-notification-status">Checking…</span>
+      </div>
+    </tab-body>
+    <tab-hint>
+      Enable browser notifications for new DMails.
+    </tab-hint>
+  </tab-entry>
+<% end %>
+
 
 <!-- Profile -->
 <tab-group name="profile">Profile</tab-group>

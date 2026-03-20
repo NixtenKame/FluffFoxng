@@ -34,6 +34,7 @@ import PostDeletion from "../src/javascripts/post_delete.js";
 import PostModeMenu from "../src/javascripts/post_mode_menu.js";
 import PostReplacement from "../src/javascripts/post_replacement.js";
 import PostVersions from "../src/javascripts/post_versions.js";
+import "../src/javascripts/push_notifications.js";
 import StaffNote from "../src/javascripts/staff_notes.js";
 import Utility from "../src/javascripts/utility.js";
 import TagRelationships from "../src/javascripts/tag_relationships.js";

@@ -497,6 +497,26 @@ module Danbooru
       false
     end
 
+    # If true, the app will send web push notifications to subscribed browsers.
+    def enable_push_notifications?
+      vapid_public_key.present? && vapid_private_key.present?
+    end
+
+    # VAPID public key for web push.
+    def vapid_public_key
+      ENV.fetch("VAPID_PUBLIC_KEY", "")
+    end
+
+    # VAPID private key for web push.
+    def vapid_private_key
+      ENV.fetch("VAPID_PRIVATE_KEY", "")
+    end
+
+    # Contact subject for VAPID (ex: mailto:admin@example.com).
+    def vapid_subject
+      ENV.fetch("VAPID_SUBJECT", "mailto:#{contact_email}")
+    end
+
     # If true, password reset requests will show a one-time reset URL on the
     # reset page instead of relying solely on email delivery. Keep this off on
     # public sites unless you fully understand the account recovery tradeoffs.

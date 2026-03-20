@@ -16,6 +16,7 @@ class Dmail < ApplicationRecord
   before_create :auto_read_if_filtered
   after_create :update_recipient_unread_count
   after_commit :send_email, on: :create, unless: :no_email_notification
+  after_commit :enqueue_push_notification, on: :create
 
   attr_accessor :bypass_limits, :no_email_notification
 
@@ -239,6 +240,14 @@ class Dmail < ApplicationRecord
   def update_recipient_unread_count
     return if owner_id == CurrentUser.user.id || is_deleted? || is_read?
     to.update_columns(unread_dmail_count: to.unread_dmail_count + 1)
+  end
+
+  def enqueue_push_notification
+    return unless Danbooru.config.enable_push_notifications?
+    return unless owner_id == to_id
+    return if is_deleted? || is_read?
+
+    PushNotificationJob.perform_later(id)
   end
 
   def visible_to?(user)
